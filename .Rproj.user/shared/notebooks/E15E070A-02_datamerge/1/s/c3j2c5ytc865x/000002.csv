@@ -1,0 +1,2 @@
+"0","pdata <- with(MACTownHealth21, expand.grid(T21year = seq(min(T21year, na.rm = TRUE), max(T21year, na.rm = TRUE)),id = unique(Name)))"
+"0","View(pdata)"

@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"R Notebook\"\noutput: html_notebook\n---\n\n```{r}\nlibrary(acs)\nlibrary(rio)\n```\n\nLoading County Health Rankings and Tobacco Localities\n```{r}\nchrankings <- import(\"../../Data/2012 County Health Rankings National Data_v2.xls\")\nt21localities <- import(\"../../Data/tobacco21-localities-new-7.xlsx\")\n```\n\nCleaning Data Up\n```{r}\nma21 <-import(\"../../Data/MAT21.xlsx\")\ncolnames(ma21) <- c(\"Town\", \"T21Date\", \"A\", \"B,\", \"C\")\nma21 <- ma21[,1:2]\nma21\nacton <- c(\"Acton\", \"2015/1/1\")\nma21 <- rbind(acton, ma21)\nma21\nView(ma21)\n```\n\nWriting out the Tobacco Locality Data\n```{r}\nwrite.csv(ma21,\"../Data/MA21Clean.csv\")\n```\n\n",
+    "created" : 1508610874357.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2599654221",
+    "id" : "74E40698",
+    "lastKnownWriteTime" : 1508610917,
+    "last_content_update" : 1508610917849,
+    "path" : "~/Desktop/StatsConsulting/Code/zarni/01_dataimport.Rmd",
+    "project_path" : "Code/zarni/01_dataimport.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

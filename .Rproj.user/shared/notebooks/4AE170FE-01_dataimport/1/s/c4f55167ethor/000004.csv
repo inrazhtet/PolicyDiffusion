@@ -1,0 +1,9 @@
+"0","chrankings <- import(""../../Data/2012 County Health Rankings National Data_v2.xls"")"
+"2","Warning message:
+"
+"2","In scan(file = file, what = what, sep = sep, quote = quote, dec = dec,  :"
+"2","
+ "
+"2"," EOF within quoted string
+"
+"0","t21localities <- import(""../../Data/tobacco21-localities-new-7.xlsx"")"

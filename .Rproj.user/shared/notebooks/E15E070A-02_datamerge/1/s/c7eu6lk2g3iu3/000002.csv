@@ -1,0 +1,4 @@
+"0","MACTownHealth21_intm <- MACTownHealth21[,c(1,119)] #Get the Name of the twon to match and get the T21 year."
+"0","MACTownHealth21_intm <- pdata %>% left_join(MACTownHealth21_intm, by = c(""id"" = ""Name""))"
+"2","joining character vector and factor, coercing into character vector"
+"0","colnames(MACTownHealth21_intm) <- c(""year"", ""TownName"", ""Event"")"

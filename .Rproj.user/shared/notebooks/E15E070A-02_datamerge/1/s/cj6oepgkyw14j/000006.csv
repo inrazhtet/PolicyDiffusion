@@ -1,0 +1,3 @@
+"0","MACTown21 <- MACounty %>% left_join(MAT21, by = c(""Name"" = ""Town""))"
+"0","MACTownHealth21 <- MACTown21 %>% left_join(MAHealth, by = c(""County"", ""County""))"
+"0","head(MACTownHealth21)"

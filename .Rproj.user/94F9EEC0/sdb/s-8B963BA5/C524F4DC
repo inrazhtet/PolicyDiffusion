@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"R Notebook\"\noutput: html_notebook\n---\n\n```{r}\nlibrary(dplyr)\nlibrary(lubridate)\n```\n\n\nData Sets\n```{r}\nMAHealth <- rio::import(\"../../Data/MAHealthRankings.xlsx\")\nMAT21 <- rio::import(\"../../Data/MA21Clean.xlsx\")\nMACounty <- rio::import(\"../../Data/CountyTownMA.xlsx\")\n```\n\nViewing Data Header\n```{r}\nhead(MAHealth) #Junyan's MA Health Rankings\nhead(MAT21) #T21 established counties\nhead(MACounty) #County Information in MA\n```\n\nClean Data\n```{r}\nMAT21 <- MAT21[,c(2:3)]\nhead(MAT21)\n```\n\n\nLeft_Joins\n```{r}\nMACTown21 <- MACounty %>% left_join(MAT21, by = c(\"Name\" = \"Town\"))\nMACTownHealth21 <- MACTown21 %>% left_join(MAHealth, by = c(\"County\", \"County\"))\nhead(MACTownHealth21)\nwrite.csv(MACTownHealth21, \"../../Data/MACTownHealth21.csv\")\n```\n\nGetting the Year of T21\n```{r}\nMACTownHealth21$T21Date <- as.Date(MACTownHealth21$T21Date)\nMACTownHealth21$T21year <- year(MACTownHealth21$T21Date)\nattach(MACTownHealth21)\n#Data needs to be fixed and cleaned or we need to crawl a more updated site\nmax(T21year, na.rm = TRUE)\nmin(T21year, na.rm = TRUE)\nnames(MACTownHealth21)\n```\n\nExpand the data to get into Event History Analysis Form\n```{r}\npdata <- with(MACTownHealth21, expand.grid(T21year = seq(min(T21year, na.rm = TRUE), max(T21year, na.rm = TRUE)),id = unique(Name)))\nView(pdata)\n```\n\nMaking the data\n```{r}\nMACTownHealth21_intm <- MACTownHealth21[,c(1,119)] #Get the Name of the twon to match and get the T21 year.\nMACTownHealth21_intm <- pdata %>% left_join(MACTownHealth21_intm, by = c(\"id\" = \"Name\"))\ncolnames(MACTownHealth21_intm) <- c(\"year\", \"TownName\", \"Event\")\n```\n\nRecoding everything to 0s\n```{r}\nMACTownHealth21_intm[is.na(MACTownHealth21_intm$Event),]$Event <- \"0\"\n```\n\nIf the event happens at a particular year, code it 1. Otherwise, 0.\n```{r}\nMACTownHealth21_intm <- mutate(MACTownHealth21_intm, Event = ifelse(Event == year, \"1\", \"0\"))\n```\n\nJoin this to County Health Data \n```{r}\nMACTownHealth21_intm <- MACTownHealth21_intm %>% left_join(MACTownHealth21, by = c(\"TownName\" = \"Name\"))\nView(MACTownHealth21_intm)\n```\n\nSample Merged Data Set Write Out\n```{r}\nwrite.csv(MACTownHealth21_intm, \"../../Data/FirstAData.csv\")\n```\n\n*\n\n",
+    "created" : 1508610877573.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2124564683",
+    "id" : "C524F4DC",
+    "lastKnownWriteTime" : 1508610981,
+    "last_content_update" : 1508610981984,
+    "path" : "~/Desktop/StatsConsulting/Code/zarni/02_datamerge.Rmd",
+    "project_path" : "Code/zarni/02_datamerge.Rmd",
+    "properties" : {
+        "chunk_output_type" : "inline"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

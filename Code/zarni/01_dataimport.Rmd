@@ -1,0 +1,33 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(acs)
+library(rio)
+```
+
+Loading County Health Rankings and Tobacco Localities
+```{r}
+chrankings <- import("../../Data/2012 County Health Rankings National Data_v2.xls")
+t21localities <- import("../../Data/tobacco21-localities-new-7.xlsx")
+```
+
+Cleaning Data Up
+```{r}
+ma21 <-import("../../Data/MAT21.xlsx")
+colnames(ma21) <- c("Town", "T21Date", "A", "B,", "C")
+ma21 <- ma21[,1:2]
+ma21
+acton <- c("Acton", "2015/1/1")
+ma21 <- rbind(acton, ma21)
+ma21
+View(ma21)
+```
+
+Writing out the Tobacco Locality Data
+```{r}
+write.csv(ma21,"../Data/MA21Clean.csv")
+```
+

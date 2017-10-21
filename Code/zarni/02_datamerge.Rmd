@@ -1,0 +1,87 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(dplyr)
+library(lubridate)
+```
+
+
+Data Sets
+```{r}
+MAHealth <- rio::import("../../Data/MAHealthRankings.xlsx")
+MAT21 <- rio::import("../../Data/MA21Clean.xlsx")
+MACounty <- rio::import("../../Data/CountyTownMA.xlsx")
+```
+
+Viewing Data Header
+```{r}
+head(MAHealth) #Junyan's MA Health Rankings
+head(MAT21) #T21 established counties
+head(MACounty) #County Information in MA
+```
+
+Clean Data
+```{r}
+MAT21 <- MAT21[,c(2:3)]
+head(MAT21)
+```
+
+
+Left_Joins
+```{r}
+MACTown21 <- MACounty %>% left_join(MAT21, by = c("Name" = "Town"))
+MACTownHealth21 <- MACTown21 %>% left_join(MAHealth, by = c("County", "County"))
+head(MACTownHealth21)
+write.csv(MACTownHealth21, "../../Data/MACTownHealth21.csv")
+```
+
+Getting the Year of T21
+```{r}
+MACTownHealth21$T21Date <- as.Date(MACTownHealth21$T21Date)
+MACTownHealth21$T21year <- year(MACTownHealth21$T21Date)
+attach(MACTownHealth21)
+#Data needs to be fixed and cleaned or we need to crawl a more updated site
+max(T21year, na.rm = TRUE)
+min(T21year, na.rm = TRUE)
+names(MACTownHealth21)
+```
+
+Expand the data to get into Event History Analysis Form
+```{r}
+pdata <- with(MACTownHealth21, expand.grid(T21year = seq(min(T21year, na.rm = TRUE), max(T21year, na.rm = TRUE)),id = unique(Name)))
+View(pdata)
+```
+
+Making the data
+```{r}
+MACTownHealth21_intm <- MACTownHealth21[,c(1,119)] #Get the Name of the twon to match and get the T21 year.
+MACTownHealth21_intm <- pdata %>% left_join(MACTownHealth21_intm, by = c("id" = "Name"))
+colnames(MACTownHealth21_intm) <- c("year", "TownName", "Event")
+```
+
+Recoding everything to 0s
+```{r}
+MACTownHealth21_intm[is.na(MACTownHealth21_intm$Event),]$Event <- "0"
+```
+
+If the event happens at a particular year, code it 1. Otherwise, 0.
+```{r}
+MACTownHealth21_intm <- mutate(MACTownHealth21_intm, Event = ifelse(Event == year, "1", "0"))
+```
+
+Join this to County Health Data 
+```{r}
+MACTownHealth21_intm <- MACTownHealth21_intm %>% left_join(MACTownHealth21, by = c("TownName" = "Name"))
+View(MACTownHealth21_intm)
+```
+
+Sample Merged Data Set Write Out
+```{r}
+write.csv(MACTownHealth21_intm, "../../Data/FirstAData.csv")
+```
+
+*
+
