@@ -83,5 +83,4 @@ Sample Merged Data Set Write Out
 write.csv(MACTownHealth21_intm, "../../Data/FirstAData.csv")
 ```
 
-*
 
