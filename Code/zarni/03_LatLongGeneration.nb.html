@@ -283,27 +283,51 @@ View(MA21_lonlat)</code></pre>
 <p>Getting Longitudes and Latitudes</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuY29sbmFtZXMoTUEyMV9sb25sYXRfdG1wKSA8LSBjKFwibG9uXCIsIFwibGF0XCIpXG5cbmBgYCJ9 -->
-<pre class="r"><code>colnames(MA21_lonlat_tmp) &lt;- c(&quot;lon&quot;, &quot;lat&quot;)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTUEyMV9sb25sYXRfdG1wPC0gYXBwbHkoTUEyMV9sb25sYXQsMiwgZ2VvY29kZSlcbk1BMjFfbG9ubGF0X3RtcCA8LSBkYXRhLmZyYW1lKE1BMjFfbG9ubGF0X3RtcClcbmNvbG5hbWVzKE1BMjFfbG9ubGF0X3RtcCkgPC0gYyhcImxvblwiLCBcImxhdFwiKVxuVmlldyhNQTIxX2xvbmxhdF90bXApXG5WaWV3KE1BMjFfbG9ubGF0KVxuYGBgIn0= -->
+<pre class="r"><code>MA21_lonlat_tmp&lt;- apply(MA21_lonlat,2, geocode)
+MA21_lonlat_tmp &lt;- data.frame(MA21_lonlat_tmp)
+colnames(MA21_lonlat_tmp) &lt;- c(&quot;lon&quot;, &quot;lat&quot;)
+View(MA21_lonlat_tmp)
+View(MA21_lonlat)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gYGNvbG5hbWVzPC1gKGAqdG1wKmAsIHZhbHVlID0gYyhcImxvblwiLCBcImxhdFwiKSkgOiBcbiAgYXR0ZW1wdCB0byBzZXQgJ2NvbG5hbWVzJyBvbiBhbiBvYmplY3Qgd2l0aCBsZXNzIHRoYW4gdHdvIGRpbWVuc2lvbnNcbiJ9 -->
-<pre><code>Error in `colnames&lt;-`(`*tmp*`, value = c(&quot;lon&quot;, &quot;lat&quot;)) : 
-  attempt to set 'colnames' on an object with less than two dimensions</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Data Set with Lat Long</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud3JpdGUuY3N2KFwiLi4vLi4vRGF0YS9NQTIxX2xvbmxhdC5jc3ZcIilcblxuYGBgIn0= -->
-<pre class="r"><code>write.csv(&quot;../../Data/MA21_lonlat.csv&quot;)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTUEyMV9sb25sYXQgPC0gY2JpbmQoTUEyMV9sb25sYXQsIE1BMjFfbG9ubGF0X3RtcCRsb24sIE1BMjFfbG9ubGF0X3RtcCRsYXQpXG5jb2xuYW1lcyhNQTIxX2xvbmxhdClbYygyLDMpXSA8LSBjKFwibG9uXCIsIFwibGF0XCIpXG5WaWV3KE1BMjFfbG9ubGF0KVxud3JpdGUuY3N2KE1BMjFfbG9ubGF0LFwiLi4vLi4vRGF0YS9NQTIxX2xvbmxhdC5jc3ZcIilcbmBgYCJ9 -->
+<pre class="r"><code>MA21_lonlat &lt;- cbind(MA21_lonlat, MA21_lonlat_tmp$lon, MA21_lonlat_tmp$lat)
+colnames(MA21_lonlat)[c(2,3)] &lt;- c(&quot;lon&quot;, &quot;lat&quot;)
+View(MA21_lonlat)
+write.csv(MA21_lonlat,&quot;../../Data/MA21_lonlat.csv&quot;)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXCJcIixcInhcIlxuXCIxXCIsXCIuLi8uLi9EYXRhL01BMjFfbG9ubGF0LmNzdlwiXG4ifQ== -->
-<pre><code>&quot;&quot;,&quot;x&quot;
-&quot;1&quot;,&quot;../../Data/MA21_lonlat.csv&quot;</code></pre>
-<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Fill the NAs manually</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI2NoZWNrIGlmIHRoZXJlIGFyZSBhbnkgTkFzIGFuZCBtYW51YWxseSBmaWxsIHRoZW1cbiMxNyBOQXNcblxuI0FtaGVyc3QgICAgICA3Mi41MTk5LCA0Mi4zNzMyXG4jQW5kb3ZlciAgICAgIDcxLjEzNjgsIDQyLjY1ODNcbiNBc2hsYW5kICAgICAgNzEuNDYzNCwgNDIuMjYxMlxuI0JyZXdzdGVyICAgICA3MC4wODI4LCA0MS43NjAxXG4jQnJpbWZpZWxkICAgIDcyLjIwMDUsIDQyLjEyMjVcbiNEZWRoYW0gICAgICAgNzEuMTY3NywgNDIuMjQzNlxuI0Vhc3RvbiAgICAgICA3MS4xMjg3LCA0Mi4wMjQ1XG4jRm94Ym9yb3VnaCAgIDcxLjI0NzgsIDQyLjA2NTRcbiNHbG91Y2VzdGVyICAgNzAuNjYyMCwgNDIuNjE1OVxuI0xlZSAgICAgICAgICA3My4yNDgyLCA0Mi4zMDQyXG4jTWV0aHVlbiAgICAgIDcxLjE5MDksIDQyLjcyNjJcbiNNaWxsaXMgICAgICAgNzEuMzUxNywgNDIuMTY3MFxuI05lZWRoYW0gICAgICA3MS4yMzc4LCA0Mi4yODA5XG4jTm9ydGggQW5kb3ZlcjcxLjEzNTEsIDQyLjY5ODdcbiNOb3J3ZWxsICAgICAgNzAuNzkyOCwgNDIuMTYxNVxuI1NvdXRoYW1wb24gICA3Mi43MzAxLCA0Mi4yMjkzXG4jV2FrZWZpZWxkICAgIDcxLjA3MjMsIDQyLjUwMzlcbmBgYCJ9 -->
+<pre class="r"><code>#check if there are any NAs and manually fill them
+#17 NAs
+
+#Amherst      72.5199, 42.3732
+#Andover      71.1368, 42.6583
+#Ashland      71.4634, 42.2612
+#Brewster     70.0828, 41.7601
+#Brimfield    72.2005, 42.1225
+#Dedham       71.1677, 42.2436
+#Easton       71.1287, 42.0245
+#Foxborough   71.2478, 42.0654
+#Gloucester   70.6620, 42.6159
+#Lee          73.2482, 42.3042
+#Methuen      71.1909, 42.7262
+#Millis       71.3517, 42.1670
+#Needham      71.2378, 42.2809
+#North Andover71.1351, 42.6987
+#Norwell      70.7928, 42.1615
+#Southampon   72.7301, 42.2293
+#Wakefield    71.0723, 42.5039</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Make a map and animate it when you get back</p>
@@ -314,7 +338,7 @@ View(MA21_lonlat)</code></pre>
 <p>FIPS ACS</p>
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKTmVlZCBhbiB1cGRhdGVkIFQyMSBkYXRhIHNldApgYGB7cn0KbGlicmFyeShnZ21hcCkKbGlicmFyeShyaW8pCmBgYAoKSGVscGVyIGZ1bmN0aW9uIHRvIHBhc3RlIE1BIGluCgpgYGB7cn0KcGFzdGVNQSA8LSBmdW5jdGlvbiAoeCl7CiAgeCA8LSBwYXN0ZSh4LCAiTWFzc2FjaHVzZXR0cyIsIHNlcCA9ICIgLCAiICkKICByZXR1cm4gKHgpCn0KYGBgCgpMb2FkIHRoZSBCb3N0b24gQ2l0aWVzIHdpdGggVDIxIGFuZCBwYXN0aW5nIGluIHRoZSBTdGF0ZQpgYGB7cn0KTUEyMSA8LSByaW86OmltcG9ydCgiLi4vLi4vRGF0YS9NQTIxQ2xlYW4ueGxzeCIpCk1BMjFfbG9ubGF0IDwtIGRhdGEuZnJhbWUoTUEyMVssMl0pCmNvbG5hbWVzKE1BMjFfbG9ubGF0KSA8LSBjKCJDaXR5VG93biIpCk1BMjFfbG9ubGF0JENpdHlUb3duCk1BMjFfbG9ubGF0IDwtIGFwcGx5KE1BMjFfbG9ubGF0LDIsIHBhc3RlTUEpClZpZXcoTUEyMV9sb25sYXQpCmBgYAoKR2V0dGluZyBMb25naXR1ZGVzIGFuZCBMYXRpdHVkZXMKYGBge3J9Ck1BMjFfbG9ubGF0X3RtcDwtIGFwcGx5KE1BMjFfbG9ubGF0LDIsIGdlb2NvZGUpCk1BMjFfbG9ubGF0X3RtcCA8LSBkYXRhLmZyYW1lKE1BMjFfbG9ubGF0X3RtcCkKY29sbmFtZXMoTUEyMV9sb25sYXRfdG1wKSA8LSBjKCJsb24iLCAibGF0IikKVmlldyhNQTIxX2xvbmxhdF90bXApClZpZXcoTUEyMV9sb25sYXQpCmBgYAoKRGF0YSBTZXQgd2l0aCBMYXQgTG9uZwpgYGB7cn0KTUEyMV9sb25sYXQgPC0gY2JpbmQoTUEyMV9sb25sYXQsIE1BMjFfbG9ubGF0X3RtcCRsb24sIE1BMjFfbG9ubGF0X3RtcCRsYXQpCmNvbG5hbWVzKE1BMjFfbG9ubGF0KVtjKDIsMyldIDwtIGMoImxvbiIsICJsYXQiKQpWaWV3KE1BMjFfbG9ubGF0KQp3cml0ZS5jc3YoIi4uLy4uL0RhdGEvTUEyMV9sb25sYXQuY3N2IikKYGBgCgoKTWFrZSBhIG1hcCBhbmQgYW5pbWF0ZSBpdCB3aGVuIHlvdSBnZXQgYmFjawoKRnVuY3Rpb24gdG8gY2FsY3VsYXRlIGRpc3RhbmNlIGFuZCBwcm9wb3J0aW9uCgpPdXRwdXQgaXMgdGhlIHJhdGlvIG9mIGNpdGllcyAgdGhhdCBoYXMgVDIxIGluIHRoZSBhcmVhLgoKUmV2aWV3IGZyb20gdGhlIHJlYWRpbmcKCjUwIG1pbGVzCjEwMCBtaWxlcwoKRklQUyBBQ1MKCgoKCgo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKTmVlZCBhbiB1cGRhdGVkIFQyMSBkYXRhIHNldApgYGB7cn0KbGlicmFyeShnZ21hcCkKbGlicmFyeShyaW8pCmBgYAoKSGVscGVyIGZ1bmN0aW9uIHRvIHBhc3RlIE1BIGluCgpgYGB7cn0KcGFzdGVNQSA8LSBmdW5jdGlvbiAoeCl7CiAgeCA8LSBwYXN0ZSh4LCAiTWFzc2FjaHVzZXR0cyIsIHNlcCA9ICIgLCAiICkKICByZXR1cm4gKHgpCn0KYGBgCgpMb2FkIHRoZSBCb3N0b24gQ2l0aWVzIHdpdGggVDIxIGFuZCBwYXN0aW5nIGluIHRoZSBTdGF0ZQpgYGB7cn0KTUEyMSA8LSByaW86OmltcG9ydCgiLi4vLi4vRGF0YS9NQTIxQ2xlYW4ueGxzeCIpCk1BMjFfbG9ubGF0IDwtIGRhdGEuZnJhbWUoTUEyMVssMl0pCmNvbG5hbWVzKE1BMjFfbG9ubGF0KSA8LSBjKCJDaXR5VG93biIpCk1BMjFfbG9ubGF0JENpdHlUb3duCk1BMjFfbG9ubGF0IDwtIGFwcGx5KE1BMjFfbG9ubGF0LDIsIHBhc3RlTUEpClZpZXcoTUEyMV9sb25sYXQpCmBgYAoKR2V0dGluZyBMb25naXR1ZGVzIGFuZCBMYXRpdHVkZXMKYGBge3J9Ck1BMjFfbG9ubGF0X3RtcDwtIGFwcGx5KE1BMjFfbG9ubGF0LDIsIGdlb2NvZGUpCk1BMjFfbG9ubGF0X3RtcCA8LSBkYXRhLmZyYW1lKE1BMjFfbG9ubGF0X3RtcCkKY29sbmFtZXMoTUEyMV9sb25sYXRfdG1wKSA8LSBjKCJsb24iLCAibGF0IikKVmlldyhNQTIxX2xvbmxhdF90bXApClZpZXcoTUEyMV9sb25sYXQpCmBgYAoKRGF0YSBTZXQgd2l0aCBMYXQgTG9uZwpgYGB7cn0KTUEyMV9sb25sYXQgPC0gY2JpbmQoTUEyMV9sb25sYXQsIE1BMjFfbG9ubGF0X3RtcCRsb24sIE1BMjFfbG9ubGF0X3RtcCRsYXQpCmNvbG5hbWVzKE1BMjFfbG9ubGF0KVtjKDIsMyldIDwtIGMoImxvbiIsICJsYXQiKQpWaWV3KE1BMjFfbG9ubGF0KQp3cml0ZS5jc3YoTUEyMV9sb25sYXQsIi4uLy4uL0RhdGEvTUEyMV9sb25sYXQuY3N2IikKYGBgCgpGaWxsIHRoZSBOQXMgbWFudWFsbHkKYGBge3J9CiNjaGVjayBpZiB0aGVyZSBhcmUgYW55IE5BcyBhbmQgbWFudWFsbHkgZmlsbCB0aGVtCiMxNyBOQXMKCiNBbWhlcnN0ICAgICAgNzIuNTE5OSwgNDIuMzczMgojQW5kb3ZlciAgICAgIDcxLjEzNjgsIDQyLjY1ODMKI0FzaGxhbmQgICAgICA3MS40NjM0LCA0Mi4yNjEyCiNCcmV3c3RlciAgICAgNzAuMDgyOCwgNDEuNzYwMQojQnJpbWZpZWxkICAgIDcyLjIwMDUsIDQyLjEyMjUKI0RlZGhhbSAgICAgICA3MS4xNjc3LCA0Mi4yNDM2CiNFYXN0b24gICAgICAgNzEuMTI4NywgNDIuMDI0NQojRm94Ym9yb3VnaCAgIDcxLjI0NzgsIDQyLjA2NTQKI0dsb3VjZXN0ZXIgICA3MC42NjIwLCA0Mi42MTU5CiNMZWUgICAgICAgICAgNzMuMjQ4MiwgNDIuMzA0MgojTWV0aHVlbiAgICAgIDcxLjE5MDksIDQyLjcyNjIKI01pbGxpcyAgICAgICA3MS4zNTE3LCA0Mi4xNjcwCiNOZWVkaGFtICAgICAgNzEuMjM3OCwgNDIuMjgwOQojTm9ydGggQW5kb3ZlcjcxLjEzNTEsIDQyLjY5ODcKI05vcndlbGwgICAgICA3MC43OTI4LCA0Mi4xNjE1CiNTb3V0aGFtcG9uICAgNzIuNzMwMSwgNDIuMjI5MwojV2FrZWZpZWxkICAgIDcxLjA3MjMsIDQyLjUwMzkKYGBgCgoKCk1ha2UgYSBtYXAgYW5kIGFuaW1hdGUgaXQgd2hlbiB5b3UgZ2V0IGJhY2sKCkZ1bmN0aW9uIHRvIGNhbGN1bGF0ZSBkaXN0YW5jZSBhbmQgcHJvcG9ydGlvbgoKT3V0cHV0IGlzIHRoZSByYXRpbyBvZiBjaXRpZXMgIHRoYXQgaGFzIFQyMSBpbiB0aGUgYXJlYS4KClJldmlldyBmcm9tIHRoZSByZWFkaW5nCgo1MCBtaWxlcwoxMDAgbWlsZXMKCkZJUFMgQUNTCg==</div>
 
 
 
