@@ -4,7 +4,7 @@ output: html_notebook
 ---
 
 Libraries
-```{r}
+```{r, warning = FALSE}
 library(readxl)
 library(data.table)
 library(lubridate) #Date Time Object
@@ -16,25 +16,69 @@ library(tigris)
 library(sp)
 library(broom)
 library(dplyr)
+library(rgdal)
 ```
 
+UNUSED: BLOCKGROUP METHOD
 Getting Census Block Group Shape files from Tigiris
 ```{r}
-MA <- block_groups("MA")
+#MA <- block_groups("MA")
 ```
 
 To make it plottable on ggplot
 ```{r}
-MA@data$id <- rownames(MA@data)
-MA.points <- fortify(MA, region = "id")
-MA.df <- MA.points %>% left_join(MA@data, by = c("id", "id"))
+# MA@data$id <- rownames(MA@data)
+# MA.points <- fortify(MA, region = "id")
+# MA.df <- MA.points %>% left_join(MA@data, by = c("id", "id"))
 ```
 
 plotting base map in ggplot
 ```{r}
-ggplot() + 
-  geom_polygon(data = MA.df, aes(x = long, y = lat))
+# ggplot() + 
+#   geom_polygon(data = MA.df, aes(x = long, y = lat, group = group, fill = NA), color = 'black', fill = NA, size = 0.5)
 ```
+END UNUSED: BLOCKGROUP METHOD
+
+
+Methods using:
+
+https://andrewbtran.github.io/NICAR/2017/maps/mapping-census-data.html
+http://www.kevjohnson.org/making-maps-in-r/
+
+ShapeFile of MA by Lower House boundaries
+```{r}
+MA_LH <- readOGR("../../Data/Shapefiles/", layer = "cb_2016_25_sldl_500k")
+MA_LH@data$id <- rownames(MA_LH@data)
+MA_LH.points <- fortify(MA_LH, region = "id")
+MA_LH_data <- MA_LH.points %>% left_join(MA_LH@data, by = c("id", "id"))
+```
+
+Read in the Long and Lat file for T21 for MA
+```{r}
+MA_Lon_Lat <- import("../../Data/MA21_lonlat.csv")
+MA_Lon_Lat
+View(MA_Lon_Lat)
+```
+
+
+
+
+```{r}
+p <- ggplot() +
+    geom_polygon(data = MA_LH_data, aes(x = long, y = lat, group = group), color = "black", size = 0.25, alpha = 0.25, fill = "ivory4")
+print(p)
+```
+
+
+```{r}
+
+```
+
+
+
+
+
+
 
 
 

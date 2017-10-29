@@ -42,8 +42,33 @@ Data Set with Lat Long
 MA21_lonlat <- cbind(MA21_lonlat, MA21_lonlat_tmp$lon, MA21_lonlat_tmp$lat)
 colnames(MA21_lonlat)[c(2,3)] <- c("lon", "lat")
 View(MA21_lonlat)
-write.csv("../../Data/MA21_lonlat.csv")
+write.csv(MA21_lonlat,"../../Data/MA21_lonlat.csv")
 ```
+
+Fill the NAs manually
+```{r}
+#check if there are any NAs and manually fill them
+#17 NAs
+
+#Amherst      72.5199, 42.3732
+#Andover      71.1368, 42.6583
+#Ashland      71.4634, 42.2612
+#Brewster     70.0828, 41.7601
+#Brimfield    72.2005, 42.1225
+#Dedham       71.1677, 42.2436
+#Easton       71.1287, 42.0245
+#Foxborough   71.2478, 42.0654
+#Gloucester   70.6620, 42.6159
+#Lee          73.2482, 42.3042
+#Methuen      71.1909, 42.7262
+#Millis       71.3517, 42.1670
+#Needham      71.2378, 42.2809
+#North Andover71.1351, 42.6987
+#Norwell      70.7928, 42.1615
+#Southampon   72.7301, 42.2293
+#Wakefield    71.0723, 42.5039
+```
+
 
 
 Make a map and animate it when you get back
@@ -58,8 +83,3 @@ Review from the reading
 100 miles
 
 FIPS ACS
-
-
-
-
-
