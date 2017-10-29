@@ -46,7 +46,7 @@ write.csv("../../Data/MA21_lonlat.csv")
 ```
 
 
-
+Make a map and animate it when you get back
 
 Function to calculate distance and proportion
 
@@ -57,7 +57,7 @@ Review from the reading
 50 miles
 100 miles
 
-
+FIPS ACS
 
 
 

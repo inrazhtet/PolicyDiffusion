@@ -1,0 +1,40 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Libraries
+```{r}
+library(readxl)
+library(data.table)
+library(lubridate) #Date Time Object
+library(ggplot2)
+library(stringr) #Regular expression string splitting
+library(rio)
+library(MASS)
+library(tigris)
+library(sp)
+library(broom)
+library(dplyr)
+```
+
+Getting Census Block Group Shape files from Tigiris
+```{r}
+MA <- block_groups("MA")
+```
+
+To make it plottable on ggplot
+```{r}
+MA@data$id <- rownames(MA@data)
+MA.points <- fortify(MA, region = "id")
+MA.df <- MA.points %>% left_join(MA@data, by = c("id", "id"))
+```
+
+plotting base map in ggplot
+```{r}
+ggplot() + 
+  geom_polygon(data = MA.df, aes(x = long, y = lat))
+```
+
+
+
