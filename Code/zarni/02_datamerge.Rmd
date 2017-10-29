@@ -84,3 +84,10 @@ write.csv(MACTownHealth21_intm, "../../Data/FirstAData.csv")
 ```
 
 
+
+```{r}
+MACTownHealth21_intm$year
+MACTownHealth21_intm$Event
+```
+
+

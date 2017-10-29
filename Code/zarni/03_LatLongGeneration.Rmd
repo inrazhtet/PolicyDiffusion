@@ -1,0 +1,65 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Need an updated T21 data set
+```{r}
+library(ggmap)
+library(rio)
+```
+
+Helper function to paste MA in
+
+```{r}
+pasteMA <- function (x){
+  x <- paste(x, "Massachusetts", sep = " , " )
+  return (x)
+}
+```
+
+Load the Boston Cities with T21 and pasting in the State
+```{r}
+MA21 <- rio::import("../../Data/MA21Clean.xlsx")
+MA21_lonlat <- data.frame(MA21[,2])
+colnames(MA21_lonlat) <- c("CityTown")
+MA21_lonlat$CityTown
+MA21_lonlat <- apply(MA21_lonlat,2, pasteMA)
+View(MA21_lonlat)
+```
+
+Getting Longitudes and Latitudes
+```{r}
+MA21_lonlat_tmp<- apply(MA21_lonlat,2, geocode)
+MA21_lonlat_tmp <- data.frame(MA21_lonlat_tmp)
+colnames(MA21_lonlat_tmp) <- c("lon", "lat")
+View(MA21_lonlat_tmp)
+View(MA21_lonlat)
+```
+
+Data Set with Lat Long
+```{r}
+MA21_lonlat <- cbind(MA21_lonlat, MA21_lonlat_tmp$lon, MA21_lonlat_tmp$lat)
+colnames(MA21_lonlat)[c(2,3)] <- c("lon", "lat")
+View(MA21_lonlat)
+write.csv("../../Data/MA21_lonlat.csv")
+```
+
+
+
+
+Function to calculate distance and proportion
+
+Output is the ratio of cities  that has T21 in the area.
+
+Review from the reading
+
+50 miles
+100 miles
+
+
+
+
+
+
+
