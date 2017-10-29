@@ -18,6 +18,6 @@ View(NoT21Towns_tmp)
 View(NoT21Towns)
 
 NoT21Towns_lonlat <- cbind(NoT21Towns, NoT21Towns_tmp$lon, NoT21Towns_tmp$lat)
-colnames(NoT21Towns_lonlat)[c(2,3)] <- c("lon", "lat")
+colnames(NoT21Towns_lonlat) <- c("CityTown","lon", "lat")
 View(NoT21Towns_lonlat)
 write.csv(NoT21Towns_lonlat,"./Data/NoT21Towns_lonlat.csv")
