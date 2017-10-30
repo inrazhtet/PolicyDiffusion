@@ -1,0 +1,53 @@
+---
+title: "R Notebook"
+output:
+  pdf_document: default
+  html_notebook: default
+  html_document: default
+---
+###Code for Creating Student Groups
+
+```{r}
+students <- c("Emanuel", "Dorota", "Bianca", "Karen", "Alan Z", "Clare", "Victoria M", "Daniel J", "David", "Boyeong", "Zarni", "Ellie", "Armanda L", "Brooke Amanda", "Jonathan", "Kaushik", "Martha", "Ekanta", "Laura E", "Chansoo", "William Harry", "Avigail", "Madison", "Erik", "Frankie", "Tana", "Lingfend" )
+students <- data.frame(students)
+colnames(students) <- c("Name")
+```
+
+```{r}
+set.seed(1234)
+rorder <- sample(1:27, replace = F)
+students$nindex <- rorder
+students <- students [order(students$nindex),]
+students$group <- sort(rep(c(1:9), times = 3))
+students <- students[, -2, drop = FALSE]
+write.csv(students, "../../Data/studgroupdsgood.csv")
+```
+
+
+###Rules of the Game
+
+1) Must be in classroom sharp at 9:00 AM. No "I am in the bathroom" or any other creative excuses
+
+###Penalities of the Game
+
+1) Those late (i.e the group) shall be punishable by the following options.
+
+a) must write a paragraph or two of the assigned readings and share it with the class
+
+b) if a is not done by the next class, participation grade shall be deducted
+deduction of participation grades
+
+###Enforcement
+
+*Up for Discussion*
+
+a) As a temporary measure, anyone who get past 9 will be noted down by the friends who know them and names will be sent to Jennifer/Lauren to assign which reading to summarize
+
+b) In the future, there may be a git commit of one line of code with the passcode of the day. Then, we can scan the log (automatic or manual) to see who push the code back up after 9:00 AM.
+
+
+
+
+
+
+
