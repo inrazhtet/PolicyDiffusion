@@ -77,7 +77,6 @@ TownDistance_km[1:10,1:10]
 NEXT LEVEL RATIO GENERATING FUNCTION:
 
 ```{r}
-
 NearbyT21Ratios = function(distmatrix, T21List,distance = 80){
   Indistance = apply(distmatrix,1,function(x) x<distance)
   TotalNear = apply(Indistance,1,function(x) sum(x))
@@ -92,5 +91,30 @@ NearbyT21Ratios = function(distmatrix, T21List,distance = 80){
   
 }
 
-NearbyT21Ratios(TownDistance_km,T21Towns$CityTown,distance = 80)
+T21Ratios = data.frame(NearbyT21Ratios(TownDistance_km,T21Towns$CityTown,distance = 80))
+names(T21Ratios) = "Nearby T21 Ratio"
+T21Ratios
 ```
+
+Let's see if there's anything.
+
+```{r}
+
+T21Ratios$T21[which(row.names(T21Ratios) %in% T21Towns$CityTown)] = 1
+
+'%!in%' <- function(x,y)!('%in%'(x,y))
+
+T21Ratios$T21[which(row.names(T21Ratios) %!in% T21Towns$CityTown)] = 0
+
+require(ggplot2)
+
+ggplot(T21Ratios, aes(x = "Nearby T21 Ratio")) +
+  geom_density(colour="black", aes(group = T21,fill = as.factor(T21)),alpha = 0.15)
+
+
+
+```
+
+
+
+
