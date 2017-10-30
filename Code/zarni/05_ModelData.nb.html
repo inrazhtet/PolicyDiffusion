@@ -142,7 +142,7 @@ $(document).ready(function () {
 </style>
 <script>
 $(document).ready(function () {
-  window.initializeSourceEmbed("04_GISMap.Rmd");
+  window.initializeSourceEmbed("05_ModelData.Rmd");
   window.initializeCodeFolding("show" === "show");
 });
 </script>
@@ -191,81 +191,13 @@ library(rgdal)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>UNUSED: BLOCKGROUP METHOD Getting Census Block Group Shape files from Tigiris</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTUEgPC0gYmxvY2tfZ3JvdXBzKFwiTUFcIilcbmBgYCJ9 -->
-<pre class="r"><code>MA &lt;- block_groups(&quot;MA&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiVXNpbmcgRklQUyBjb2RlICcyNScgZm9yIHN0YXRlICdNQSdcbnRyeWluZyBVUkwgJ2h0dHA6Ly93d3cyLmNlbnN1cy5nb3YvZ2VvL3RpZ2VyL1RJR0VSMjAxNS9CRy90bF8yMDE1XzI1X2JnLnppcCdcbkNvbnRlbnQgdHlwZSAnYXBwbGljYXRpb24vemlwJyBsZW5ndGggODA4MDQ1MiBieXRlcyAoNy43IE1CKVxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cbmRvd25sb2FkZWQgNy43IE1CXG4ifQ== -->
-<pre><code>Using FIPS code '25' for state 'MA'
-trying URL 'http://www2.census.gov/geo/tiger/TIGER2015/BG/tl_2015_25_bg.zip'
-Content type 'application/zip' length 8080452 bytes (7.7 MB)
-==================================================
-downloaded 7.7 MB</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>To make it plottable on ggplot</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTUFAZGF0YSRpZCA8LSByb3duYW1lcyhNQUBkYXRhKVxuTUEucG9pbnRzIDwtIGZvcnRpZnkoTUEsIHJlZ2lvbiA9IFwiaWRcIilcbk1BLmRmIDwtIE1BLnBvaW50cyAlPiUgbGVmdF9qb2luKE1BQGRhdGEsIGJ5ID0gYyhcImlkXCIsIFwiaWRcIikpXG5gYGAifQ== -->
-<pre class="r"><code>MA@data$id &lt;- rownames(MA@data)
-MA.points &lt;- fortify(MA, region = &quot;id&quot;)
-MA.df &lt;- MA.points %&gt;% left_join(MA@data, by = c(&quot;id&quot;, &quot;id&quot;))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>plotting base map in ggplot</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBnZ3Bsb3QoKSArIFxuIyAgIGdlb21fcG9seWdvbihkYXRhID0gTUEuZGYsIGFlcyh4ID0gbG9uZywgeSA9IGxhdCwgZ3JvdXAgPSBncm91cCwgZmlsbCA9IE5BKSwgY29sb3IgPSAnYmxhY2snLCBmaWxsID0gTkEsIHNpemUgPSAwLjUpXG5gYGAifQ== -->
-<pre class="r"><code># ggplot() + 
-#   geom_polygon(data = MA.df, aes(x = long, y = lat, group = group, fill = NA), color = 'black', fill = NA, size = 0.5)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>END UNUSED: BLOCKGROUP METHOD</p>
-<p>Methods using:</p>
-<p><a href="https://andrewbtran.github.io/NICAR/2017/maps/mapping-census-data.html" class="uri">https://andrewbtran.github.io/NICAR/2017/maps/mapping-census-data.html</a> <a href="http://www.kevjohnson.org/making-maps-in-r/" class="uri">http://www.kevjohnson.org/making-maps-in-r/</a></p>
-<p>ShapeFile of MA by Lower House boundaries</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTUFfTEggPC0gZm9ydGlmeShNQV9MSCwgcmVnaW9uID0gXCJHRU9fSURcIilcblxuYGBgIn0= -->
-<pre class="r"><code>MA_LH &lt;- fortify(MA_LH, region = &quot;GEO_ID&quot;)
-</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gYFsuZGF0YS5mcmFtZWAoYXR0ciwgLCByZWdpb24pIDogdW5kZWZpbmVkIGNvbHVtbnMgc2VsZWN0ZWRcbiJ9 -->
-<pre><code>Error in `[.data.frame`(attr, , region) : undefined columns selected</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Read in the Long and Lat file for T21 for MA</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubmFtZXMoTUFfTG9uX0xhdClcblxuYGBgIn0= -->
-<pre class="r"><code>names(MA_Lon_Lat)
-</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiVjFcIiAgICAgICBcIkNpdHlUb3duXCIgXCJsb25cIiAgICAgIFwibGF0XCIgICAgIFxuIn0= -->
-<pre><code>[1] &quot;V1&quot;       &quot;CityTown&quot; &quot;lon&quot;      &quot;lat&quot;     </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2dzYXZlKHAsIGZpbGUgPSBcIi4uLy4uL0RhdGEvTUFUMjEucG5nXCIsIHR5cGUgPSBcImNhaXJvLXBuZ1wiKVxuXG5gYGAifQ== -->
-<pre class="r"><code>ggsave(p, file = &quot;../../Data/MAT21.png&quot;, type = &quot;cairo-png&quot;)
-</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiU2F2aW5nIDcgeCA3IGluIGltYWdlXG4ifQ== -->
-<pre><code>Saving 7 x 7 in image</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQoKTGlicmFyaWVzCmBgYHtyLCB3YXJuaW5nID0gRkFMU0V9CmxpYnJhcnkocmVhZHhsKQpsaWJyYXJ5KGRhdGEudGFibGUpCmxpYnJhcnkobHVicmlkYXRlKSAjRGF0ZSBUaW1lIE9iamVjdApsaWJyYXJ5KGdncGxvdDIpCmxpYnJhcnkoc3RyaW5ncikgI1JlZ3VsYXIgZXhwcmVzc2lvbiBzdHJpbmcgc3BsaXR0aW5nCmxpYnJhcnkocmlvKQpsaWJyYXJ5KE1BU1MpCmxpYnJhcnkodGlncmlzKQpsaWJyYXJ5KHNwKQpsaWJyYXJ5KGJyb29tKQpsaWJyYXJ5KGRwbHlyKQpsaWJyYXJ5KHJnZGFsKQpgYGAKClVOVVNFRDogQkxPQ0tHUk9VUCBNRVRIT0QKR2V0dGluZyBDZW5zdXMgQmxvY2sgR3JvdXAgU2hhcGUgZmlsZXMgZnJvbSBUaWdpcmlzCmBgYHtyfQojTUEgPC0gYmxvY2tfZ3JvdXBzKCJNQSIpCmBgYAoKVG8gbWFrZSBpdCBwbG90dGFibGUgb24gZ2dwbG90CmBgYHtyfQojIE1BQGRhdGEkaWQgPC0gcm93bmFtZXMoTUFAZGF0YSkKIyBNQS5wb2ludHMgPC0gZm9ydGlmeShNQSwgcmVnaW9uID0gImlkIikKIyBNQS5kZiA8LSBNQS5wb2ludHMgJT4lIGxlZnRfam9pbihNQUBkYXRhLCBieSA9IGMoImlkIiwgImlkIikpCmBgYAoKcGxvdHRpbmcgYmFzZSBtYXAgaW4gZ2dwbG90CmBgYHtyfQojIGdncGxvdCgpICsgCiMgICBnZW9tX3BvbHlnb24oZGF0YSA9IE1BLmRmLCBhZXMoeCA9IGxvbmcsIHkgPSBsYXQsIGdyb3VwID0gZ3JvdXAsIGZpbGwgPSBOQSksIGNvbG9yID0gJ2JsYWNrJywgZmlsbCA9IE5BLCBzaXplID0gMC41KQpgYGAKRU5EIFVOVVNFRDogQkxPQ0tHUk9VUCBNRVRIT0QKCgpNZXRob2RzIHVzaW5nOgoKaHR0cHM6Ly9hbmRyZXdidHJhbi5naXRodWIuaW8vTklDQVIvMjAxNy9tYXBzL21hcHBpbmctY2Vuc3VzLWRhdGEuaHRtbApodHRwOi8vd3d3LmtldmpvaG5zb24ub3JnL21ha2luZy1tYXBzLWluLXIvCgpTaGFwZUZpbGUgb2YgTUEgYnkgTG93ZXIgSG91c2UgYm91bmRhcmllcwpgYGB7cn0KTUFfTEggPC0gcmVhZE9HUigiLi4vLi4vRGF0YS9TaGFwZWZpbGVzLyIsIGxheWVyID0gImNiXzIwMTZfMjVfc2xkbF81MDBrIikKTUFfTEhAZGF0YSRpZCA8LSByb3duYW1lcyhNQV9MSEBkYXRhKQpNQV9MSC5wb2ludHMgPC0gZm9ydGlmeShNQV9MSCwgcmVnaW9uID0gImlkIikKTUFfTEhfZGF0YSA8LSBNQV9MSC5wb2ludHMgJT4lIGxlZnRfam9pbihNQV9MSEBkYXRhLCBieSA9IGMoImlkIiwgImlkIikpCmBgYAoKUmVhZCBpbiB0aGUgTG9uZyBhbmQgTGF0IGZpbGUgZm9yIFQyMSBmb3IgTUEKYGBge3J9Ck1BX0xvbl9MYXQgPC0gaW1wb3J0KCIuLi8uLi9EYXRhL01BMjFfbG9ubGF0LmNzdiIpClZpZXcoTUFfTG9uX0xhdCkKY29vcmRzIDwtIE1BX0xvbl9MYXRbLCBjKCJsb24iLCAibGF0IildCiNDaGVjayB0byBzZWUgaWYgd2UgaGF2ZSBhbnkgbWlzc2luZwpjb29yZHMgPC0gY29vcmRzW2NvbXBsZXRlLmNhc2VzKGNvb3JkcyksXQojQ29udmVydCBpdCB0byBTcGF0aWFsIFBvaW50cwpzcCA8LSBTcGF0aWFsUG9pbnRzKGNvb3JkcykKYGBgCgoKCgpgYGB7cn0KcCA8LSBnZ3Bsb3QoKSArCiAgICBnZW9tX3BvbHlnb24oZGF0YSA9IE1BX0xIX2RhdGEsIGFlcyh4ID0gbG9uZywgeSA9IGxhdCwgZ3JvdXAgPSBncm91cCksIGNvbG9yID0gImJsYWNrIiwgc2l6ZSA9IDAuMjUsIGFscGhhID0gMC4yNSwgZmlsbCA9ICJpdm9yeTQiKQpwIDwtIHAgK2dlb21fcG9pbnQoZGF0YSA9IE1BX0xvbl9MYXQsIGFlcyh4ID0gbG9uLCB5ID0gbGF0LCBjb2xvciA9ICJyZWQiKSwgc2l6ZSA9IDAuNSApCnAgPC0gcCArIGNvb3JkX21hcCgpCnAgPC0gcCArIGxhYnMoeD1OVUxMLCB5PU5VTEwsIAogICAgICAgICAgICAgICAgICB0aXRsZT0iVDIxIGNpdGllcyBpbiBNQSIsCiAgICAgICAgICAgICAgICAgIHN1YnRpdGxlPU5VTEwsCiAgICAgICAgICAgICAgICAgIGNhcHRpb249IlNvdXJjZTogVDIxIHdlYnNpdGUiKQpwIDwtIHAgKyB0aGVtZShwbG90LnRpdGxlPWVsZW1lbnRfdGV4dChmYWNlPSJib2xkIiwgZmFtaWx5PSJBcmlhbCIsIHNpemU9MjApKQpwIDwtIHAgKyB0aGVtZShwbG90LmNhcHRpb249ZWxlbWVudF90ZXh0KGZhY2U9ImJvbGQiLCBmYW1pbHk9IkFyaWFsIiwgc2l6ZT0xMCwgY29sb3I9ImdyYXkiLCBtYXJnaW49bWFyZ2luKHQ9MTAsIHI9ODApKSkKcCA8LSBwICsgdGhlbWUobGVnZW5kLnBvc2l0aW9uPSJub25lIikKcCA8LSBwICsgdGhlbWUoYXhpcy5saW5lID0gIGVsZW1lbnRfYmxhbmsoKSwKICAgICAgICAgICAgICAgICAgIGF4aXMudGV4dCA9ICBlbGVtZW50X2JsYW5rKCksCiAgICAgICAgICAgICAgICAgICBheGlzLnRpY2tzID0gIGVsZW1lbnRfYmxhbmsoKSwKICAgICAgICAgICAgICAgICAgIHBhbmVsLmdyaWQubWFqb3IgPSBlbGVtZW50X2JsYW5rKCksCiAgICAgICAgICAgICAgICAgICBwYW5lbC5ncmlkLm1pbm9yID0gZWxlbWVudF9ibGFuaygpLAogICAgICAgICAgICAgICAgICAgcGFuZWwuYm9yZGVyID0gZWxlbWVudF9ibGFuaygpLAogICAgICAgICAgICAgICAgICAgcGFuZWwuYmFja2dyb3VuZCA9IGVsZW1lbnRfYmxhbmsoKSkgCnByaW50KHApCmdnc2F2ZShwLCBmaWxlID0gIi4uLy4uL0RhdGEvTUFUMjEucG5nIiwgdHlwZSA9ICJjYWlyby1wbmciKQoKYGBgCgoKCgoKCgoKCgoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQpMaWJyYXJpZXMKCmBgYHtyLCB3YXJuaW5nID0gRkFMU0V9CmxpYnJhcnkocmVhZHhsKQpsaWJyYXJ5KGRhdGEudGFibGUpCmxpYnJhcnkobHVicmlkYXRlKSAjRGF0ZSBUaW1lIE9iamVjdApsaWJyYXJ5KGdncGxvdDIpCmxpYnJhcnkoc3RyaW5ncikgI1JlZ3VsYXIgZXhwcmVzc2lvbiBzdHJpbmcgc3BsaXR0aW5nCmxpYnJhcnkocmlvKQpsaWJyYXJ5KE1BU1MpCmxpYnJhcnkodGlncmlzKQpsaWJyYXJ5KHNwKQpsaWJyYXJ5KGJyb29tKQpsaWJyYXJ5KGRwbHlyKQpsaWJyYXJ5KHJnZGFsKQpgYGAKCmBgYHtyfQpUMjFSYXRpbyA8LSBpbXBvcnQoIi4uLy4uL0RhdGEvVDIxUmF0aW9zLmNzdiIpClZpZXcoVDIxUmF0aW8pCmBgYAoK</div>
 
 
 

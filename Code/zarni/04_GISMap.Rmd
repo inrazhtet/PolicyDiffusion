@@ -56,8 +56,12 @@ MA_LH_data <- MA_LH.points %>% left_join(MA_LH@data, by = c("id", "id"))
 Read in the Long and Lat file for T21 for MA
 ```{r}
 MA_Lon_Lat <- import("../../Data/MA21_lonlat.csv")
-MA_Lon_Lat
 View(MA_Lon_Lat)
+coords <- MA_Lon_Lat[, c("lon", "lat")]
+#Check to see if we have any missing
+coords <- coords[complete.cases(coords),]
+#Convert it to Spatial Points
+sp <- SpatialPoints(coords)
 ```
 
 
@@ -66,13 +70,28 @@ View(MA_Lon_Lat)
 ```{r}
 p <- ggplot() +
     geom_polygon(data = MA_LH_data, aes(x = long, y = lat, group = group), color = "black", size = 0.25, alpha = 0.25, fill = "ivory4")
+p <- p +geom_point(data = MA_Lon_Lat, aes(x = lon, y = lat, color = "red"), size = 0.5 )
+p <- p + coord_map()
+p <- p + labs(x=NULL, y=NULL, 
+                  title="T21 cities in MA",
+                  subtitle=NULL,
+                  caption="Source: T21 website")
+p <- p + theme(plot.title=element_text(face="bold", family="Arial", size=20))
+p <- p + theme(plot.caption=element_text(face="bold", family="Arial", size=10, color="gray", margin=margin(t=10, r=80)))
+p <- p + theme(legend.position="none")
+p <- p + theme(axis.line =  element_blank(),
+                   axis.text =  element_blank(),
+                   axis.ticks =  element_blank(),
+                   panel.grid.major = element_blank(),
+                   panel.grid.minor = element_blank(),
+                   panel.border = element_blank(),
+                   panel.background = element_blank()) 
 print(p)
-```
-
-
-```{r}
+ggsave(p, file = "../../Data/MAT21.png", type = "cairo-png")
 
 ```
+
+
 
 
 

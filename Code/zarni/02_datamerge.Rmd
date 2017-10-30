@@ -6,6 +6,9 @@ output: html_notebook
 ```{r}
 library(dplyr)
 library(lubridate)
+library(zoo)
+library(data.table)
+library(plyr)
 ```
 
 
@@ -70,7 +73,42 @@ MACTownHealth21_intm[is.na(MACTownHealth21_intm$Event),]$Event <- "0"
 If the event happens at a particular year, code it 1. Otherwise, 0.
 ```{r}
 MACTownHealth21_intm <- mutate(MACTownHealth21_intm, Event = ifelse(Event == year, "1", "0"))
+View(MACTownHealth21_intm)
 ```
+
+Converting Event to Numeric Variable
+```{r}
+MACTownHealth21_intm$Event <- as.numeric(MACTownHealth21_intm$Event)
+```
+
+CumSum to subset the years Town has T21 to get the distance going
+```{r}
+MACTownHealth21_intm_3 <- MACTownHealth21_intm %>% group_by(TownName) %>% mutate(Sub = cumsum(Event))
+```
+
+All the towns has T21
+```{r}
+MACTownDistance <- MACTownHealth21_intm_3[MACTownHealth21_intm_3$Sub ==1,]
+View(MACTownDistance)
+```
+
+Get the Number of Rows by Each Group for Matrix
+```{r}
+MACTownMax <- MACTownDistance %>% group_by(year) %>% tally()
+colnum <- max(MACTownMax$n)
+rownum <- nrow(MACTownMax)
+```
+
+Building list of Cities/Towns with existing file name
+
+
+
+
+
+
+
+
+
 
 Join this to County Health Data 
 ```{r}

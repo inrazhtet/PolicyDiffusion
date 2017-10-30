@@ -1,0 +1,26 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+Libraries
+
+```{r, warning = FALSE}
+library(readxl)
+library(data.table)
+library(lubridate) #Date Time Object
+library(ggplot2)
+library(stringr) #Regular expression string splitting
+library(rio)
+library(MASS)
+library(tigris)
+library(sp)
+library(broom)
+library(dplyr)
+library(rgdal)
+```
+
+```{r}
+T21Ratio <- import("../../Data/T21Ratios.csv")
+View(T21Ratio)
+```
+
