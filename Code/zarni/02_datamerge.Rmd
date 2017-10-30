@@ -86,20 +86,30 @@ CumSum to subset the years Town has T21 to get the distance going
 MACTownHealth21_intm_3 <- MACTownHealth21_intm %>% group_by(TownName) %>% mutate(Sub = cumsum(Event))
 ```
 
-All the towns has T21
+All the towns has T21 after the initial policy year
 ```{r}
 MACTownDistance <- MACTownHealth21_intm_3[MACTownHealth21_intm_3$Sub ==1,]
 View(MACTownDistance)
 ```
 
-Get the Number of Rows by Each Group for Matrix
+Ordering all by years
 ```{r}
-MACTownMax <- MACTownDistance %>% group_by(year) %>% tally()
-colnum <- max(MACTownMax$n)
-rownum <- nrow(MACTownMax)
+MACTownDistance_2 <- MACTownDistance[order(MACTownDistance$year),]
+View(MACTownDistance_2)
 ```
 
-Building list of Cities/Towns with existing file name
+```{r}
+write.csv(MACTownDistance_2,"../../Data/matowndistyear.csv")
+```
+
+
+<!-- Get the Number of Rows by Each Group for Matrix -->
+<!-- ```{r} -->
+<!-- MACTownMax <- MACTownDistance %>% group_by(year) %>% tally() -->
+<!-- colnum <- max(MACTownMax$n) -->
+<!-- rownum <- nrow(MACTownMax) -->
+<!-- ``` -->
+
 
 
 
