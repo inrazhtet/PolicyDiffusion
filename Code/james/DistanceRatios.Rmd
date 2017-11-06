@@ -9,6 +9,7 @@ First, the matrix (borrowing the code from https://eurekastatistics.com/calculat
 ```{r}
 require(Imap)
 require(dplyr)
+require(tibble)
 
 ReplaceLowerOrUpperTriangle <- function(m, triangle.to.replace){
    # If triangle.to.replace="lower", replaces the lower triangle of a square matrix with its upper triangle.
@@ -58,8 +59,8 @@ GeoDistanceInMetresMatrix <- function(df.geopoints){
    return(mat.distances)
 }
 
-T21Towns = import("./Data/MA21_lonlat.csv")
-NoT21Towns = import("./Data/NoT21Towns_lonlat.csv")
+T21Towns = read.csv("~/NYU Coursework/Statistical Consulting_Fall17/PolicyDiffusion/Data/MA21_lonlat.csv")
+NoT21Towns = read.csv("~/NYU Coursework/Statistical Consulting_Fall17/PolicyDiffusion/Data/NoT21Towns_lonlat.csv")
 
 T21Towns$CityTown = gsub(" , Massachusetts","",x = T21Towns$CityTown)
 NoT21Towns$CityTown = gsub(" , Massachusetts","",x = NoT21Towns$CityTown)
@@ -78,43 +79,233 @@ NEXT LEVEL RATIO GENERATING FUNCTION:
 
 ```{r}
 NearbyT21Ratios = function(distmatrix, T21List,distance = 80){
-  Indistance = apply(distmatrix,1,function(x) x<distance)
+  Indistance = apply(distmatrix,1,function(x) x <= distance & x != 0)
   TotalNear = apply(Indistance,1,function(x) sum(x))
   
   NearbyF = function(distcol){
     sum(names(distcol)[which(distcol == TRUE)] %in% T21List)
   }
+  NearbyT21 = apply(Indistance,2,NearbyF)
   
-  NearbyT21 = apply(Indistance,1,NearbyF)
+  RatioMatrix = round(NearbyT21/TotalNear,3)
   
-  return(round(NearbyT21/TotalNear,3))
-  
+  #Fix up and return as data frame
+  RatioMatrix = data.frame(RatioMatrix)
+  names(RatioMatrix) = "Nearby T21 Ratio"
+  require(tibble)
+  RatioMatrix = rownames_to_column(RatioMatrix)
+  names(RatioMatrix)[1] = "CityTown"
+  return(RatioMatrix)
 }
 
-T21Ratios = data.frame(NearbyT21Ratios(TownDistance_km,T21Towns$CityTown,distance = 80))
-names(T21Ratios) = "Nearby T21 Ratio"
+T21Ratios = NearbyT21Ratios(TownDistance_km,T21Towns$CityTown,distance = 80)
 T21Ratios
+
+#write.csv(T21Ratios,"../../Data/T21Ratios.csv")
 ```
 
-Let's see if there's anything.
+We can alternatively look at the top somenumber of closest neighbors instead:
 
 ```{r}
+TopT21Ratios = function(distmatrix, T21List,HowMany = 10){
+  
+  Indistance = matrix(rep(0,ncol(distmatrix)^2),ncol = ncol(distmatrix))
+  for(i in 1:ncol(distmatrix)){
+    Indistance[sort(distmatrix[,i], index.return = TRUE)$ix[2:(HowMany+1)],i] = 1
+  }
+  
+  colnames(Indistance) = colnames(distmatrix)
+  rownames(Indistance) = rownames(distmatrix)
+  
+  
+  NearbyF = function(distcol){
+    sum(names(distcol)[which(distcol == TRUE)] %in% T21List)
+  }
+  NearbyT21 = apply(Indistance,2,NearbyF)
+  
+  RatioMatrix = round(NearbyT21/HowMany,3)
+  
+  #Fix up and return as data frame
+  RatioMatrix = data.frame(RatioMatrix)
+  names(RatioMatrix) = "Nearby T21 Ratio"
+  require(tibble)
+  RatioMatrix = rownames_to_column(RatioMatrix)
+  names(RatioMatrix)[1] = "CityTown"
+  return(RatioMatrix)
+}
 
-T21Ratios$T21[which(row.names(T21Ratios) %in% T21Towns$CityTown)] = 1
-
-'%!in%' <- function(x,y)!('%in%'(x,y))
-
-T21Ratios$T21[which(row.names(T21Ratios) %!in% T21Towns$CityTown)] = 0
-
-require(ggplot2)
-
-ggplot(T21Ratios, aes(x = "Nearby T21 Ratio")) +
-  geom_density(colour="black", aes(group = T21,fill = as.factor(T21)),alpha = 0.15)
-
-
-
+Nearest10Ratio = TopT21Ratios(TownDistance_km,T21Towns$CityTown, HowMany = 10)
+Nearest10Ratio
 ```
 
+Let's get all the years and Merge.
+
+```{r}
+dat = read.csv("~/NYU Coursework/Statistical Consulting_Fall17/PolicyDiffusion/Data/matowndistyear.csv")
+'%!in%' <- function(x,y)!('%in%'(x,y))
 
 
+GenerateRatios = function(yr,dist = 80){
+  T21Towns1 = left_join(dat %>% filter(year %in% yr),AllTowns,by = c('TownName' = 'CityTown'))[,-c(1,2,4,5)]
+  names(T21Towns1)[1]= "CityTown"
+  NoT21Towns1 = AllTowns %>% filter(CityTown %!in% T21Towns1$CityTown)
+  AllTowns1 = rbind(T21Towns1,NoT21Towns1)
+  TownDistance_km1 = round(GeoDistanceInMetresMatrix(AllTowns) / 1000)
+  T21Ratios1 = data.frame(NearbyT21Ratios(TownDistance_km1,T21Towns1$CityTown,distance = dist))
+  return(T21Ratios1)
+}
+
+
+#2005
+T21Ratios2005 = GenerateRatios(2005)
+T21Ratios2005$year = 2005
+
+#2006
+T21Ratios2006 = GenerateRatios(2006)
+T21Ratios2006$year = 2006
+
+#2007
+T21Ratios2007 = GenerateRatios(2007)
+T21Ratios2007$year = 2007
+
+#2008
+T21Ratios2008 = GenerateRatios(2008)
+T21Ratios2008$year = 2008
+
+#2009
+T21Ratios2009 = GenerateRatios(2009)
+T21Ratios2009$year = 2009
+
+#2010
+T21Ratios2010 = GenerateRatios(2010)
+T21Ratios2010$year = 2010
+
+#2011
+T21Ratios2011 = GenerateRatios(2011)
+T21Ratios2011$year = 2011
+
+#2012
+T21Ratios2012 = GenerateRatios(2012)
+T21Ratios2012$year = 2012
+
+#2013
+T21Ratios2013 = GenerateRatios(2013)
+T21Ratios2013$year = 2013
+
+#2014
+T21Ratios2014 = GenerateRatios(2014)
+T21Ratios2014$year = 2014
+
+#2015
+T21Ratios2015 = GenerateRatios(2015)
+T21Ratios2015$year = 2015
+
+#2016
+T21Ratios2016 = GenerateRatios(2016)
+T21Ratios2016$year = 2016
+
+#2017
+T21Ratios2017 = GenerateRatios(2017)
+T21Ratios2017$year = 2017
+
+#2018
+T21Ratios2018 = GenerateRatios(2018)
+T21Ratios2018$year = 2018
+
+
+ALLRATIO = rbind(T21Ratios2005,T21Ratios2006,T21Ratios2007,T21Ratios2008,T21Ratios2009,T21Ratios2010,T21Ratios2011,T21Ratios2012,T21Ratios2013,T21Ratios2014,T21Ratios2015,T21Ratios2016,T21Ratios2017,T21Ratios2018)
+
+
+#write.csv(ALLRATIO,"./AllT21Ratios.csv")
+
+#write.csv(T21Ratios2005,"./T21Ratios2005.csv")
+#write.csv(T21Ratios2006,"./T21Ratios2006.csv")
+#write.csv(T21Ratios2007,"./T21Ratios2007.csv")
+#write.csv(T21Ratios2008,"./T21Ratios2008.csv")
+#write.csv(T21Ratios2009,"./T21Ratios2009.csv")
+#write.csv(T21Ratios2010,"./T21Ratios2010.csv")
+#write.csv(T21Ratios2011,"./T21Ratios2011.csv")
+#write.csv(T21Ratios2012,"./T21Ratios2012.csv")
+#write.csv(T21Ratios2013,"./T21Ratios2013.csv")
+#write.csv(T21Ratios2014,"./T21Ratios2014.csv")
+#write.csv(T21Ratios2015,"./T21Ratios2015.csv")
+#write.csv(T21Ratios2016,"./T21Ratios2016.csv")
+#write.csv(T21Ratios2017,"./T21Ratios2017.csv")
+#write.csv(T21Ratios2018,"./T21Ratios2018.csv")
+```
+
+For the Top 10 Ratios
+
+```{r}
+GenerateTopRatios = function(yr,HowMan = 10){
+  T21Towns1 = left_join(dat %>% filter(year %in% yr),AllTowns,by = c('TownName' = 'CityTown'))[,-c(1,2,4,5)]
+  names(T21Towns1)[1]= "CityTown"
+  NoT21Towns1 = AllTowns %>% filter(CityTown %!in% T21Towns1$CityTown)
+  AllTowns1 = rbind(T21Towns1,NoT21Towns1)
+  TownDistance_km1 = round(GeoDistanceInMetresMatrix(AllTowns) / 1000)
+  T21Ratios1 = TopT21Ratios(TownDistance_km1,T21Towns1$CityTown,HowMany = HowMan)
+  return(T21Ratios1)
+}
+
+
+#2005
+T21TopRatios2005 = GenerateTopRatios(2005)
+T21TopRatios2005$year = 2005
+
+#2006
+T21TopRatios2006 = GenerateTopRatios(2006)
+T21TopRatios2006$year = 2006
+
+#2007
+T21TopRatios2007 = GenerateTopRatios(2007)
+T21TopRatios2007$year = 2007
+
+#2008
+T21TopRatios2008 = GenerateTopRatios(2008)
+T21TopRatios2008$year = 2008
+
+#2009
+T21TopRatios2009 = GenerateTopRatios(2009)
+T21TopRatios2009$year = 2009
+
+#2010
+T21TopRatios2010 = GenerateTopRatios(2010)
+T21TopRatios2010$year = 2010
+
+#2011
+T21TopRatios2011 = GenerateTopRatios(2011)
+T21TopRatios2011$year = 2011
+
+#2012
+T21TopRatios2012 = GenerateTopRatios(2012)
+T21TopRatios2012$year = 2012
+
+#2013
+T21TopRatios2013 = GenerateTopRatios(2013)
+T21TopRatios2013$year = 2013
+
+#2014
+T21TopRatios2014 = GenerateTopRatios(2014)
+T21TopRatios2014$year = 2014
+
+#2015
+T21TopRatios2015 = GenerateTopRatios(2015)
+T21TopRatios2015$year = 2015
+
+#2016
+T21TopRatios2016 = GenerateTopRatios(2016)
+T21TopRatios2016$year = 2016
+
+#2017
+T21TopRatios2017 = GenerateTopRatios(2017)
+T21TopRatios2017$year = 2017
+
+#2018
+T21TopRatios2018 = GenerateTopRatios(2018)
+T21TopRatios2018$year = 2018
+
+ALLTopRATIO = rbind(T21TopRatios2005,T21TopRatios2006,T21TopRatios2007,T21TopRatios2008,T21TopRatios2009,T21TopRatios2010,T21TopRatios2011,T21TopRatios2012,T21TopRatios2013,T21TopRatios2014,T21TopRatios2015,T21TopRatios2016,T21TopRatios2017,T21TopRatios2018)
+
+#write.csv(ALLTopRATIO,"./AllT21TopRatios.csv")
+```
 
