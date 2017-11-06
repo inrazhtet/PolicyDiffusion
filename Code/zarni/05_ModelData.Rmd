@@ -19,84 +19,50 @@ library(dplyr)
 library(rgdal)
 ```
 
-Import the T21 Ratios
-```{r}
-T21Ratio_2005 <- import("../../Data/T21Ratios2005.csv")
-T21Ratio_2006 <- import("../../Data/T21Ratios2006.csv")
-T21Ratio_2007 <- import("../../Data/T21Ratios2007.csv")
-T21Ratio_2008 <- import("../../Data/T21Ratios2008.csv")
-T21Ratio_2009 <- import("../../Data/T21Ratios2009.csv")
-T21Ratio_2010 <- import("../../Data/T21Ratios2010.csv")
-T21Ratio_2011 <- import("../../Data/T21Ratios2011.csv")
-T21Ratio_2012 <- import("../../Data/T21Ratios2012.csv")
-T21Ratio_2013 <- import("../../Data/T21Ratios2013.csv")
-T21Ratio_2014 <- import("../../Data/T21Ratios2014.csv")
-T21Ratio_2015 <- import("../../Data/T21Ratios2015.csv")
-T21Ratio_2016 <- import("../../Data/T21Ratios2016.csv")
-T21Ratio_2017 <- import("../../Data/T21Ratios2017.csv")
-T21Ratio_2018 <- import("../../Data/T21Ratios2018.csv")
-```
-
-
-```{r}
-T21Ratio_2005$year <- rep("2005", times = nrow(T21Ratio_2005))
-T21Ratio_2006$year <- rep("2006", times = nrow(T21Ratio_2006))
-T21Ratio_2007$year <- rep("2007", times = nrow(T21Ratio_2007))
-T21Ratio_2008$year <- rep("2008", times = nrow(T21Ratio_2008))
-T21Ratio_2009$year <- rep("2009", times = nrow(T21Ratio_2009))
-T21Ratio_2010$year <- rep("2010", times = nrow(T21Ratio_2010))
-T21Ratio_2011$year <- rep("2011", times = nrow(T21Ratio_2011))
-T21Ratio_2012$year <- rep("2012", times = nrow(T21Ratio_2012))
-T21Ratio_2013$year <- rep("2013", times = nrow(T21Ratio_2013))
-T21Ratio_2014$year <- rep("2014", times = nrow(T21Ratio_2014))
-T21Ratio_2015$year <- rep("2015", times = nrow(T21Ratio_2015))
-T21Ratio_2016$year <- rep("2016", times = nrow(T21Ratio_2016))
-T21Ratio_2017$year <- rep("2017", times = nrow(T21Ratio_2017))
-T21Ratio_2018$year <- rep("2018", times = nrow(T21Ratio_2018))
-```
-
-
-
-
-
 T21 External Raw Data 
-
 ```{r}
-T21External <- import("../../Data/MACTownHealth21_v5.csv")
+T21External <- import("../../Data/MACTownHealth21_v6.csv")
+View(T21External)
 ```
 
+Remove the 2 cases and remove the years before 2009 and removing 2018 (Data needs to be reformatted again)
 ```{r}
 T21ExtSub <- T21External[T21External$Event != 2, ]
+T21ExtSub <- T21ExtSub[-1]
+T21ExtSub <- subset(T21ExtSub, Year > 2010)
+T21ExtSub <- subset(T21ExtSub, Year < 2018)
+View(T21ExtSub)
+
 write.csv(T21ExtSub, "../../Data/T21ExtSub.csv")
+View(T21ExtSub)
 ```
 
 All T21 Imports
 
 ```{r}
-T21AllRatios <- import("../../Data/AllT21Ratios.csv")
-View(T21AllRatios)
-names(T21AllRatios) [4] <- c("Year")
-names(T21AllRatios)
+AllT21TopRatios <- import("../../Data/AllT21TopRatios.csv")
+View(AllT21TopRatios)
+AllT21TopRatios <- AllT21TopRatios[-1]
+View(AllT21TopRatios)
 ```
 
 Merging the data file
 ```{r}
-T21Merged <- T21ExtSub %>% left_join(T21AllRatios, by = c("Name" ="CityTown", "Year" = "Year"))
+T21Merged <- T21ExtSub %>% left_join(AllT21TopRatios, by = c("Name" ="CityTown", "Year" = "year"))
 ```
 
-
 ```{r}
-names(T21Merged)[c(13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31)] <- c("smokingrank", "dietexerrank", "alcoholuserank","unsafesexrank", "accesscarerank", "qualitycarerank", "educationrank", "employmentrank", "incomerank", "familysupportrank", "communityrank", "airqualityrank", "builtenvironmentrank", "mortalityrank",  "morbidityrank", "hbehaviorrank", "clinicalrank","socialeconrank","physicalenvironrank")
-names(T21Merged)[c(38)] <- c("nearbyt21ratio")
+names(T21Merged) <- gsub(" ","",names(T21Merged))
 ```
 
 ```{r}
 str(T21Merged)
-write.csv(T21Merged, "../../Data/T21Mergedfirstattempt.csv")
+T21Merged$Population <- as.numeric (T21Merged$Population)
+write.csv(T21Merged, "../../Data/T21Mergedsecondattempt.csv")
 ```
 
 ```{r}
-demo <- import("../../Data/T21Mergedfirstattempt.csv")
+demo <- import("../../Data/T21Mergedsecondattempt.csv")
 View(demo)
 dim(demo)
 ```
@@ -111,7 +77,8 @@ T21Merged$Event <- as.numeric(T21Merged$Event)
 
 Probit Model
 ```{r}
-probitmodel <- glm(Event ~ Population + nearbyt21ratio + smokingrank + dietexerrank + alcoholuserank + unsafesexrank + accesscarerank + qualitycarerank + educationrank + employmentrank + incomerank + familysupportrank + communityrank + airqualityrank + builtenvironmentrank + mortalityrank + morbidityrank + hbehaviorrank + clinicalrank + socialeconrank + physicalenvironrank, family = binomial(link = "probit"), data = T21Merged )
+logitmodel <- glm(Event ~  Population + NearbyT21Ratio + PhysicallyUnhealthyDays + MentallyUnhealthyDays + PercentSmokers + PercentExcessiveDrinking + TeenBirthRate + ChlamydiaRate + PercentUnemployed + ViolentCrimeRate   , family = binomial(link = "logit"), data = T21Merged )
 
+summary(logitmodel)
 ```
 

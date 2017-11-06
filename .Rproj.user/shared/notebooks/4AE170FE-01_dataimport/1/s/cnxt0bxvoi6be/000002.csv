@@ -1,3 +1,0 @@
-"0","```r
-write.csv(ma21,\"../Data/MA21Clean.csv\")
-```"

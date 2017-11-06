@@ -1,5 +1,0 @@
-"0","```r
-MAHealth <- rio::import(\"../Data/MAHealthRankings.xlsx\")
-MAT21 <- rio::import(\"../Data/MA21Clean.xlsx\")
-MACounty <- rio::import(\"../Data/CountyTownMA.xlsx\")
-```"
