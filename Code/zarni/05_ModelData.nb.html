@@ -175,20 +175,17 @@ $(document).ready(function () {
 <p>Libraries</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShyZWFkeGwpXG5saWJyYXJ5KGRhdGEudGFibGUpXG5saWJyYXJ5KGx1YnJpZGF0ZSkgI0RhdGUgVGltZSBPYmplY3RcbmxpYnJhcnkoZ2dwbG90MilcbmxpYnJhcnkoc3RyaW5ncikgI1JlZ3VsYXIgZXhwcmVzc2lvbiBzdHJpbmcgc3BsaXR0aW5nXG5saWJyYXJ5KHJpbylcbmxpYnJhcnkoTUFTUylcbmxpYnJhcnkodGlncmlzKVxubGlicmFyeShzcClcbmxpYnJhcnkoYnJvb20pXG5saWJyYXJ5KGRwbHlyKVxubGlicmFyeShyZ2RhbClcbmBgYCJ9 -->
-<pre class="r"><code>library(readxl)
-library(data.table)
-library(lubridate) #Date Time Object
-library(ggplot2)
-library(stringr) #Regular expression string splitting
-library(rio)
-library(MASS)
-library(tigris)
-library(sp)
-library(broom)
-library(dplyr)
-library(rgdal)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShzdGFyZ2F6ZXIpXG5cbmBgYCJ9 -->
+<pre class="r"><code>library(stargazer)
+</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5QbGVhc2UgY2l0ZSBhczogXG5cbiBIbGF2YWMsIE1hcmVrICgyMDE1KS4gc3RhcmdhemVyOiBXZWxsLUZvcm1hdHRlZCBSZWdyZXNzaW9uIGFuZCBTdW1tYXJ5IFN0YXRpc3RpY3MgVGFibGVzLlxuIFIgcGFja2FnZSB2ZXJzaW9uIDUuMi4gaHR0cDovL0NSQU4uUi1wcm9qZWN0Lm9yZy9wYWNrYWdlPXN0YXJnYXplciBcbiJ9 -->
+<pre><code>
+Please cite as: 
+
+ Hlavac, Marek (2015). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2. http://CRAN.R-project.org/package=stargazer </code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>T21 External Raw Data</p>
@@ -320,12 +317,12 @@ dim(demo)
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>Probit Model</p>
+<p>Logit Model</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG9naXRtb2RlbCA8LSBnbG0oRXZlbnQgfiAgUG9wdWxhdGlvbiArIE5lYXJieVQyMVJhdGlvICsgUGh5c2ljYWxseVVuaGVhbHRoeURheXMgKyBNZW50YWxseVVuaGVhbHRoeURheXMgKyBQZXJjZW50U21va2VycyArIFBlcmNlbnRFeGNlc3NpdmVEcmlua2luZyArIFRlZW5CaXJ0aFJhdGUgKyBDaGxhbXlkaWFSYXRlICsgUGVyY2VudFVuZW1wbG95ZWQgKyBWaW9sZW50Q3JpbWVSYXRlICAgLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gXCJsb2dpdFwiKSwgZGF0YSA9IFQyMU1lcmdlZCApXG5zdW1tYXJ5KGxvZ2l0bW9kZWwpXG5gYGAifQ== -->
-<pre class="r"><code>logitmodel &lt;- glm(Event ~  Population + NearbyT21Ratio + PhysicallyUnhealthyDays + MentallyUnhealthyDays + PercentSmokers + PercentExcessiveDrinking + TeenBirthRate + ChlamydiaRate + PercentUnemployed + ViolentCrimeRate   , family = binomial(link = &quot;logit&quot;), data = T21Merged )
-summary(logitmodel)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3RhYmxlXG5cbmBgYCJ9 -->
+<pre class="r"><code>stable
+</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtKGZvcm11bGEgPSBFdmVudCB+IFBvcHVsYXRpb24gKyBOZWFyYnlUMjFSYXRpbyArIFBoeXNpY2FsbHlVbmhlYWx0aHlEYXlzICsgXG4gICAgTWVudGFsbHlVbmhlYWx0aHlEYXlzICsgUGVyY2VudFNtb2tlcnMgKyBQZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgKyBcbiAgICBUZWVuQmlydGhSYXRlICsgQ2hsYW15ZGlhUmF0ZSArIFBlcmNlbnRVbmVtcGxveWVkICsgVmlvbGVudENyaW1lUmF0ZSwgXG4gICAgZmFtaWx5ID0gYmlub21pYWwobGluayA9IFwibG9naXRcIiksIGRhdGEgPSBUMjFNZXJnZWQpXG5cbkRldmlhbmNlIFJlc2lkdWFsczogXG4gICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4ICBcbi0xLjU5ODIgIC0wLjMwODkgIC0wLjIzNDAgIC0wLjE5ODIgICAyLjg2MDUgIFxuXG5Db2VmZmljaWVudHM6XG4gICAgICAgICAgICAgICAgICAgICAgICAgICBFc3RpbWF0ZSBTdGQuIEVycm9yIHogdmFsdWUgUHIoPnx6fCkgICAgXG4oSW50ZXJjZXB0KSAgICAgICAgICAgICAgLTEuNzkxZSswMCAgMS44NTllKzAwICAtMC45NjMgICAwLjMzNTMgICAgXG5Qb3B1bGF0aW9uICAgICAgICAgICAgICAgIDUuODY5ZS0wNiAgNS4zNDJlLTA2ICAgMS4wOTkgICAwLjI3MTkgICAgXG5OZWFyYnlUMjFSYXRpbyAgICAgICAgICAgIDQuNjQyZSswMCAgNS4wMTBlLTAxICAgOS4yNjYgICA8MmUtMTYgKioqXG5QaHlzaWNhbGx5VW5oZWFsdGh5RGF5cyAgIDEuODMwZS0wMSAgNC4yNDVlLTAxICAgMC40MzEgICAwLjY2NjQgICAgXG5NZW50YWxseVVuaGVhbHRoeURheXMgICAgLTEuNzMwZS0wMSAgMy42ODllLTAxICAtMC40NjkgICAwLjYzOTAgICAgXG5QZXJjZW50U21va2VycyAgICAgICAgICAgIDEuNzI5ZS0wMyAgOS4zNDVlLTAyICAgMC4wMTggICAwLjk4NTIgICAgXG5QZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgLTEuMzExZS0wMSAgOS44NjBlLTAyICAtMS4zMzAgICAwLjE4MzUgICAgXG5UZWVuQmlydGhSYXRlICAgICAgICAgICAgLTQuMDMxZS0wMiAgMi45MzdlLTAyICAtMS4zNzMgICAwLjE2OTggICAgXG5DaGxhbXlkaWFSYXRlICAgICAgICAgICAgIDIuOTgzZS0wMyAgMS41OTVlLTAzICAgMS44NzEgICAwLjA2MTQgLiAgXG5QZXJjZW50VW5lbXBsb3llZCAgICAgICAgIDEuNDgyZS0wMSAgMS40OTRlLTAxICAgMC45OTIgICAwLjMyMTEgICAgXG5WaW9sZW50Q3JpbWVSYXRlICAgICAgICAgLTEuMzk2ZS0wMyAgMS42MTNlLTAzICAtMC44NjYgICAwLjM4NjggICAgXG4tLS1cblNpZ25pZi4gY29kZXM6ICAwIOKAmCoqKuKAmSAwLjAwMSDigJgqKuKAmSAwLjAxIOKAmCrigJkgMC4wNSDigJgu4oCZIDAuMSDigJgg4oCZIDFcblxuKERpc3BlcnNpb24gcGFyYW1ldGVyIGZvciBiaW5vbWlhbCBmYW1pbHkgdGFrZW4gdG8gYmUgMSlcblxuICAgIE51bGwgZGV2aWFuY2U6IDk1NC42NyAgb24gMTgzNyAgZGVncmVlcyBvZiBmcmVlZG9tXG5SZXNpZHVhbCBkZXZpYW5jZTogNzQzLjMzICBvbiAxODI3ICBkZWdyZWVzIG9mIGZyZWVkb21cbiAgKDM4MiBvYnNlcnZhdGlvbnMgZGVsZXRlZCBkdWUgdG8gbWlzc2luZ25lc3MpXG5BSUM6IDc2NS4zM1xuXG5OdW1iZXIgb2YgRmlzaGVyIFNjb3JpbmcgaXRlcmF0aW9uczogNlxuIn0= -->
 <pre><code>
@@ -366,9 +363,68 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+<p>Table format</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3RhcmdhemVyKGxvZ2l0bW9kZWwsIHR5cGUgPSBcInRleHRcIilcblxuYGBgIn0= -->
+<pre class="r"><code>stargazer(logitmodel, type = &quot;text&quot;)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoidGhlIGNvbmRpdGlvbiBoYXMgbGVuZ3RoID4gMSBhbmQgb25seSB0aGUgZmlyc3QgZWxlbWVudCB3aWxsIGJlIHVzZWRcbiJ9 -->
+<pre><code>the condition has length &gt; 1 and only the first element will be used</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG49PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIERlcGVuZGVudCB2YXJpYWJsZTogICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBFdmVudCAgICAgICAgICAgXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5Qb3B1bGF0aW9uICAgICAgICAgICAgICAgICAgICAgICAgIDAuMDAwMDEgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKDAuMDAwMDEpICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5OZWFyYnlUMjFSYXRpbyAgICAgICAgICAgICAgICAgICAgNC42NDIqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjUwMSkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5QaHlzaWNhbGx5VW5oZWFsdGh5RGF5cyAgICAgICAgICAgICAwLjE4MyAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjQyNSkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5NZW50YWxseVVuaGVhbHRoeURheXMgICAgICAgICAgICAgIC0wLjE3MyAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjM2OSkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5QZXJjZW50U21va2VycyAgICAgICAgICAgICAgICAgICAgICAwLjAwMiAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjA5MykgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5QZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgICAgICAgICAgIC0wLjEzMSAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjA5OSkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5UZWVuQmlydGhSYXRlICAgICAgICAgICAgICAgICAgICAgIC0wLjA0MCAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjAyOSkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5DaGxhbXlkaWFSYXRlICAgICAgICAgICAgICAgICAgICAgIDAuMDAzKiAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjAwMikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5QZXJjZW50VW5lbXBsb3llZCAgICAgICAgICAgICAgICAgICAwLjE0OCAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjE0OSkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5WaW9sZW50Q3JpbWVSYXRlICAgICAgICAgICAgICAgICAgIC0wLjAwMSAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjAwMikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5Db25zdGFudCAgICAgICAgICAgICAgICAgICAgICAgICAgIC0xLjc5MSAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgxLjg1OSkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5PYnNlcnZhdGlvbnMgICAgICAgICAgICAgICAgICAgICAgICAxLDgzOCAgICAgICAgICAgXG5Mb2cgTGlrZWxpaG9vZCAgICAgICAgICAgICAgICAgICAgLTM3MS42NjUgICAgICAgICAgXG5Ba2Fpa2UgSW5mLiBDcml0LiAgICAgICAgICAgICAgICAgIDc2NS4zMzAgICAgICAgICAgXG49PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG5Ob3RlOiAgICAgICAgICAgICAgICAgICAgKnA8MC4xOyAqKnA8MC4wNTsgKioqcDwwLjAxXG4ifQ== -->
+<pre><code>
+====================================================
+                             Dependent variable:    
+                         ---------------------------
+                                    Event           
+----------------------------------------------------
+Population                         0.00001          
+                                  (0.00001)         
+                                                    
+NearbyT21Ratio                    4.642***          
+                                   (0.501)          
+                                                    
+PhysicallyUnhealthyDays             0.183           
+                                   (0.425)          
+                                                    
+MentallyUnhealthyDays              -0.173           
+                                   (0.369)          
+                                                    
+PercentSmokers                      0.002           
+                                   (0.093)          
+                                                    
+PercentExcessiveDrinking           -0.131           
+                                   (0.099)          
+                                                    
+TeenBirthRate                      -0.040           
+                                   (0.029)          
+                                                    
+ChlamydiaRate                      0.003*           
+                                   (0.002)          
+                                                    
+PercentUnemployed                   0.148           
+                                   (0.149)          
+                                                    
+ViolentCrimeRate                   -0.001           
+                                   (0.002)          
+                                                    
+Constant                           -1.791           
+                                   (1.859)          
+                                                    
+----------------------------------------------------
+Observations                        1,838           
+Log Likelihood                    -371.665          
+Akaike Inf. Crit.                  765.330          
+====================================================
+Note:                    *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQpMaWJyYXJpZXMKCmBgYHtyLCB3YXJuaW5nID0gRkFMU0V9CmxpYnJhcnkocmVhZHhsKQpsaWJyYXJ5KGRhdGEudGFibGUpCmxpYnJhcnkobHVicmlkYXRlKSAjRGF0ZSBUaW1lIE9iamVjdApsaWJyYXJ5KGdncGxvdDIpCmxpYnJhcnkoc3RyaW5ncikgI1JlZ3VsYXIgZXhwcmVzc2lvbiBzdHJpbmcgc3BsaXR0aW5nCmxpYnJhcnkocmlvKQpsaWJyYXJ5KE1BU1MpCmxpYnJhcnkodGlncmlzKQpsaWJyYXJ5KHNwKQpsaWJyYXJ5KGJyb29tKQpsaWJyYXJ5KGRwbHlyKQpsaWJyYXJ5KHJnZGFsKQpgYGAKClQyMSBFeHRlcm5hbCBSYXcgRGF0YSAKYGBge3J9ClQyMUV4dGVybmFsIDwtIGltcG9ydCgiLi4vLi4vRGF0YS9NQUNUb3duSGVhbHRoMjFfdjYuY3N2IikKVmlldyhUMjFFeHRlcm5hbCkKYGBgCgpSZW1vdmUgdGhlIDIgY2FzZXMgYW5kIHJlbW92ZSB0aGUgeWVhcnMgYmVmb3JlIDIwMDkgYW5kIHJlbW92aW5nIDIwMTggKERhdGEgbmVlZHMgdG8gYmUgcmVmb3JtYXR0ZWQgYWdhaW4pCmBgYHtyfQpUMjFFeHRTdWIgPC0gVDIxRXh0ZXJuYWxbVDIxRXh0ZXJuYWwkRXZlbnQgIT0gMiwgXQpUMjFFeHRTdWIgPC0gVDIxRXh0U3ViWy0xXQpUMjFFeHRTdWIgPC0gc3Vic2V0KFQyMUV4dFN1YiwgWWVhciA+IDIwMTApClQyMUV4dFN1YiA8LSBzdWJzZXQoVDIxRXh0U3ViLCBZZWFyIDwgMjAxOCkKVmlldyhUMjFFeHRTdWIpCgp3cml0ZS5jc3YoVDIxRXh0U3ViLCAiLi4vLi4vRGF0YS9UMjFFeHRTdWIuY3N2IikKVmlldyhUMjFFeHRTdWIpCmBgYAoKQWxsIFQyMSBJbXBvcnRzCgpgYGB7cn0KQWxsVDIxVG9wUmF0aW9zIDwtIGltcG9ydCgiLi4vLi4vRGF0YS9BbGxUMjFUb3BSYXRpb3MuY3N2IikKVmlldyhBbGxUMjFUb3BSYXRpb3MpCkFsbFQyMVRvcFJhdGlvcyA8LSBBbGxUMjFUb3BSYXRpb3NbLTFdClZpZXcoQWxsVDIxVG9wUmF0aW9zKQpgYGAKCk1lcmdpbmcgdGhlIGRhdGEgZmlsZQpgYGB7cn0KVDIxTWVyZ2VkIDwtIFQyMUV4dFN1YiAlPiUgbGVmdF9qb2luKEFsbFQyMVRvcFJhdGlvcywgYnkgPSBjKCJOYW1lIiA9IkNpdHlUb3duIiwgIlllYXIiID0gInllYXIiKSkKYGBgCgpgYGB7cn0KbmFtZXMoVDIxTWVyZ2VkKSA8LSBnc3ViKCIgIiwiIixuYW1lcyhUMjFNZXJnZWQpKQpgYGAKCmBgYHtyfQpzdHIoVDIxTWVyZ2VkKQpUMjFNZXJnZWQkUG9wdWxhdGlvbiA8LSBhcy5udW1lcmljIChUMjFNZXJnZWQkUG9wdWxhdGlvbikKd3JpdGUuY3N2KFQyMU1lcmdlZCwgIi4uLy4uL0RhdGEvVDIxTWVyZ2Vkc2Vjb25kYXR0ZW1wdC5jc3YiKQpgYGAKCmBgYHtyfQpkZW1vIDwtIGltcG9ydCgiLi4vLi4vRGF0YS9UMjFNZXJnZWRzZWNvbmRhdHRlbXB0LmNzdiIpClZpZXcoZGVtbykKZGltKGRlbW8pCmBgYAoKCgpgYGB7cn0KVDIxTWVyZ2VkJEV2ZW50IDwtIGFzLm51bWVyaWMoVDIxTWVyZ2VkJEV2ZW50KQpgYGAKCgoKUHJvYml0IE1vZGVsCmBgYHtyfQpsb2dpdG1vZGVsIDwtIGdsbShFdmVudCB+ICBQb3B1bGF0aW9uICsgTmVhcmJ5VDIxUmF0aW8gKyBQaHlzaWNhbGx5VW5oZWFsdGh5RGF5cyArIE1lbnRhbGx5VW5oZWFsdGh5RGF5cyArIFBlcmNlbnRTbW9rZXJzICsgUGVyY2VudEV4Y2Vzc2l2ZURyaW5raW5nICsgVGVlbkJpcnRoUmF0ZSArIENobGFteWRpYVJhdGUgKyBQZXJjZW50VW5lbXBsb3llZCArIFZpb2xlbnRDcmltZVJhdGUgICAsIGZhbWlseSA9IGJpbm9taWFsKGxpbmsgPSAibG9naXQiKSwgZGF0YSA9IFQyMU1lcmdlZCApCgpzdW1tYXJ5KGxvZ2l0bW9kZWwpCmBgYAoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OgogIGh0bWxfbm90ZWJvb2s6IGRlZmF1bHQKICBwZGZfZG9jdW1lbnQ6IGRlZmF1bHQKLS0tCkxpYnJhcmllcwoKYGBge3IsIHdhcm5pbmcgPSBGQUxTRX0KbGlicmFyeShyZWFkeGwpCmxpYnJhcnkoZGF0YS50YWJsZSkKbGlicmFyeShsdWJyaWRhdGUpICNEYXRlIFRpbWUgT2JqZWN0CmxpYnJhcnkoZ2dwbG90MikKbGlicmFyeShzdHJpbmdyKSAjUmVndWxhciBleHByZXNzaW9uIHN0cmluZyBzcGxpdHRpbmcKbGlicmFyeShyaW8pCmxpYnJhcnkoTUFTUykKbGlicmFyeSh0aWdyaXMpCmxpYnJhcnkoc3ApCmxpYnJhcnkoYnJvb20pCmxpYnJhcnkoZHBseXIpCmxpYnJhcnkocmdkYWwpCmxpYnJhcnkoc3RhcmdhemVyKQpgYGAKClQyMSBFeHRlcm5hbCBSYXcgRGF0YSAKYGBge3J9ClQyMUV4dGVybmFsIDwtIGltcG9ydCgiLi4vLi4vRGF0YS9NQUNUb3duSGVhbHRoMjFfdjYuY3N2IikKVmlldyhUMjFFeHRlcm5hbCkKYGBgCgpSZW1vdmUgdGhlIDIgY2FzZXMgYW5kIHJlbW92ZSB0aGUgeWVhcnMgYmVmb3JlIDIwMDkgYW5kIHJlbW92aW5nIDIwMTggKERhdGEgbmVlZHMgdG8gYmUgcmVmb3JtYXR0ZWQgYWdhaW4pCmBgYHtyfQpUMjFFeHRTdWIgPC0gVDIxRXh0ZXJuYWxbVDIxRXh0ZXJuYWwkRXZlbnQgIT0gMiwgXQpUMjFFeHRTdWIgPC0gVDIxRXh0U3ViWy0xXQpUMjFFeHRTdWIgPC0gc3Vic2V0KFQyMUV4dFN1YiwgWWVhciA+IDIwMTApClQyMUV4dFN1YiA8LSBzdWJzZXQoVDIxRXh0U3ViLCBZZWFyIDwgMjAxOCkKVmlldyhUMjFFeHRTdWIpCgp3cml0ZS5jc3YoVDIxRXh0U3ViLCAiLi4vLi4vRGF0YS9UMjFFeHRTdWIuY3N2IikKVmlldyhUMjFFeHRTdWIpCmBgYAoKQWxsIFQyMSBJbXBvcnRzCgpgYGB7cn0KQWxsVDIxVG9wUmF0aW9zIDwtIGltcG9ydCgiLi4vLi4vRGF0YS9BbGxUMjFUb3BSYXRpb3MuY3N2IikKVmlldyhBbGxUMjFUb3BSYXRpb3MpCkFsbFQyMVRvcFJhdGlvcyA8LSBBbGxUMjFUb3BSYXRpb3NbLTFdClZpZXcoQWxsVDIxVG9wUmF0aW9zKQpgYGAKCk1lcmdpbmcgdGhlIGRhdGEgZmlsZQpgYGB7cn0KVDIxTWVyZ2VkIDwtIFQyMUV4dFN1YiAlPiUgbGVmdF9qb2luKEFsbFQyMVRvcFJhdGlvcywgYnkgPSBjKCJOYW1lIiA9IkNpdHlUb3duIiwgIlllYXIiID0gInllYXIiKSkKYGBgCgpgYGB7cn0KbmFtZXMoVDIxTWVyZ2VkKSA8LSBnc3ViKCIgIiwiIixuYW1lcyhUMjFNZXJnZWQpKQpgYGAKCmBgYHtyfQpzdHIoVDIxTWVyZ2VkKQpUMjFNZXJnZWQkUG9wdWxhdGlvbiA8LSBhcy5udW1lcmljIChUMjFNZXJnZWQkUG9wdWxhdGlvbikKd3JpdGUuY3N2KFQyMU1lcmdlZCwgIi4uLy4uL0RhdGEvVDIxTWVyZ2Vkc2Vjb25kYXR0ZW1wdC5jc3YiKQpgYGAKCmBgYHtyfQpkZW1vIDwtIGltcG9ydCgiLi4vLi4vRGF0YS9UMjFNZXJnZWRzZWNvbmRhdHRlbXB0LmNzdiIpClZpZXcoZGVtbykKZGltKGRlbW8pCmBgYAoKCgpgYGB7cn0KVDIxTWVyZ2VkJEV2ZW50IDwtIGFzLm51bWVyaWMoVDIxTWVyZ2VkJEV2ZW50KQpgYGAKCgoKTG9naXQgTW9kZWwKYGBge3J9CmxvZ2l0bW9kZWwgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBOZWFyYnlUMjFSYXRpbyArIFBoeXNpY2FsbHlVbmhlYWx0aHlEYXlzICsgTWVudGFsbHlVbmhlYWx0aHlEYXlzICsgUGVyY2VudFNtb2tlcnMgKyBQZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgKyBUZWVuQmlydGhSYXRlICsgQ2hsYW15ZGlhUmF0ZSArIFBlcmNlbnRVbmVtcGxveWVkICsgVmlvbGVudENyaW1lUmF0ZSAgICwgZmFtaWx5ID0gYmlub21pYWwobGluayA9ICJsb2dpdCIpLCBkYXRhID0gVDIxTWVyZ2VkICkKCnN1bW1hcnkobG9naXRtb2RlbCkKYGBgCgpUYWJsZSBmb3JtYXQKYGBge3J9CnN0YXJnYXplcihsb2dpdG1vZGVsLCB0eXBlID0gInRleHQiKQoKYGBgCgo=</div>
 
 
 

@@ -1,6 +1,8 @@
 ---
 title: "R Notebook"
-output: html_notebook
+output:
+  html_notebook: default
+  pdf_document: default
 ---
 Libraries
 
@@ -17,6 +19,7 @@ library(sp)
 library(broom)
 library(dplyr)
 library(rgdal)
+library(stargazer)
 ```
 
 T21 External Raw Data 
@@ -75,10 +78,16 @@ T21Merged$Event <- as.numeric(T21Merged$Event)
 
 
 
-Probit Model
+Logit Model
 ```{r}
 logitmodel <- glm(Event ~  Population + NearbyT21Ratio + PhysicallyUnhealthyDays + MentallyUnhealthyDays + PercentSmokers + PercentExcessiveDrinking + TeenBirthRate + ChlamydiaRate + PercentUnemployed + ViolentCrimeRate   , family = binomial(link = "logit"), data = T21Merged )
 
 summary(logitmodel)
+```
+
+Table format
+```{r}
+stargazer(logitmodel, type = "text")
+
 ```
 
