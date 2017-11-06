@@ -98,6 +98,7 @@ write.csv(T21Merged, "../../Data/T21Mergedfirstattempt.csv")
 ```{r}
 demo <- import("../../Data/T21Mergedfirstattempt.csv")
 View(demo)
+dim(demo)
 ```
 
 
