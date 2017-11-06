@@ -91,3 +91,20 @@ stargazer(logitmodel, type = "text")
 
 ```
 
+```{r}
+exp(coefficients(logitmodel))
+```
+Should NearbyT21 Ratio be coded as a factor?
+
+```{r}
+T21Merged$FNT21Ratio <- as.factor(T21Merged$NearbyT21Ratio)
+```
+
+Logit Model 2
+```{r}
+logitmodel <- glm(Event ~  Population + FNT21Ratio + PhysicallyUnhealthyDays + MentallyUnhealthyDays + PercentSmokers + PercentExcessiveDrinking + TeenBirthRate + ChlamydiaRate + PercentUnemployed + ViolentCrimeRate   , family = binomial(link = "logit"), data = T21Merged )
+
+summary(logitmodel)
+```
+
+
