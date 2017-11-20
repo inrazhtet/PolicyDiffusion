@@ -23,6 +23,7 @@ Viewing Data Header
 ```{r}
 head(MAHealth) #Junyan's MA Health Rankings
 head(MAT21) #T21 established counties
+nrow(MAT21)
 head(MACounty) #County Information in MA
 ```
 
@@ -37,7 +38,6 @@ Left_Joins
 ```{r}
 MACTown21 <- MACounty %>% left_join(MAT21, by = c("Name" = "Town"))
 MACTownHealth21 <- MACTown21 %>% left_join(MAHealth, by = c("County", "County"))
-head(MACTownHealth21)
 write.csv(MACTownHealth21, "../../Data/MACTownHealth21.csv")
 ```
 
@@ -45,17 +45,22 @@ Getting the Year of T21
 ```{r}
 MACTownHealth21$T21Date <- as.Date(MACTownHealth21$T21Date)
 MACTownHealth21$T21year <- year(MACTownHealth21$T21Date)
-attach(MACTownHealth21)
+#attach(MACTownHealth21)
 #Data needs to be fixed and cleaned or we need to crawl a more updated site
 max(T21year, na.rm = TRUE)
 min(T21year, na.rm = TRUE)
 names(MACTownHealth21)
+#2018 is impossible so, we can fix it here.
+MACTownHealth21[!is.na(MACTownHealth21$T21year) & (MACTownHealth21$T21year == 2018),]$T21year <- 2017
+max(MACTownHealth21$T21year, na.rm = TRUE)
+
 ```
 
 Expand the data to get into Event History Analysis Form
 ```{r}
 pdata <- with(MACTownHealth21, expand.grid(T21year = seq(min(T21year, na.rm = TRUE), max(T21year, na.rm = TRUE)),id = unique(Name)))
 View(pdata)
+length(unique(pdata$id))
 ```
 
 Making the data
@@ -74,32 +79,47 @@ If the event happens at a particular year, code it 1. Otherwise, 0.
 ```{r}
 MACTownHealth21_intm <- mutate(MACTownHealth21_intm, Event = ifelse(Event == year, "1", "0"))
 View(MACTownHealth21_intm)
+length(unique(MACTownHealth21_intm$TownName))
 ```
 
 Converting Event to Numeric Variable
 ```{r}
 MACTownHealth21_intm$Event <- as.numeric(MACTownHealth21_intm$Event)
+MACTownHealth21_final <- MACTownHealth21_intm[MACTownHealth21_intm$Event ==1,]
+#View(MACTownHealth21_final)
+nrow(MACTownHealth21_final)
+write.csv(MACTownHealth21_final, "../../Data/matownyearfinal.csv")
 ```
 
 CumSum to subset the years Town has T21 to get the distance going
 ```{r}
-MACTownHealth21_intm_3 <- MACTownHealth21_intm %>% group_by(TownName) %>% mutate(Sub = cumsum(Event))
+MACTownHealth21_intm_3 <-  MACTownHealth21_intm %>% group_by(TownName) %>% mutate(Sub = cumsum(Event))
+
 ```
 
-All the towns has T21 after the initial policy year
+Something going on with Dplyr code
 ```{r}
-MACTownDistance <- MACTownHealth21_intm_3[MACTownHealth21_intm_3$Sub ==1,]
-View(MACTownDistance)
-```
-
-Ordering all by years
-```{r}
-MACTownDistance_2 <- MACTownDistance[order(MACTownDistance$year),]
-View(MACTownDistance_2)
+MACTownHealth21_intm_3 <- data.table(MACTownHealth21_intm_3, key = "TownName")
+MACTownHealth21_intm_3[, csum := cumsum(Event), by = key(MACTownHealth21_intm_3)]
+View(MACTownHealth21_intm_3)
+MACTownHealth21_intm_3 <- data.frame(MACTownHealth21_intm_3)
+MACTownHealth21_intm_3 <- MACTownHealth21_intm_3[,-4]
 ```
 
 ```{r}
-write.csv(MACTownDistance_2,"../../Data/matowndistyear.csv")
+tmp <- read.csv("../../Data/matowndistyear.csv")
+View(tmp)
+```
+
+```{r}
+MACTownHealth21_intm_4 <- MACTownHealth21_intm_3[order(MACTownHealth21_intm_3$year),]
+View(MACTownHealth21_intm_4)
+MACTownHealth21_intm_4 <- MACTownHealth21_intm_4[!(MACTownHealth21_intm_4$Event == 0 & MACTownHealth21_intm_4$csum == 0),]
+
+```
+
+```{r}
+write.csv(MACTownHealth21_intm_4,"../../Data/matowndistyear_edited.csv")
 ```
 
 
@@ -138,5 +158,6 @@ write.csv(MACTownHealth21_intm, "../../Data/FirstAData.csv")
 MACTownHealth21_intm$year
 MACTownHealth21_intm$Event
 ```
+
 
 

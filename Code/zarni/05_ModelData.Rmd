@@ -20,6 +20,7 @@ library(broom)
 library(dplyr)
 library(rgdal)
 library(stargazer)
+library(stats) #Principal Component Package
 ```
 
 T21 External Raw Data 
@@ -80,9 +81,9 @@ T21Merged$Event <- as.numeric(T21Merged$Event)
 
 Logit Model
 ```{r}
-logitmodel <- glm(Event ~  Population + NearbyT21Ratio + PhysicallyUnhealthyDays + MentallyUnhealthyDays + PercentSmokers + PercentExcessiveDrinking + TeenBirthRate + ChlamydiaRate + PercentUnemployed + ViolentCrimeRate   , family = binomial(link = "logit"), data = T21Merged )
+logitmodel1 <- glm(Event ~  Population + NearbyT21Ratio + PhysicallyUnhealthyDays + MentallyUnhealthyDays + PercentSmokers + PercentExcessiveDrinking + TeenBirthRate + ChlamydiaRate + PercentUnemployed + ViolentCrimeRate   , family = binomial(link = "logit"), data = T21Merged )
 
-summary(logitmodel)
+summary(logitmodel1)
 ```
 
 Table format
@@ -102,9 +103,51 @@ T21Merged$FNT21Ratio <- as.factor(T21Merged$NearbyT21Ratio)
 
 Logit Model 2
 ```{r}
-logitmodel <- glm(Event ~  Population + FNT21Ratio + PhysicallyUnhealthyDays + MentallyUnhealthyDays + PercentSmokers + PercentExcessiveDrinking + TeenBirthRate + ChlamydiaRate + PercentUnemployed + ViolentCrimeRate   , family = binomial(link = "logit"), data = T21Merged )
+logitmodel2 <- glm(Event ~  Population + FNT21Ratio + PhysicallyUnhealthyDays + MentallyUnhealthyDays + PercentSmokers + PercentExcessiveDrinking + TeenBirthRate + ChlamydiaRate + PercentUnemployed + ViolentCrimeRate   , family = binomial(link = "logit"), data = T21Merged )
 
-summary(logitmodel)
+summary(logitmodel2)
 ```
+
+
+```{r}
+stargazer(logitmodel2, type = "text")
+```
+```{r}
+exp(coefficients(logitmodel2))
+```
+
+**Principal Component Analysis**
+
+
+Principal Component Analysis
+
+```{r}
+pca_test <- T21Merged
+```
+
+```{r}
+View(pca_test)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -1,0 +1,313 @@
+<?xml version="1.0"?>
+<!--<!DOCTYPE metadata SYSTEM "http://www.esri.com/metadata/esriprof80.dtd">-->
+<metadata xml:lang="en">
+	<Esri>
+		<CreaDate>20080714</CreaDate>
+		<CreaTime>11081500</CreaTime>
+		<SyncOnce>FALSE</SyncOnce>
+		<SyncDate>20080714</SyncDate>
+		<SyncTime>12335700</SyncTime>
+		<ModDate>20080714</ModDate>
+		<ModTime>12335700</ModTime>
+		<MetaID>{33BB1D88-013D-44DA-9F50-AB6499863281}</MetaID><DataProperties><lineage><Process ToolSource="C:\Program Files\ArcGIS\ArcToolbox\Toolboxes\Data Management Tools.tbx\CopyRows" Date="20080714" Time="123405">CopyRows "Database Connections\phoenix_gisdata.sde\GISDATA.TOWNS_POLY_AREACODE" F:\data\statewide_viewer\gisdata\men1\Political_Boundaries\GISDATA_TOWNS_POLY_AREACODE.dbf #</Process></lineage></DataProperties></Esri>
+	<idinfo>
+		<native Sync="TRUE">Microsoft Windows XP Version 5.1 (Build 2600) Service Pack 2; ESRI ArcCatalog 9.2.5.1450</native>
+		<descript>
+			<langdata Sync="TRUE">en</langdata>
+			<abstract>This table stores telephone area codes for each municipality in the Commonwealth of Massachusetts and reflects the addition of four new "overlay" codes which took effect on April 2, 2001. For more information on the Commonwealth's area codes, see Verizon's Area Codes Lookup Web page at http://www22.verizon.com/areacodes/.</abstract>
+			<purpose>Planning and analysis</purpose>
+		</descript>
+		<citation>
+			<citeinfo>
+				<origin>MassGIS, from data from Verizon</origin>
+				<pubdate>April 2001</pubdate>
+				<ftname Sync="TRUE">GISDATA_TOWNS_POLY_AREACODE</ftname>
+				<geoform Sync="TRUE">tabular digital data</geoform>
+				<title>Massachusetts Telephone Area Codes</title>
+				<onlink Sync="TRUE">\\fire\mtrust\data\statewide_viewer\gisdata\men1\Political_Boundaries\GISDATA_TOWNS_POLY_AREACODE.dbf</onlink></citeinfo>
+		</citation>
+		<timeperd>
+			<current>publication date</current>
+			<timeinfo>
+				<sngdate>
+					<caldate>April 2001</caldate>
+				</sngdate>
+			</timeinfo>
+		</timeperd>
+		<status>
+			<progress>Complete</progress>
+			<update>As needed</update>
+		</status>
+		<spdom>
+			<bounding>
+				<westbc Sync="TRUE">-73.510369</westbc>
+				<eastbc Sync="TRUE">-69.896442</eastbc>
+				<northbc Sync="TRUE">42.808885</northbc>
+				<southbc Sync="TRUE">41.533459</southbc>
+			</bounding>
+			<lboundng>
+				<leftbc Sync="TRUE">35531.537262</leftbc>
+				<rightbc Sync="TRUE">331178.347262</rightbc>
+				<bottombc Sync="TRUE">811151.564606</bottombc>
+				<topbc Sync="TRUE">950919.374606</topbc>
+			</lboundng>
+		</spdom>
+		<keywords>
+			<theme>
+				<themekt>None</themekt>
+				<themekey>telephone</themekey>
+				<themekey>area codes</themekey></theme>
+			<place><placekey>Commonwealth of Massachusetts</placekey><placekey>USA</placekey></place></keywords>
+		<accconst>None</accconst>
+		<useconst>None</useconst>
+		<natvform Sync="TRUE">dBASE Table</natvform>
+		<ptcontac>
+			<cntinfo>
+				<cntorgp>
+					<cntper>Michael Trust</cntper>
+					<cntorg>EOEEA - MassGIS</cntorg>
+				</cntorgp>
+				<cntpos>Sr. Database Administrator</cntpos>
+				<cntaddr>
+					<addrtype>mailing address</addrtype>
+					<address>251 Causeway Street</address>
+					<address>Suite 500</address>
+					<city>Boston</city>
+					<state>MA</state>
+					<postal>02114</postal>
+					<country>USA</country>
+				</cntaddr>
+				<cntvoice>(617) 626-1195</cntvoice>
+				<cntfax>(617) 626-1249</cntfax>
+				<cntemail>michael.trust@state.ma.us</cntemail>
+				<hours>9 AM - 5 PM</hours>
+			</cntinfo>
+		</ptcontac>
+	</idinfo>
+	<dataIdInfo>
+		<envirDesc Sync="TRUE">Microsoft Windows XP Version 5.1 (Build 2600) Service Pack 2; ESRI ArcCatalog 9.2.5.1450</envirDesc>
+		<dataLang>
+			<languageCode Sync="TRUE" value="en">
+			</languageCode>
+		</dataLang>
+		<idCitation>
+			<resTitle Sync="TRUE">GISDATA_TOWNS_POLY_AREACODE</resTitle>
+			<presForm>
+				<PresFormCd Sync="TRUE" value="011">
+				</PresFormCd>
+			</presForm>
+		</idCitation>
+		<spatRpType>
+			<SpatRepTypCd Sync="TRUE" value="001">
+			</SpatRepTypCd>
+		</spatRpType>
+		<dataExt>
+			<geoEle>
+				<GeoBndBox esriExtentType="native">
+					<westBL Sync="TRUE">35531.537262</westBL>
+					<eastBL Sync="TRUE">331178.347262</eastBL>
+					<northBL Sync="TRUE">950919.374606</northBL>
+					<southBL Sync="TRUE">811151.564606</southBL>
+					<exTypeCode Sync="TRUE">1</exTypeCode>
+				</GeoBndBox>
+			</geoEle>
+		</dataExt>
+		<geoBox esriExtentType="decdegrees">
+			<westBL Sync="TRUE">-73.510369</westBL>
+			<eastBL Sync="TRUE">-69.896442</eastBL>
+			<northBL Sync="TRUE">42.808885</northBL>
+			<southBL Sync="TRUE">41.533459</southBL>
+			<exTypeCode Sync="TRUE">1</exTypeCode>
+		</geoBox>
+	</dataIdInfo>
+	<metainfo>
+		<langmeta Sync="TRUE">en</langmeta>
+		<metstdn Sync="TRUE">FGDC Content Standards for Digital Geospatial Metadata</metstdn>
+		<metstdv Sync="TRUE">FGDC-STD-001-1998</metstdv>
+		<mettc Sync="TRUE">local time</mettc>
+		<metc>
+			<cntinfo>
+				<cntorgp>
+					<cntper>Michael Trust</cntper>
+					<cntorg>EOEEA - MassGIS</cntorg>
+				</cntorgp>
+				<cntpos>Sr. Database Administrator</cntpos>
+				<cntaddr>
+					<addrtype>mailing address</addrtype>
+					<address>251 Causeway Street</address>
+					<address>Suite 500</address>
+					<city>Boston</city>
+					<state>MA</state>
+					<postal>02114</postal>
+					<country>USA</country>
+				</cntaddr>
+				<cntvoice>(617) 626-1195</cntvoice>
+				<cntfax>(617) 626-1249</cntfax>
+				<cntemail>michael.trust@state.ma.us</cntemail>
+				<hours>9 AM - 5 PM</hours>
+			</cntinfo>
+		</metc>
+		<metd Sync="TRUE">20080714</metd>
+		<metextns><onlink>http://www.mass.gov/mgis/towns.htm</onlink><metprof>MassGIS Online Documentation</metprof></metextns><metextns><onlink Sync="TRUE">http://www.esri.com/metadata/esriprof80.html</onlink><metprof Sync="TRUE">ESRI Metadata Profile</metprof></metextns></metainfo>
+	<mdLang>
+		<languageCode Sync="TRUE" value="en">
+		</languageCode>
+	</mdLang>
+	<mdStanName Sync="TRUE">ISO 19115 Geographic Information - Metadata</mdStanName>
+	<mdStanVer Sync="TRUE">DIS_ESRI1.0</mdStanVer>
+	<mdChar>
+		<CharSetCd Sync="TRUE" value="004">
+		</CharSetCd>
+	</mdChar>
+	<mdHrLv>
+		<ScopeCd Sync="TRUE" value="005">
+		</ScopeCd>
+	</mdHrLv>
+	<mdHrLvName Sync="TRUE">dataset</mdHrLvName>
+	<distinfo>
+		<resdesc Sync="TRUE">Downloadable Data</resdesc>
+		<distrib>
+			<cntinfo>
+				<cntorgp>
+					<cntper>Michael Trust</cntper>
+					<cntorg>EOEA - MassGIS</cntorg>
+				</cntorgp>
+				<cntpos>Sr. Database Administrator</cntpos>
+				<cntaddr>
+					<addrtype>mailing address</addrtype>
+					<address>251 Causeway Street</address>
+					<address>Suite 500</address>
+					<city>Boston</city>
+					<state>MA</state>
+					<postal>02114</postal>
+					<country>USA</country>
+				</cntaddr>
+				<cntvoice>(617) 626-1000</cntvoice>
+				<cntfax>(617) 626-1249</cntfax>
+				<cntemail>michael.trust@state.ma.us</cntemail>
+				<hours>9 AM - 5 PM</hours>
+			</cntinfo>
+		</distrib>
+		<techpreq>MassGIS' data may be used in many standard GIS software products. See each software's vendor for technical prerequisites.</techpreq>
+		<stdorder>
+			<ordering>To order go to http://www.mass.gov/mgis/order.htm and click on "CD Product". To download go to the datalayer's description page on the MassGIS Web site (see the link in the Online_Linkage or "Who wrote the metadata?" section of this document or go to http://www.mass.gov/mgis/laylist.htm).
+        </ordering>
+			<digform><digtinfo><transize Sync="TRUE">0.000</transize><dssize Sync="TRUE">0.000</dssize></digtinfo></digform></stdorder>
+		<distliab>Please see the "PURCHASE AGREEMENT FOR DIGITAL DATA PROVIDED BY THE MASSACHUSETTS EXECUTIVE OFFICE OF ENVIRONMENTAL AFFAIRS", online at http://www.state.ma.us/mgis/puragree.htm.</distliab>
+		<custom>Please contact MassGIS with questions regarding alternative methods of receiving data.</custom>
+	</distinfo>
+	<distInfo>
+		<distributor>
+			<distorTran>
+				<onLineSrc>
+					<orDesc Sync="TRUE">002</orDesc>
+					<linkage Sync="TRUE">file://\\fire\mtrust\data\statewide_viewer\gisdata\men1\Political_Boundaries\GISDATA_TOWNS_POLY_AREACODE.dbf</linkage>
+					<protocol Sync="TRUE">Local Area Network</protocol>
+				</onLineSrc>
+				<transSize Sync="TRUE">0.000</transSize></distorTran>
+			<distorFormat>
+				<formatName Sync="TRUE">dBASE Table</formatName>
+			</distorFormat>
+		</distributor>
+	</distInfo>
+	<spdoinfo>
+		<direct Sync="TRUE">Vector</direct>
+		<ptvctinf>
+			<esriterm Name="">
+				<efeatyp Sync="TRUE">Simple</efeatyp>
+				<efeageom Sync="TRUE">Polygon</efeageom>
+				<esritopo Sync="TRUE">FALSE</esritopo>
+				<efeacnt Sync="TRUE">44</efeacnt>
+				<spindex Sync="TRUE">TRUE</spindex>
+				<linrefer Sync="TRUE">FALSE</linrefer>
+			</esriterm>
+			<sdtsterm Name="">
+				<sdtstype Sync="TRUE">G-polygon</sdtstype>
+				<ptvctcnt Sync="TRUE">44</ptvctcnt>
+			</sdtsterm>
+		</ptvctinf>
+	</spdoinfo>
+	<spref>
+		<horizsys>
+			<cordsysn>
+				<geogcsn Sync="TRUE">GCS_North_American_1983</geogcsn>
+				<projcsn Sync="TRUE">NAD_1983_StatePlane_Massachusetts_Mainland_FIPS_2001</projcsn>
+			</cordsysn>
+			<planar>
+				<planci>
+					<plance Sync="TRUE">coordinate pair</plance>
+					<plandu Sync="TRUE">meters</plandu>
+					<coordrep>
+						<absres Sync="TRUE">0.010000</absres>
+						<ordres Sync="TRUE">0.010000</ordres>
+					</coordrep>
+				</planci>
+				<gridsys>
+					<gridsysn>State Plane Coordinate System</gridsysn>
+					<spcs>
+						<spcszone Sync="TRUE">2001</spcszone>
+						<lambertc>
+							<stdparll Sync="TRUE">41.716667</stdparll>
+							<stdparll Sync="TRUE">42.683333</stdparll>
+							<longcm Sync="TRUE">-71.500000</longcm>
+							<latprjo Sync="TRUE">41.000000</latprjo>
+							<feast Sync="TRUE">200000.000000</feast>
+							<fnorth Sync="TRUE">750000.000000</fnorth>
+						</lambertc>
+					</spcs>
+				</gridsys>
+			</planar>
+			<geodetic>
+				<horizdn Sync="TRUE">North American Datum of 1983</horizdn>
+				<ellips Sync="TRUE">Geodetic Reference System 80</ellips>
+				<semiaxis Sync="TRUE">6378137.000000</semiaxis>
+				<denflat Sync="TRUE">298.257222</denflat>
+			</geodetic>
+		</horizsys>
+		<vertdef>
+			<altsys>
+				<altenc Sync="TRUE">Explicit elevation coordinate included with horizontal coordinates</altenc>
+				<altres Sync="TRUE">1.000000</altres>
+			</altsys>
+		</vertdef>
+	</spref>
+	<refSysInfo>
+		<RefSystem>
+			<refSysID>
+				<identCode Sync="TRUE">NAD_1983_StatePlane_Massachusetts_Mainland_FIPS_2001</identCode>
+			</refSysID>
+		</RefSystem>
+	</refSysInfo>
+	<spatRepInfo>
+		<VectSpatRep>
+			<topLvl>
+				<TopoLevCd Sync="TRUE" value="001">
+				</TopoLevCd>
+			</topLvl>
+			<geometObjs Name="">
+				<geoObjTyp>
+					<GeoObjTypCd Sync="TRUE" value="001">
+					</GeoObjTypCd>
+				</geoObjTyp>
+				<geoObjCnt Sync="TRUE">44</geoObjCnt>
+			</geometObjs>
+		</VectSpatRep>
+	</spatRepInfo>
+	<eainfo>
+		<detailed Name="GISDATA_TOWNS_POLY_AREACODE">
+			<attr><attrlabl Sync="TRUE">AREACODE</attrlabl><attalias Sync="TRUE">AREACODE</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">8</attwidth><atprecis Sync="TRUE">0</atprecis><attscale Sync="TRUE">0</attscale><attrdef>Telephone area code for each municipality.</attrdef></attr><enttyp>
+				<enttypl Sync="TRUE">GISDATA_TOWNS_POLY_AREACODE</enttypl>
+				<enttypt Sync="TRUE">Table</enttypt>
+				<enttypc Sync="TRUE">0</enttypc>
+			</enttyp>
+			<attr><attrlabl Sync="TRUE">TOWN_ID</attrlabl><attalias Sync="TRUE">TOWN_ID</attalias><attrtype Sync="TRUE">Number</attrtype><attwidth Sync="TRUE">3</attwidth><attrdef>MassGIS unique town identifier (1-351)</attrdef></attr><attr><attrlabl Sync="TRUE">OID</attrlabl><attalias Sync="TRUE">OID</attalias><attrtype Sync="TRUE">String</attrtype><attwidth Sync="TRUE">8</attwidth><attrdef Sync="TRUE">Internal feature number.</attrdef><attrdefs Sync="TRUE">ESRI</attrdefs><attrdomv><udom Sync="TRUE">Sequential unique whole numbers that are automatically generated.</udom></attrdomv></attr></detailed>
+	</eainfo>
+	<mdDateSt Sync="TRUE">20080714</mdDateSt>
+	<dataqual>
+		<lineage>
+			<srcinfo>
+				<srccontr>See the "Abstract" section of this document for details.</srccontr>
+			</srcinfo>
+		</lineage>
+	</dataqual>
+</metadata>

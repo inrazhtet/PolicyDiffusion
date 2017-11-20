@@ -175,9 +175,98 @@ $(document).ready(function () {
 <p>Libraries</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShzdGFyZ2F6ZXIpXG5cbmBgYCJ9 -->
-<pre class="r"><code>library(stargazer)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShyZWFkeGwpXG5saWJyYXJ5KGRhdGEudGFibGUpXG5gYGAifQ== -->
+<pre class="r"><code>library(readxl)
+library(data.table)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiZGF0YS50YWJsZSAxLjEwLjBcbioqKioqKioqKipcblRoaXMgaW5zdGFsbGF0aW9uIG9mIGRhdGEudGFibGUgaGFzIG5vdCBkZXRlY3RlZCBPcGVuTVAgc3VwcG9ydC4gSXQgd2lsbCBzdGlsbCB3b3JrIGJ1dCBpbiBzaW5nbGUtdGhyZWFkZWQgbW9kZS5cbioqKioqKioqKipcbiAgVGhlIGZhc3Rlc3Qgd2F5IHRvIGxlYXJuIChieSBkYXRhLnRhYmxlIGF1dGhvcnMpOiBodHRwczovL3d3dy5kYXRhY2FtcC5jb20vY291cnNlcy9kYXRhLWFuYWx5c2lzLXRoZS1kYXRhLXRhYmxlLXdheVxuICBEb2N1bWVudGF0aW9uOiA/ZGF0YS50YWJsZSwgZXhhbXBsZShkYXRhLnRhYmxlKSBhbmQgYnJvd3NlVmlnbmV0dGVzKFwiZGF0YS50YWJsZVwiKVxuICBSZWxlYXNlIG5vdGVzLCB2aWRlb3MgYW5kIHNsaWRlczogaHR0cDovL3ItZGF0YXRhYmxlLmNvbVxuIn0= -->
+<pre><code>data.table 1.10.0
+**********
+This installation of data.table has not detected OpenMP support. It will still work but in single-threaded mode.
+**********
+  The fastest way to learn (by data.table authors): https://www.datacamp.com/courses/data-analysis-the-data-table-way
+  Documentation: ?data.table, example(data.table) and browseVignettes(&quot;data.table&quot;)
+  Release notes, videos and slides: http://r-datatable.com</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShsdWJyaWRhdGUpICNEYXRlIFRpbWUgT2JqZWN0XG5gYGAifQ== -->
+<pre class="r"><code>library(lubridate) #Date Time Object</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5BdHRhY2hpbmcgcGFja2FnZTog4oCYbHVicmlkYXRl4oCZXG5cblRoZSBmb2xsb3dpbmcgb2JqZWN0cyBhcmUgbWFza2VkIGZyb20g4oCYcGFja2FnZTpkYXRhLnRhYmxl4oCZOlxuXG4gICAgaG91ciwgaXNvd2VlaywgbWRheSwgbWludXRlLCBtb250aCwgcXVhcnRlcixcbiAgICBzZWNvbmQsIHdkYXksIHdlZWssIHlkYXksIHllYXJcblxuVGhlIGZvbGxvd2luZyBvYmplY3QgaXMgbWFza2VkIGZyb20g4oCYcGFja2FnZTpiYXNl4oCZOlxuXG4gICAgZGF0ZVxuIn0= -->
+<pre><code>
+Attaching package: ‘lubridate’
+
+The following objects are masked from ‘package:data.table’:
+
+    hour, isoweek, mday, minute, month, quarter,
+    second, wday, week, yday, year
+
+The following object is masked from ‘package:base’:
+
+    date</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShnZ3Bsb3QyKVxubGlicmFyeShzdHJpbmdyKSAjUmVndWxhciBleHByZXNzaW9uIHN0cmluZyBzcGxpdHRpbmdcbmxpYnJhcnkocmlvKVxubGlicmFyeShNQVNTKVxubGlicmFyeSh0aWdyaXMpXG5gYGAifQ== -->
+<pre class="r"><code>library(ggplot2)
+library(stringr) #Regular expression string splitting
+library(rio)
+library(MASS)
+library(tigris)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiQXMgb2YgdmVyc2lvbiAwLjUuMSwgdGlncmlzIGRvZXMgbm90IGNhY2hlIGRvd25sb2FkZWQgZGF0YSBieSBkZWZhdWx0LiBUbyBlbmFibGUgY2FjaGluZyBvZiBkYXRhLCBzZXQgYG9wdGlvbnModGlncmlzX3VzZV9jYWNoZSA9IFRSVUUpYCBpbiB5b3VyIFIgc2NyaXB0IG9yIC5ScHJvZmlsZS5cblxuQXR0YWNoaW5nIHBhY2thZ2U6IOKAmHRpZ3Jpc+KAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOmdyYXBoaWNz4oCZOlxuXG4gICAgcGxvdFxuIn0= -->
+<pre><code>As of version 0.5.1, tigris does not cache downloaded data by default. To enable caching of data, set `options(tigris_use_cache = TRUE)` in your R script or .Rprofile.
+
+Attaching package: ‘tigris’
+
+The following object is masked from ‘package:graphics’:
+
+    plot</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShzcClcbmxpYnJhcnkoYnJvb20pXG5saWJyYXJ5KGRwbHlyKVxuYGBgIn0= -->
+<pre class="r"><code>library(sp)
+library(broom)
+library(dplyr)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLVxuZGF0YS50YWJsZSArIGRwbHlyIGNvZGUgbm93IGxpdmVzIGluIGR0cGx5ci5cblBsZWFzZSBsaWJyYXJ5KGR0cGx5cikhXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5cbkF0dGFjaGluZyBwYWNrYWdlOiDigJhkcGx5cuKAmVxuXG5UaGUgZm9sbG93aW5nIG9iamVjdCBpcyBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOk1BU1PigJk6XG5cbiAgICBzZWxlY3RcblxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOmx1YnJpZGF0ZeKAmTpcblxuICAgIGludGVyc2VjdCwgc2V0ZGlmZiwgdW5pb25cblxuVGhlIGZvbGxvd2luZyBvYmplY3RzIGFyZSBtYXNrZWQgZnJvbSDigJhwYWNrYWdlOmRhdGEudGFibGXigJk6XG5cbiAgICBiZXR3ZWVuLCBmaXJzdCwgbGFzdFxuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tIOKAmHBhY2thZ2U6c3RhdHPigJk6XG5cbiAgICBmaWx0ZXIsIGxhZ1xuXG5UaGUgZm9sbG93aW5nIG9iamVjdHMgYXJlIG1hc2tlZCBmcm9tIOKAmHBhY2thZ2U6YmFzZeKAmTpcblxuICAgIGludGVyc2VjdCwgc2V0ZGlmZiwgc2V0ZXF1YWwsIHVuaW9uXG4ifQ== -->
+<pre><code>----------------------------------------------------------
+data.table + dplyr code now lives in dtplyr.
+Please library(dtplyr)!
+----------------------------------------------------------
+
+Attaching package: ‘dplyr’
+
+The following object is masked from ‘package:MASS’:
+
+    select
+
+The following objects are masked from ‘package:lubridate’:
+
+    intersect, setdiff, union
+
+The following objects are masked from ‘package:data.table’:
+
+    between, first, last
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShyZ2RhbClcbmBgYCJ9 -->
+<pre class="r"><code>library(rgdal)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoicmdkYWw6IHZlcnNpb246IDEuMi0xMywgKFNWTiByZXZpc2lvbiA2ODYpXG4gR2Vvc3BhdGlhbCBEYXRhIEFic3RyYWN0aW9uIExpYnJhcnkgZXh0ZW5zaW9ucyB0byBSIHN1Y2Nlc3NmdWxseSBsb2FkZWRcbiBMb2FkZWQgR0RBTCBydW50aW1lOiBHREFMIDIuMS4yLCByZWxlYXNlZCAyMDE2LzEwLzI0XG4gUGF0aCB0byBHREFMIHNoYXJlZCBmaWxlczogL0xpYnJhcnkvRnJhbWV3b3Jrcy9SLmZyYW1ld29yay9WZXJzaW9ucy8zLjMvUmVzb3VyY2VzL2xpYnJhcnkvc2YvZ2RhbFxuIExvYWRlZCBQUk9KLjQgcnVudGltZTogUmVsLiA0LjkuMSwgMDQgTWFyY2ggMjAxNSwgW1BKX1ZFUlNJT046IDQ5MV1cbiBQYXRoIHRvIFBST0ouNCBzaGFyZWQgZmlsZXM6IC9MaWJyYXJ5L0ZyYW1ld29ya3MvUi5mcmFtZXdvcmsvVmVyc2lvbnMvMy4zL1Jlc291cmNlcy9saWJyYXJ5L3NmL3Byb2pcbiBMaW5raW5nIHRvIHNwIHZlcnNpb246IDEuMi01IFxuIn0= -->
+<pre><code>rgdal: version: 1.2-13, (SVN revision 686)
+ Geospatial Data Abstraction Library extensions to R successfully loaded
+ Loaded GDAL runtime: GDAL 2.1.2, released 2016/10/24
+ Path to GDAL shared files: /Library/Frameworks/R.framework/Versions/3.3/Resources/library/sf/gdal
+ Loaded PROJ.4 runtime: Rel. 4.9.1, 04 March 2015, [PJ_VERSION: 491]
+ Path to PROJ.4 shared files: /Library/Frameworks/R.framework/Versions/3.3/Resources/library/sf/proj
+ Linking to sp version: 1.2-5 </code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShzdGFyZ2F6ZXIpXG5gYGAifQ== -->
+<pre class="r"><code>library(stargazer)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiXG5QbGVhc2UgY2l0ZSBhczogXG5cbiBIbGF2YWMsIE1hcmVrICgyMDE1KS4gc3RhcmdhemVyOiBXZWxsLUZvcm1hdHRlZCBSZWdyZXNzaW9uIGFuZCBTdW1tYXJ5IFN0YXRpc3RpY3MgVGFibGVzLlxuIFIgcGFja2FnZSB2ZXJzaW9uIDUuMi4gaHR0cDovL0NSQU4uUi1wcm9qZWN0Lm9yZy9wYWNrYWdlPXN0YXJnYXplciBcbiJ9 -->
 <pre><code>
@@ -191,54 +280,56 @@ Please cite as:
 <p>T21 External Raw Data</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxRXh0ZXJuYWwgPC0gaW1wb3J0KFwiLi4vLi4vRGF0YS9NQUNUb3duSGVhbHRoMjFfdjYuY3N2XCIpXG5WaWV3KFQyMUV4dGVybmFsKVxuYGBgIn0= -->
+<pre class="r"><code>T21External &lt;- import(&quot;../../Data/MACTownHealth21_v6.csv&quot;)
+View(T21External)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Remove the 2 cases and remove the years before 2009 and removing 2018 (Data needs to be reformatted again)</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGVuZ3RoKHVuaXF1ZShUMjFFeHRTdWIkTmFtZSkpXG5cbmBgYCJ9 -->
-<pre class="r"><code>length(unique(T21ExtSub$Name))
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxRXh0U3ViIDwtIFQyMUV4dGVybmFsW1QyMUV4dGVybmFsJEV2ZW50ICE9IDIsIF1cblQyMUV4dFN1YiA8LSBUMjFFeHRTdWJbLTFdXG5UMjFFeHRTdWIgPC0gc3Vic2V0KFQyMUV4dFN1YiwgWWVhciA+IDIwMTApXG5UMjFFeHRTdWIgPC0gc3Vic2V0KFQyMUV4dFN1YiwgWWVhciA8IDIwMTgpXG5WaWV3KFQyMUV4dFN1YilcbndyaXRlLmNzdihUMjFFeHRTdWIsIFwiLi4vLi4vRGF0YS9UMjFFeHRTdWIuY3N2XCIpXG5WaWV3KFQyMUV4dFN1YilcbmBgYCJ9 -->
+<pre class="r"><code>T21ExtSub &lt;- T21External[T21External$Event != 2, ]
+T21ExtSub &lt;- T21ExtSub[-1]
+T21ExtSub &lt;- subset(T21ExtSub, Year &gt; 2010)
+T21ExtSub &lt;- subset(T21ExtSub, Year &lt; 2018)
+View(T21ExtSub)
+write.csv(T21ExtSub, &quot;../../Data/T21ExtSub.csv&quot;)
+View(T21ExtSub)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDM1MVxuIn0= -->
-<pre><code>[1] 351</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>All T21 Imports</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuQWxsVDIxVG9wUmF0aW9zIDwtIGltcG9ydChcIi4uLy4uL0RhdGEvQWxsVDIxVG9wUmF0aW9zLmNzdlwiKVxuVmlldyhBbGxUMjFUb3BSYXRpb3MpXG5BbGxUMjFUb3BSYXRpb3MgPC0gQWxsVDIxVG9wUmF0aW9zWy0xXVxuVmlldyhBbGxUMjFUb3BSYXRpb3MpXG5gYGAifQ== -->
+<pre class="r"><code>AllT21TopRatios &lt;- import(&quot;../../Data/AllT21TopRatios.csv&quot;)
+View(AllT21TopRatios)
+AllT21TopRatios &lt;- AllT21TopRatios[-1]
+View(AllT21TopRatios)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Merging the data file</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxTWVyZ2VkIDwtIFQyMUV4dFN1YiAlPiUgbGVmdF9qb2luKEFsbFQyMVRvcFJhdGlvcywgYnkgPSBjKFwiTmFtZVwiID1cIkNpdHlUb3duXCIsIFwiWWVhclwiID0gXCJZZWFyXCIpKVxuXG5gYGAifQ== -->
-<pre class="r"><code>T21Merged &lt;- T21ExtSub %&gt;% left_join(AllT21TopRatios, by = c(&quot;Name&quot; =&quot;CityTown&quot;, &quot;Year&quot; = &quot;Year&quot;))
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxTWVyZ2VkIDwtIFQyMUV4dFN1YiAlPiUgbGVmdF9qb2luKEFsbFQyMVRvcFJhdGlvcywgYnkgPSBjKFwiTmFtZVwiID1cIkNpdHlUb3duXCIsIFwiWWVhclwiID0gXCJ5ZWFyXCIpKVxuYGBgIn0= -->
+<pre class="r"><code>T21Merged &lt;- T21ExtSub %&gt;% left_join(AllT21TopRatios, by = c(&quot;Name&quot; =&quot;CityTown&quot;, &quot;Year&quot; = &quot;year&quot;))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3I6ICdZZWFyJyBjb2x1bW4gbm90IGZvdW5kIGluIGxocywgY2Fubm90IGpvaW5cbiJ9 -->
-<pre><code>Error: 'Year' column not found in lhs, cannot join</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGFwcGx5KG5hbWVzKFQyMU1lcmdlZCksIGZ1bmN0aW9uKHgpIGdzdWIoXCIgXCIsXCJcIiwgeCkpXG5cbmBgYCJ9 -->
-<pre class="r"><code>tapply(names(T21Merged), function(x) gsub(&quot; &quot;,&quot;&quot;, x))
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubmFtZXMoVDIxTWVyZ2VkKSA8LSBnc3ViKFwiIFwiLFwiXCIsbmFtZXMoVDIxTWVyZ2VkKSlcbmBgYCJ9 -->
+<pre class="r"><code>names(T21Merged) &lt;- gsub(&quot; &quot;,&quot;&quot;,names(T21Merged))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gdW5pcXVlLmRlZmF1bHQoeCwgbm1heCA9IG5tYXgpIDogXG4gIHVuaXF1ZSgpIGFwcGxpZXMgb25seSB0byB2ZWN0b3JzXG4ifQ== -->
-<pre><code>Error in unique.default(x, nmax = nmax) : 
-  unique() applies only to vectors</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3RyKFQyMU1lcmdlZClcblxuYGBgIn0= -->
-<pre class="r"><code>str(T21Merged)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3RyKFQyMU1lcmdlZClcbmBgYCJ9 -->
+<pre class="r"><code>str(T21Merged)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiJ2RhdGEuZnJhbWUnOlx0MjIyMCBvYnMuIG9mICA0MiB2YXJpYWJsZXM6XG4gJCBZZWFyICAgICAgICAgICAgICAgICAgICAgICAgICA6IGludCAgMjAxMSAyMDEyIDIwMTMgMjAxNCAyMDE1IDIwMTYgMjAxNyAyMDExIDIwMTIgMjAxMyAuLi5cbiAkIE5hbWUgICAgICAgICAgICAgICAgICAgICAgICAgIDogY2hyICBcIkFiaW5ndG9uXCIgXCJBYmluZ3RvblwiIFwiQWJpbmd0b25cIiBcIkFiaW5ndG9uXCIgLi4uXG4gJCBFdmVudCAgICAgICAgICAgICAgICAgICAgICAgICA6IGNociAgXCIwXCIgXCIwXCIgXCIwXCIgXCIwXCIgLi4uXG4gJCBUeXBlICAgICAgICAgICAgICAgICAgICAgICAgICA6IGNociAgXCJUb3duXCIgXCJUb3duXCIgXCJUb3duXCIgXCJUb3duXCIgLi4uXG4gJCBDb3VudHkgICAgICAgICAgICAgICAgICAgICAgICA6IGNociAgXCJQbHltb3V0aFwiIFwiUGx5bW91dGhcIiBcIlBseW1vdXRoXCIgXCJQbHltb3V0aFwiIC4uLlxuICQgRm9ybW9mZ292ZXJubWVudCAgICAgICAgICAgICAgOiBjaHIgIFwiT3BlbiB0b3duIG1lZXRpbmdcIiBcIk9wZW4gdG93biBtZWV0aW5nXCIgXCJPcGVuIHRvd24gbWVldGluZ1wiIFwiT3BlbiB0b3duIG1lZXRpbmdcIiAuLi5cbiAkIFBvcHVsYXRpb24gICAgICAgICAgICAgICAgICAgIDogY2hyICBcIjE1OTg1LjBcIiBcIjE1OTg1LjBcIiBcIjE1OTg1LjBcIiBcIjE1OTg1LjBcIiAuLi5cbiAkIEZvcm1ZZWFyICAgICAgICAgICAgICAgICAgICAgIDogaW50ICAxNzEyIDE3MTIgMTcxMiAxNzEyIDE3MTIgMTcxMiAxNzEyIDE3MzUgMTczNSAxNzM1IC4uLlxuICQgVDIxRGF0ZSAgICAgICAgICAgICAgICAgICAgICAgOiBjaHIgIE5BIE5BIE5BIE5BIC4uLlxuICQgRklQUyAgICAgICAgICAgICAgICAgICAgICAgICAgOiBjaHIgIFwiMjUwMjNcIiBcIjI1MDIzXCIgXCIyNTAyM1wiIFwiMjUwMjNcIiAuLi5cbiAkIFN0YXRlICAgICAgICAgICAgICAgICAgICAgICAgIDogY2hyICBcIk1hc3NhY2h1c2V0dHNcIiBcIk1hc3NhY2h1c2V0dHNcIiBcIk1hc3NhY2h1c2V0dHNcIiBcIk1hc3NhY2h1c2V0dHNcIiAuLi5cbiAkIE5vX1ByZW1hdHVyZURlYXRocyAgICAgICAgICAgIDogaW50ICA0NjkzIDQ2OTIgNDg1NCA0ODU0IDQ4ODEgNDkyNiA1MTc5IDExMjA2IDEwODg1IDEwODk5IC4uLlxuICQgWWVhcnNvZlBvdGVudGlhbExpZmVMb3N0UmF0ZSAgOiBudW0gIDU4NzIgNTY3NiA1NzIxIDU3MjEgNTQ2NiAuLi5cbiAkIFBlcmNlbnRfRmFpck9yUG9vciAgICAgICAgICAgIDogbnVtICAxMC42IDEwLjIgMTEgMTEgMTEgLi4uXG4gJCBQaHlzaWNhbGx5VW5oZWFsdGh5RGF5cyAgICAgICA6IG51bSAgMy4xIDMgMy4yIDMuMSAzLjEgLi4uXG4gJCBNZW50YWxseVVuaGVhbHRoeURheXMgICAgICAgICA6IG51bSAgMy42IDMuNiAzLjggMy42IDMuNiAuLi5cbiAkIFByZWNlbnRMQlcgICAgICAgICAgICAgICAgICAgIDogbnVtICA3Ljc2IDcuOCA3LjcgNy43IDcuNDkgLi4uXG4gJCBQZXJjZW50U21va2VycyAgICAgICAgICAgICAgICA6IG51bSAgMjAuOSAxOS45IDE5LjEgMTcuOCAxNy44IC4uLlxuICQgUGVyY2VudE9iZXNlICAgICAgICAgICAgICAgICAgOiBudW0gIDIyLjEgMjMuMSAyMy4xIDI0LjcgMjUuOCAyNi40IDI3LjggMjIuMSAyMy4xIDIzLjEgLi4uXG4gJCBGb29kRW52aXJvbm1lbnRJbmRleCAgICAgICAgICA6IG51bSAgTkEgTkEgTkEgOC43NiA4LjYgLi4uXG4gJCBQZXJjZW50UGh5c2ljYWxseUluYWN0aXZlICAgICA6IG51bSAgTkEgMjEgMjEgMjMuMSAyMy45IDI0LjcgMjIuOSBOQSAyMS4xIDIxLjEgLi4uXG4gJCBQZXJjZW50V2l0aEFjY2Vzc1RvRXhlcmNpc2UgICA6IG51bSAgTkEgTkEgTkEgODAuMiA4Ny40IC4uLlxuICQgUGVyY2VudEV4Y2Vzc2l2ZURyaW5raW5nICAgICAgOiBudW0gIDIwLjcgMjEuMSAyMC44IDIxLjEgMjEuMSAuLi5cbiAkIE51bWJlckNobGFteWRpYUNhc2VzICAgICAgICAgIDogaW50ICBOQSAxMTYwIDE0MTQgMTM5OCAxNTAyIDE0OTAgMTE3NiBOQSAyNTYyIDI3NzggLi4uXG4gJCBDaGxhbXlkaWFSYXRlICAgICAgICAgICAgICAgICA6IG51bSAgTkEgMjM2IDI4NiAyODEgMzAwIC4uLlxuICQgVGVlbkJpcnRocyAgICAgICAgICAgICAgICAgICAgOiBpbnQgIDIxOTQgMjIxMyAyMTAyIDIwMTcgMTkzNSAxNzk0IDE2MTMgNDEzMyA0MTU3IDQwODYgLi4uXG4gJCBUZWVuQmlydGhSYXRlICAgICAgICAgICAgICAgICA6IG51bSAgMTguOSAxOS41IDE3LjcgMTcgMTYuMyAuLi5cbiAkIFBlcmNlbnRVbmluc3VyZWQgICAgICAgICAgICAgIDogbnVtICA4LjMgNC40IDQuNyA0LjI5IDMuODkgLi4uXG4gJCBOdW1iZXJNZWRpY2FyZUVucm9sbGVlcyAgICAgICA6IGludCAgMTAwNDU3IDUzMTg1IDU0OTQwIDU4MDcxIDYxNDg4IDY0MjEyIDY2MDIzIDI2NDg1NSAxMzM2MzMgMTM1Njg4IC4uLlxuICQgUGVyY2VudERpYWJldGljcyAgICAgICAgICAgICAgOiBpbnQgIDE3NjkgNTExNyA1MzUwIDU4NzEgNjI4MSA2NzM0IDY5MjggNDAwMCAxMDgxOSAxMTA0MiAuLi5cbiAkIFBlcmNlbnRSZWNlaXZpbmdIYkExYyAgICAgICAgIDogbnVtICA4Ni4zIDg2LjUgODguNCA4OC42IDg5LjkgLi4uXG4gJCBQZXJjZW50VW5lbXBsb3llZCAgICAgICAgICAgICA6IG51bSAgOC44IDkuMSA3LjggNi45MSA3LjE3IC4uLlxuICQgUGVyY2VudENoaWxkcmVuaW5Qb3ZlcnR5ICAgICAgOiBudW0gIDguMyAxMC45IDEwLjggMTAuNyAxMS4yIDExLjUgMTIuNCA4LjMgOC41IDkuMyAuLi5cbiAkIFBlcmNlbnRTaW5nbGUtUGFyZW50SG91c2Vob2xkczogbnVtICAyNC4xIDI0LjcgMjUgMjUuNSAyNS4yIC4uLlxuICQgTnVtYmVyVmlvbGVudENyaW1lcyAgICAgICAgICAgOiBudW0gIDYyOTkgNjI4MCAyMTc5IDIxNjEgMjAyNCAuLi5cbiAkIFZpb2xlbnRDcmltZVJhdGUgICAgICAgICAgICAgIDogbnVtICA0MjggNDM1IDQ0MyA0NDggNDMyIC4uLlxuICQgVDIxeWVhciAgICAgICAgICAgICAgICAgICAgICAgOiBpbnQgIE5BIE5BIE5BIE5BIE5BIE5BIE5BIDIwMTUgMjAxNSAyMDE1IC4uLlxuICQgTUFZT1IgICAgICAgICAgICAgICAgICAgICAgICAgOiBjaHIgIE5BIE5BIE5BIE5BIC4uLlxuICQgTEVOR1RIT0ZURVJNICAgICAgICAgICAgICAgICAgOiBjaHIgIE5BIE5BIE5BIE5BIC4uLlxuICQgTkVYVEVMRUNUSU9OICAgICAgICAgICAgICAgICAgOiBjaHIgIE5BIE5BIE5BIE5BIC4uLlxuICQgbWF5b3JfaW5kICAgICAgICAgICAgICAgICAgICAgOiBpbnQgIDAgMCAwIDAgMCAwIDAgMCAwIDAgLi4uXG4gJCBOZWFyYnlUMjFSYXRpbyAgICAgICAgICAgICAgICA6IG51bSAgMCAwIDAgMCAwIDAuNSAwLjUgMCAwIDAgLi4uXG4ifQ== -->
 <pre><code>'data.frame':   2220 obs. of  42 variables:
@@ -291,40 +382,38 @@ Please cite as:
 <!-- rnb-output-begin eyJkYXRhIjoiTkFzIGludHJvZHVjZWQgYnkgY29lcmNpb25cbiJ9 -->
 <pre><code>NAs introduced by coercion</code></pre>
 <!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud3JpdGUuY3N2KFQyMU1lcmdlZCwgXCIuLi8uLi9EYXRhL1QyMU1lcmdlZHNlY29uZGF0dGVtcHQuY3N2XCIpXG5gYGAifQ== -->
+<pre class="r"><code>write.csv(T21Merged, &quot;../../Data/T21Mergedsecondattempt.csv&quot;)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGVtbyA8LSBpbXBvcnQoXCIuLi8uLi9EYXRhL1QyMU1lcmdlZHNlY29uZGF0dGVtcHQuY3N2XCIpXG5WaWV3KGRlbW8pXG5kaW0oZGVtbylcblxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGVtbyA8LSBpbXBvcnQoXCIuLi8uLi9EYXRhL1QyMU1lcmdlZHNlY29uZGF0dGVtcHQuY3N2XCIpXG5WaWV3KGRlbW8pXG5kaW0oZGVtbylcbmBgYCJ9 -->
 <pre class="r"><code>demo &lt;- import(&quot;../../Data/T21Mergedsecondattempt.csv&quot;)
 View(demo)
-dim(demo)
-</code></pre>
+dim(demo)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDIyMjAgICAgMlxuIn0= -->
-<pre><code>[1] 2220    2</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDIyMjAgICA0M1xuIn0= -->
+<pre><code>[1] 2220   43</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxTWVyZ2VkJEV2ZW50IDwtIGFzLm51bWVyaWMoVDIxTWVyZ2VkJEV2ZW50KVxuXG5gYGAifQ== -->
-<pre class="r"><code>T21Merged$Event &lt;- as.numeric(T21Merged$Event)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxTWVyZ2VkJEV2ZW50IDwtIGFzLm51bWVyaWMoVDIxTWVyZ2VkJEV2ZW50KVxuYGBgIn0= -->
+<pre class="r"><code>T21Merged$Event &lt;- as.numeric(T21Merged$Event)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gVDIxTWVyZ2VkJEV2ZW50IDogJCBvcGVyYXRvciBpcyBpbnZhbGlkIGZvciBhdG9taWMgdmVjdG9yc1xuIn0= -->
-<pre><code>Error in T21Merged$Event : $ operator is invalid for atomic vectors</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Logit Model</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3RhYmxlXG5cbmBgYCJ9 -->
-<pre class="r"><code>stable
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG9naXRtb2RlbDEgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBOZWFyYnlUMjFSYXRpbyArIFBoeXNpY2FsbHlVbmhlYWx0aHlEYXlzICsgTWVudGFsbHlVbmhlYWx0aHlEYXlzICsgUGVyY2VudFNtb2tlcnMgKyBQZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgKyBUZWVuQmlydGhSYXRlICsgQ2hsYW15ZGlhUmF0ZSArIFBlcmNlbnRVbmVtcGxveWVkICsgVmlvbGVudENyaW1lUmF0ZSAgICwgZmFtaWx5ID0gYmlub21pYWwobGluayA9IFwibG9naXRcIiksIGRhdGEgPSBUMjFNZXJnZWQgKVxuc3VtbWFyeShsb2dpdG1vZGVsMSlcbmBgYCJ9 -->
+<pre class="r"><code>logitmodel1 &lt;- glm(Event ~  Population + NearbyT21Ratio + PhysicallyUnhealthyDays + MentallyUnhealthyDays + PercentSmokers + PercentExcessiveDrinking + TeenBirthRate + ChlamydiaRate + PercentUnemployed + ViolentCrimeRate   , family = binomial(link = &quot;logit&quot;), data = T21Merged )
+summary(logitmodel1)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtKGZvcm11bGEgPSBFdmVudCB+IFBvcHVsYXRpb24gKyBOZWFyYnlUMjFSYXRpbyArIFBoeXNpY2FsbHlVbmhlYWx0aHlEYXlzICsgXG4gICAgTWVudGFsbHlVbmhlYWx0aHlEYXlzICsgUGVyY2VudFNtb2tlcnMgKyBQZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgKyBcbiAgICBUZWVuQmlydGhSYXRlICsgQ2hsYW15ZGlhUmF0ZSArIFBlcmNlbnRVbmVtcGxveWVkICsgVmlvbGVudENyaW1lUmF0ZSwgXG4gICAgZmFtaWx5ID0gYmlub21pYWwobGluayA9IFwibG9naXRcIiksIGRhdGEgPSBUMjFNZXJnZWQpXG5cbkRldmlhbmNlIFJlc2lkdWFsczogXG4gICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4ICBcbi0xLjU5ODIgIC0wLjMwODkgIC0wLjIzNDAgIC0wLjE5ODIgICAyLjg2MDUgIFxuXG5Db2VmZmljaWVudHM6XG4gICAgICAgICAgICAgICAgICAgICAgICAgICBFc3RpbWF0ZSBTdGQuIEVycm9yIHogdmFsdWUgUHIoPnx6fCkgICAgXG4oSW50ZXJjZXB0KSAgICAgICAgICAgICAgLTEuNzkxZSswMCAgMS44NTllKzAwICAtMC45NjMgICAwLjMzNTMgICAgXG5Qb3B1bGF0aW9uICAgICAgICAgICAgICAgIDUuODY5ZS0wNiAgNS4zNDJlLTA2ICAgMS4wOTkgICAwLjI3MTkgICAgXG5OZWFyYnlUMjFSYXRpbyAgICAgICAgICAgIDQuNjQyZSswMCAgNS4wMTBlLTAxICAgOS4yNjYgICA8MmUtMTYgKioqXG5QaHlzaWNhbGx5VW5oZWFsdGh5RGF5cyAgIDEuODMwZS0wMSAgNC4yNDVlLTAxICAgMC40MzEgICAwLjY2NjQgICAgXG5NZW50YWxseVVuaGVhbHRoeURheXMgICAgLTEuNzMwZS0wMSAgMy42ODllLTAxICAtMC40NjkgICAwLjYzOTAgICAgXG5QZXJjZW50U21va2VycyAgICAgICAgICAgIDEuNzI5ZS0wMyAgOS4zNDVlLTAyICAgMC4wMTggICAwLjk4NTIgICAgXG5QZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgLTEuMzExZS0wMSAgOS44NjBlLTAyICAtMS4zMzAgICAwLjE4MzUgICAgXG5UZWVuQmlydGhSYXRlICAgICAgICAgICAgLTQuMDMxZS0wMiAgMi45MzdlLTAyICAtMS4zNzMgICAwLjE2OTggICAgXG5DaGxhbXlkaWFSYXRlICAgICAgICAgICAgIDIuOTgzZS0wMyAgMS41OTVlLTAzICAgMS44NzEgICAwLjA2MTQgLiAgXG5QZXJjZW50VW5lbXBsb3llZCAgICAgICAgIDEuNDgyZS0wMSAgMS40OTRlLTAxICAgMC45OTIgICAwLjMyMTEgICAgXG5WaW9sZW50Q3JpbWVSYXRlICAgICAgICAgLTEuMzk2ZS0wMyAgMS42MTNlLTAzICAtMC44NjYgICAwLjM4NjggICAgXG4tLS1cblNpZ25pZi4gY29kZXM6ICAwIOKAmCoqKuKAmSAwLjAwMSDigJgqKuKAmSAwLjAxIOKAmCrigJkgMC4wNSDigJgu4oCZIDAuMSDigJgg4oCZIDFcblxuKERpc3BlcnNpb24gcGFyYW1ldGVyIGZvciBiaW5vbWlhbCBmYW1pbHkgdGFrZW4gdG8gYmUgMSlcblxuICAgIE51bGwgZGV2aWFuY2U6IDk1NC42NyAgb24gMTgzNyAgZGVncmVlcyBvZiBmcmVlZG9tXG5SZXNpZHVhbCBkZXZpYW5jZTogNzQzLjMzICBvbiAxODI3ICBkZWdyZWVzIG9mIGZyZWVkb21cbiAgKDM4MiBvYnNlcnZhdGlvbnMgZGVsZXRlZCBkdWUgdG8gbWlzc2luZ25lc3MpXG5BSUM6IDc2NS4zM1xuXG5OdW1iZXIgb2YgRmlzaGVyIFNjb3JpbmcgaXRlcmF0aW9uczogNlxuIn0= -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtKGZvcm11bGEgPSBFdmVudCB+IFBvcHVsYXRpb24gKyBOZWFyYnlUMjFSYXRpbyArIFBoeXNpY2FsbHlVbmhlYWx0aHlEYXlzICsgXG4gICAgTWVudGFsbHlVbmhlYWx0aHlEYXlzICsgUGVyY2VudFNtb2tlcnMgKyBQZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgKyBcbiAgICBUZWVuQmlydGhSYXRlICsgQ2hsYW15ZGlhUmF0ZSArIFBlcmNlbnRVbmVtcGxveWVkICsgVmlvbGVudENyaW1lUmF0ZSwgXG4gICAgZmFtaWx5ID0gYmlub21pYWwobGluayA9IFwibG9naXRcIiksIGRhdGEgPSBUMjFNZXJnZWQpXG5cbkRldmlhbmNlIFJlc2lkdWFsczogXG4gICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4ICBcbi0xLjU5ODIgIC0wLjMwODkgIC0wLjIzNDAgIC0wLjE5ODIgICAyLjg2MDUgIFxuXG5Db2VmZmljaWVudHM6XG4gICAgICAgICAgICAgICAgICAgICAgICAgICBFc3RpbWF0ZSBTdGQuIEVycm9yIHogdmFsdWVcbihJbnRlcmNlcHQpICAgICAgICAgICAgICAtMS43OTFlKzAwICAxLjg1OWUrMDAgIC0wLjk2M1xuUG9wdWxhdGlvbiAgICAgICAgICAgICAgICA1Ljg2OWUtMDYgIDUuMzQyZS0wNiAgIDEuMDk5XG5OZWFyYnlUMjFSYXRpbyAgICAgICAgICAgIDQuNjQyZSswMCAgNS4wMTBlLTAxICAgOS4yNjZcblBoeXNpY2FsbHlVbmhlYWx0aHlEYXlzICAgMS44MzBlLTAxICA0LjI0NWUtMDEgICAwLjQzMVxuTWVudGFsbHlVbmhlYWx0aHlEYXlzICAgIC0xLjczMGUtMDEgIDMuNjg5ZS0wMSAgLTAuNDY5XG5QZXJjZW50U21va2VycyAgICAgICAgICAgIDEuNzI5ZS0wMyAgOS4zNDVlLTAyICAgMC4wMThcblBlcmNlbnRFeGNlc3NpdmVEcmlua2luZyAtMS4zMTFlLTAxICA5Ljg2MGUtMDIgIC0xLjMzMFxuVGVlbkJpcnRoUmF0ZSAgICAgICAgICAgIC00LjAzMWUtMDIgIDIuOTM3ZS0wMiAgLTEuMzczXG5DaGxhbXlkaWFSYXRlICAgICAgICAgICAgIDIuOTgzZS0wMyAgMS41OTVlLTAzICAgMS44NzFcblBlcmNlbnRVbmVtcGxveWVkICAgICAgICAgMS40ODJlLTAxICAxLjQ5NGUtMDEgICAwLjk5MlxuVmlvbGVudENyaW1lUmF0ZSAgICAgICAgIC0xLjM5NmUtMDMgIDEuNjEzZS0wMyAgLTAuODY2XG4gICAgICAgICAgICAgICAgICAgICAgICAgUHIoPnx6fCkgICAgXG4oSW50ZXJjZXB0KSAgICAgICAgICAgICAgICAwLjMzNTMgICAgXG5Qb3B1bGF0aW9uICAgICAgICAgICAgICAgICAwLjI3MTkgICAgXG5OZWFyYnlUMjFSYXRpbyAgICAgICAgICAgICA8MmUtMTYgKioqXG5QaHlzaWNhbGx5VW5oZWFsdGh5RGF5cyAgICAwLjY2NjQgICAgXG5NZW50YWxseVVuaGVhbHRoeURheXMgICAgICAwLjYzOTAgICAgXG5QZXJjZW50U21va2VycyAgICAgICAgICAgICAwLjk4NTIgICAgXG5QZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgICAwLjE4MzUgICAgXG5UZWVuQmlydGhSYXRlICAgICAgICAgICAgICAwLjE2OTggICAgXG5DaGxhbXlkaWFSYXRlICAgICAgICAgICAgICAwLjA2MTQgLiAgXG5QZXJjZW50VW5lbXBsb3llZCAgICAgICAgICAwLjMyMTEgICAgXG5WaW9sZW50Q3JpbWVSYXRlICAgICAgICAgICAwLjM4NjggICAgXG4tLS1cblNpZ25pZi4gY29kZXM6ICBcbjAg4oCYKioq4oCZIDAuMDAxIOKAmCoq4oCZIDAuMDEg4oCYKuKAmSAwLjA1IOKAmC7igJkgMC4xIOKAmCDigJkgMVxuXG4oRGlzcGVyc2lvbiBwYXJhbWV0ZXIgZm9yIGJpbm9taWFsIGZhbWlseSB0YWtlbiB0byBiZSAxKVxuXG4gICAgTnVsbCBkZXZpYW5jZTogOTU0LjY3ICBvbiAxODM3ICBkZWdyZWVzIG9mIGZyZWVkb21cblJlc2lkdWFsIGRldmlhbmNlOiA3NDMuMzMgIG9uIDE4MjcgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuICAoMzgyIG9ic2VydmF0aW9ucyBkZWxldGVkIGR1ZSB0byBtaXNzaW5nbmVzcylcbkFJQzogNzY1LjMzXG5cbk51bWJlciBvZiBGaXNoZXIgU2NvcmluZyBpdGVyYXRpb25zOiA2XG4ifQ== -->
 <pre><code>
 Call:
 glm(formula = Event ~ Population + NearbyT21Ratio + PhysicallyUnhealthyDays + 
@@ -337,20 +426,33 @@ Deviance Residuals:
 -1.5982  -0.3089  -0.2340  -0.1982   2.8605  
 
 Coefficients:
-                           Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)              -1.791e+00  1.859e+00  -0.963   0.3353    
-Population                5.869e-06  5.342e-06   1.099   0.2719    
-NearbyT21Ratio            4.642e+00  5.010e-01   9.266   &lt;2e-16 ***
-PhysicallyUnhealthyDays   1.830e-01  4.245e-01   0.431   0.6664    
-MentallyUnhealthyDays    -1.730e-01  3.689e-01  -0.469   0.6390    
-PercentSmokers            1.729e-03  9.345e-02   0.018   0.9852    
-PercentExcessiveDrinking -1.311e-01  9.860e-02  -1.330   0.1835    
-TeenBirthRate            -4.031e-02  2.937e-02  -1.373   0.1698    
-ChlamydiaRate             2.983e-03  1.595e-03   1.871   0.0614 .  
-PercentUnemployed         1.482e-01  1.494e-01   0.992   0.3211    
-ViolentCrimeRate         -1.396e-03  1.613e-03  -0.866   0.3868    
+                           Estimate Std. Error z value
+(Intercept)              -1.791e+00  1.859e+00  -0.963
+Population                5.869e-06  5.342e-06   1.099
+NearbyT21Ratio            4.642e+00  5.010e-01   9.266
+PhysicallyUnhealthyDays   1.830e-01  4.245e-01   0.431
+MentallyUnhealthyDays    -1.730e-01  3.689e-01  -0.469
+PercentSmokers            1.729e-03  9.345e-02   0.018
+PercentExcessiveDrinking -1.311e-01  9.860e-02  -1.330
+TeenBirthRate            -4.031e-02  2.937e-02  -1.373
+ChlamydiaRate             2.983e-03  1.595e-03   1.871
+PercentUnemployed         1.482e-01  1.494e-01   0.992
+ViolentCrimeRate         -1.396e-03  1.613e-03  -0.866
+                         Pr(&gt;|z|)    
+(Intercept)                0.3353    
+Population                 0.2719    
+NearbyT21Ratio             &lt;2e-16 ***
+PhysicallyUnhealthyDays    0.6664    
+MentallyUnhealthyDays      0.6390    
+PercentSmokers             0.9852    
+PercentExcessiveDrinking   0.1835    
+TeenBirthRate              0.1698    
+ChlamydiaRate              0.0614 .  
+PercentUnemployed          0.3211    
+ViolentCrimeRate           0.3868    
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
 (Dispersion parameter for binomial family taken to be 1)
 
@@ -447,21 +549,191 @@ PercentExcessiveDrinking            TeenBirthRate
 <p>Should NearbyT21 Ratio be coded as a factor?</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxTWVyZ2VkJEZOVDIxUmF0aW8gPC0gYXMuZmFjdG9yKFQyMU1lcmdlZCROZWFyYnlUMjFSYXRpbylcbmBgYCJ9 -->
+<pre class="r"><code>T21Merged$FNT21Ratio &lt;- as.factor(T21Merged$NearbyT21Ratio)</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Logit Model 2</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG9naXRtb2RlbCA8LSBnbG0oRXZlbnQgfiAgUG9wdWxhdGlvbiArIEZOVDIxUmF0aW8gKyBQaHlzaWNhbGx5VW5oZWFsdGh5RGF5cyArIE1lbnRhbGx5VW5oZWFsdGh5RGF5cyArIFBlcmNlbnRTbW9rZXJzICsgUGVyY2VudEV4Y2Vzc2l2ZURyaW5raW5nICsgVGVlbkJpcnRoUmF0ZSArIENobGFteWRpYVJhdGUgKyBQZXJjZW50VW5lbXBsb3llZCArIFZpb2xlbnRDcmltZVJhdGUgICAsIGZhbWlseSA9IGJpbm9taWFsKGxpbmsgPSBcImxvZ2l0XCIpLCBkYXRhID0gVDIxTWVyZ2VkIClcblxuc3VtbWFyeShsb2dpdG1vZGVsKVxuYGBgIn0= -->
-<pre class="r"><code>logitmodel &lt;- glm(Event ~  Population + FNT21Ratio + PhysicallyUnhealthyDays + MentallyUnhealthyDays + PercentSmokers + PercentExcessiveDrinking + TeenBirthRate + ChlamydiaRate + PercentUnemployed + ViolentCrimeRate   , family = binomial(link = &quot;logit&quot;), data = T21Merged )
-
-summary(logitmodel)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG9naXRtb2RlbDIgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBGTlQyMVJhdGlvICsgUGh5c2ljYWxseVVuaGVhbHRoeURheXMgKyBNZW50YWxseVVuaGVhbHRoeURheXMgKyBQZXJjZW50U21va2VycyArIFBlcmNlbnRFeGNlc3NpdmVEcmlua2luZyArIFRlZW5CaXJ0aFJhdGUgKyBDaGxhbXlkaWFSYXRlICsgUGVyY2VudFVuZW1wbG95ZWQgKyBWaW9sZW50Q3JpbWVSYXRlICAgLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gXCJsb2dpdFwiKSwgZGF0YSA9IFQyMU1lcmdlZCApXG5zdW1tYXJ5KGxvZ2l0bW9kZWwyKVxuYGBgIn0= -->
+<pre class="r"><code>logitmodel2 &lt;- glm(Event ~  Population + FNT21Ratio + PhysicallyUnhealthyDays + MentallyUnhealthyDays + PercentSmokers + PercentExcessiveDrinking + TeenBirthRate + ChlamydiaRate + PercentUnemployed + ViolentCrimeRate   , family = binomial(link = &quot;logit&quot;), data = T21Merged )
+summary(logitmodel2)</code></pre>
 <!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtKGZvcm11bGEgPSBFdmVudCB+IFBvcHVsYXRpb24gKyBGTlQyMVJhdGlvICsgUGh5c2ljYWxseVVuaGVhbHRoeURheXMgKyBcbiAgICBNZW50YWxseVVuaGVhbHRoeURheXMgKyBQZXJjZW50U21va2VycyArIFBlcmNlbnRFeGNlc3NpdmVEcmlua2luZyArIFxuICAgIFRlZW5CaXJ0aFJhdGUgKyBDaGxhbXlkaWFSYXRlICsgUGVyY2VudFVuZW1wbG95ZWQgKyBWaW9sZW50Q3JpbWVSYXRlLCBcbiAgICBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gXCJsb2dpdFwiKSwgZGF0YSA9IFQyMU1lcmdlZClcblxuRGV2aWFuY2UgUmVzaWR1YWxzOiBcbiAgICBNaW4gICAgICAgMVEgICBNZWRpYW4gICAgICAgM1EgICAgICBNYXggIFxuLTEuNDAzNiAgLTAuMjYyNiAgLTAuMTQ3OSAgLTAuMTIxNCAgIDMuMjE5NiAgXG5cbkNvZWZmaWNpZW50czpcbiAgICAgICAgICAgICAgICAgICAgICAgICAgIEVzdGltYXRlIFN0ZC4gRXJyb3JcbihJbnRlcmNlcHQpICAgICAgICAgICAgICAtNC4yMjhlKzAwICAyLjAyMGUrMDBcblBvcHVsYXRpb24gICAgICAgICAgICAgICAgOS41MTllLTA2ICA1LjQ1MmUtMDZcbkZOVDIxUmF0aW8wLjEgICAgICAgICAgICAgMS4yMDVlKzAwICA1LjMzNmUtMDFcbkZOVDIxUmF0aW8wLjIgICAgICAgICAgICAgMi43MDRlKzAwICA0LjczM2UtMDFcbkZOVDIxUmF0aW8wLjMgICAgICAgICAgICAgMy40MzJlKzAwICA0LjMyN2UtMDFcbkZOVDIxUmF0aW8wLjQgICAgICAgICAgICAgNC4xODNlKzAwICA0LjU1OGUtMDFcbkZOVDIxUmF0aW8wLjUgICAgICAgICAgICAgMy45NDFlKzAwICA0Ljk3NWUtMDFcbkZOVDIxUmF0aW8wLjYgICAgICAgICAgICAgMy45OTRlKzAwICA1LjMyM2UtMDFcbkZOVDIxUmF0aW8wLjcgICAgICAgICAgICAgNC42NDBlKzAwICA1LjM4MWUtMDFcbkZOVDIxUmF0aW8wLjggICAgICAgICAgICAgMi44NTllKzAwICA3Ljg3MmUtMDFcbkZOVDIxUmF0aW8wLjkgICAgICAgICAgICAgNC40MDRlKzAwICA3LjYwMWUtMDFcbkZOVDIxUmF0aW8xICAgICAgICAgICAgICAgNC4zOThlKzAwICAxLjMxMmUrMDBcblBoeXNpY2FsbHlVbmhlYWx0aHlEYXlzICAtNS41MDZlLTAyICA0LjM2MWUtMDFcbk1lbnRhbGx5VW5oZWFsdGh5RGF5cyAgICAtNC42MzFlLTAxICAzLjU0OGUtMDFcblBlcmNlbnRTbW9rZXJzICAgICAgICAgICAgMS4wMzBlLTAxICA5Ljc2NGUtMDJcblBlcmNlbnRFeGNlc3NpdmVEcmlua2luZyAtNi40NjFlLTAyICAxLjA2OGUtMDFcblRlZW5CaXJ0aFJhdGUgICAgICAgICAgICAtMy41OTNlLTAyICAzLjIwMWUtMDJcbkNobGFteWRpYVJhdGUgICAgICAgICAgICAgMy45MzRlLTAzICAxLjY4N2UtMDNcblBlcmNlbnRVbmVtcGxveWVkICAgICAgICAgMi4yNThlLTAxICAxLjU1NWUtMDFcblZpb2xlbnRDcmltZVJhdGUgICAgICAgICAtMy4zMjVlLTAzICAxLjc5NWUtMDNcbiAgICAgICAgICAgICAgICAgICAgICAgICB6IHZhbHVlIFByKD58enwpICAgIFxuKEludGVyY2VwdCkgICAgICAgICAgICAgICAtMi4wOTMgMC4wMzYzMzIgKiAgXG5Qb3B1bGF0aW9uICAgICAgICAgICAgICAgICAxLjc0NiAwLjA4MDgyOCAuICBcbkZOVDIxUmF0aW8wLjEgICAgICAgICAgICAgIDIuMjU4IDAuMDIzOTQwICogIFxuRk5UMjFSYXRpbzAuMiAgICAgICAgICAgICAgNS43MTQgMS4xMGUtMDggKioqXG5GTlQyMVJhdGlvMC4zICAgICAgICAgICAgICA3LjkzMiAyLjE2ZS0xNSAqKipcbkZOVDIxUmF0aW8wLjQgICAgICAgICAgICAgIDkuMTc3ICA8IDJlLTE2ICoqKlxuRk5UMjFSYXRpbzAuNSAgICAgICAgICAgICAgNy45MjEgMi4zNWUtMTUgKioqXG5GTlQyMVJhdGlvMC42ICAgICAgICAgICAgICA3LjUwMyA2LjI0ZS0xNCAqKipcbkZOVDIxUmF0aW8wLjcgICAgICAgICAgICAgIDguNjI0ICA8IDJlLTE2ICoqKlxuRk5UMjFSYXRpbzAuOCAgICAgICAgICAgICAgMy42MzIgMC4wMDAyODIgKioqXG5GTlQyMVJhdGlvMC45ICAgICAgICAgICAgICA1Ljc5NCA2Ljg2ZS0wOSAqKipcbkZOVDIxUmF0aW8xICAgICAgICAgICAgICAgIDMuMzUxIDAuMDAwODA2ICoqKlxuUGh5c2ljYWxseVVuaGVhbHRoeURheXMgICAtMC4xMjYgMC44OTk1MzQgICAgXG5NZW50YWxseVVuaGVhbHRoeURheXMgICAgIC0xLjMwNSAwLjE5MTgwNSAgICBcblBlcmNlbnRTbW9rZXJzICAgICAgICAgICAgIDEuMDU0IDAuMjkxNzE1ICAgIFxuUGVyY2VudEV4Y2Vzc2l2ZURyaW5raW5nICAtMC42MDUgMC41NDUwNzggICAgXG5UZWVuQmlydGhSYXRlICAgICAgICAgICAgIC0xLjEyMiAwLjI2MTY5NCAgICBcbkNobGFteWRpYVJhdGUgICAgICAgICAgICAgIDIuMzMzIDAuMDE5NjU5ICogIFxuUGVyY2VudFVuZW1wbG95ZWQgICAgICAgICAgMS40NTIgMC4xNDY1MDAgICAgXG5WaW9sZW50Q3JpbWVSYXRlICAgICAgICAgIC0xLjg1MyAwLjA2MzkyNyAuICBcbi0tLVxuU2lnbmlmLiBjb2RlczogIFxuMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cbihEaXNwZXJzaW9uIHBhcmFtZXRlciBmb3IgYmlub21pYWwgZmFtaWx5IHRha2VuIHRvIGJlIDEpXG5cbiAgICBOdWxsIGRldmlhbmNlOiA5NTQuNjcgIG9uIDE4MzcgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuUmVzaWR1YWwgZGV2aWFuY2U6IDY3NC41NCAgb24gMTgxOCAgZGVncmVlcyBvZiBmcmVlZG9tXG4gICgzODIgb2JzZXJ2YXRpb25zIGRlbGV0ZWQgZHVlIHRvIG1pc3NpbmduZXNzKVxuQUlDOiA3MTQuNTRcblxuTnVtYmVyIG9mIEZpc2hlciBTY29yaW5nIGl0ZXJhdGlvbnM6IDdcbiJ9 -->
+<pre><code>
+Call:
+glm(formula = Event ~ Population + FNT21Ratio + PhysicallyUnhealthyDays + 
+    MentallyUnhealthyDays + PercentSmokers + PercentExcessiveDrinking + 
+    TeenBirthRate + ChlamydiaRate + PercentUnemployed + ViolentCrimeRate, 
+    family = binomial(link = &quot;logit&quot;), data = T21Merged)
+
+Deviance Residuals: 
+    Min       1Q   Median       3Q      Max  
+-1.4036  -0.2626  -0.1479  -0.1214   3.2196  
+
+Coefficients:
+                           Estimate Std. Error
+(Intercept)              -4.228e+00  2.020e+00
+Population                9.519e-06  5.452e-06
+FNT21Ratio0.1             1.205e+00  5.336e-01
+FNT21Ratio0.2             2.704e+00  4.733e-01
+FNT21Ratio0.3             3.432e+00  4.327e-01
+FNT21Ratio0.4             4.183e+00  4.558e-01
+FNT21Ratio0.5             3.941e+00  4.975e-01
+FNT21Ratio0.6             3.994e+00  5.323e-01
+FNT21Ratio0.7             4.640e+00  5.381e-01
+FNT21Ratio0.8             2.859e+00  7.872e-01
+FNT21Ratio0.9             4.404e+00  7.601e-01
+FNT21Ratio1               4.398e+00  1.312e+00
+PhysicallyUnhealthyDays  -5.506e-02  4.361e-01
+MentallyUnhealthyDays    -4.631e-01  3.548e-01
+PercentSmokers            1.030e-01  9.764e-02
+PercentExcessiveDrinking -6.461e-02  1.068e-01
+TeenBirthRate            -3.593e-02  3.201e-02
+ChlamydiaRate             3.934e-03  1.687e-03
+PercentUnemployed         2.258e-01  1.555e-01
+ViolentCrimeRate         -3.325e-03  1.795e-03
+                         z value Pr(&gt;|z|)    
+(Intercept)               -2.093 0.036332 *  
+Population                 1.746 0.080828 .  
+FNT21Ratio0.1              2.258 0.023940 *  
+FNT21Ratio0.2              5.714 1.10e-08 ***
+FNT21Ratio0.3              7.932 2.16e-15 ***
+FNT21Ratio0.4              9.177  &lt; 2e-16 ***
+FNT21Ratio0.5              7.921 2.35e-15 ***
+FNT21Ratio0.6              7.503 6.24e-14 ***
+FNT21Ratio0.7              8.624  &lt; 2e-16 ***
+FNT21Ratio0.8              3.632 0.000282 ***
+FNT21Ratio0.9              5.794 6.86e-09 ***
+FNT21Ratio1                3.351 0.000806 ***
+PhysicallyUnhealthyDays   -0.126 0.899534    
+MentallyUnhealthyDays     -1.305 0.191805    
+PercentSmokers             1.054 0.291715    
+PercentExcessiveDrinking  -0.605 0.545078    
+TeenBirthRate             -1.122 0.261694    
+ChlamydiaRate              2.333 0.019659 *  
+PercentUnemployed          1.452 0.146500    
+ViolentCrimeRate          -1.853 0.063927 .  
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 954.67  on 1837  degrees of freedom
+Residual deviance: 674.54  on 1818  degrees of freedom
+  (382 observations deleted due to missingness)
+AIC: 714.54
+
+Number of Fisher Scoring iterations: 7</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3RhcmdhemVyKGxvZ2l0bW9kZWwyLCB0eXBlID0gXCJ0ZXh0XCIpXG5cbmBgYCJ9 -->
+<pre class="r"><code>stargazer(logitmodel2, type = &quot;text&quot;)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoidGhlIGNvbmRpdGlvbiBoYXMgbGVuZ3RoID4gMSBhbmQgb25seSB0aGUgZmlyc3QgZWxlbWVudCB3aWxsIGJlIHVzZWRcbiJ9 -->
+<pre><code>the condition has length &gt; 1 and only the first element will be used</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiXG49PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIERlcGVuZGVudCB2YXJpYWJsZTogICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBFdmVudCAgICAgICAgICAgXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5Qb3B1bGF0aW9uICAgICAgICAgICAgICAgICAgICAgICAgMC4wMDAwMSogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKDAuMDAwMDEpICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC4xICAgICAgICAgICAgICAgICAgICAgIDEuMjA1KiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjUzNCkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC4yICAgICAgICAgICAgICAgICAgICAgMi43MDQqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjQ3MykgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC4zICAgICAgICAgICAgICAgICAgICAgMy40MzIqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjQzMykgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC40ICAgICAgICAgICAgICAgICAgICAgNC4xODMqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjQ1NikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC41ICAgICAgICAgICAgICAgICAgICAgMy45NDEqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjQ5OCkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC42ICAgICAgICAgICAgICAgICAgICAgMy45OTQqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjUzMikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC43ICAgICAgICAgICAgICAgICAgICAgNC42NDAqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjUzOCkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC44ICAgICAgICAgICAgICAgICAgICAgMi44NTkqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjc4NykgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC45ICAgICAgICAgICAgICAgICAgICAgNC40MDQqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjc2MCkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMSAgICAgICAgICAgICAgICAgICAgICAgNC4zOTgqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgxLjMxMikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5QaHlzaWNhbGx5VW5oZWFsdGh5RGF5cyAgICAgICAgICAgIC0wLjA1NSAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjQzNikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5NZW50YWxseVVuaGVhbHRoeURheXMgICAgICAgICAgICAgIC0wLjQ2MyAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjM1NSkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5QZXJjZW50U21va2VycyAgICAgICAgICAgICAgICAgICAgICAwLjEwMyAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjA5OCkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5QZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgICAgICAgICAgIC0wLjA2NSAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjEwNykgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5UZWVuQmlydGhSYXRlICAgICAgICAgICAgICAgICAgICAgIC0wLjAzNiAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjAzMikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5DaGxhbXlkaWFSYXRlICAgICAgICAgICAgICAgICAgICAgIDAuMDA0KiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjAwMikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5QZXJjZW50VW5lbXBsb3llZCAgICAgICAgICAgICAgICAgICAwLjIyNiAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjE1NikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5WaW9sZW50Q3JpbWVSYXRlICAgICAgICAgICAgICAgICAgIC0wLjAwMyogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjAwMikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5Db25zdGFudCAgICAgICAgICAgICAgICAgICAgICAgICAgLTQuMjI4KiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgyLjAyMCkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5PYnNlcnZhdGlvbnMgICAgICAgICAgICAgICAgICAgICAgICAxLDgzOCAgICAgICAgICAgXG5Mb2cgTGlrZWxpaG9vZCAgICAgICAgICAgICAgICAgICAgLTMzNy4yNjkgICAgICAgICAgXG5Ba2Fpa2UgSW5mLiBDcml0LiAgICAgICAgICAgICAgICAgIDcxNC41MzkgICAgICAgICAgXG49PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG5Ob3RlOiAgICAgICAgICAgICAgICAgICAgKnA8MC4xOyAqKnA8MC4wNTsgKioqcDwwLjAxXG4ifQ== -->
+<pre><code>
+====================================================
+                             Dependent variable:    
+                         ---------------------------
+                                    Event           
+----------------------------------------------------
+Population                        0.00001*          
+                                  (0.00001)         
+                                                    
+FNT21Ratio0.1                      1.205**          
+                                   (0.534)          
+                                                    
+FNT21Ratio0.2                     2.704***          
+                                   (0.473)          
+                                                    
+FNT21Ratio0.3                     3.432***          
+                                   (0.433)          
+                                                    
+FNT21Ratio0.4                     4.183***          
+                                   (0.456)          
+                                                    
+FNT21Ratio0.5                     3.941***          
+                                   (0.498)          
+                                                    
+FNT21Ratio0.6                     3.994***          
+                                   (0.532)          
+                                                    
+FNT21Ratio0.7                     4.640***          
+                                   (0.538)          
+                                                    
+FNT21Ratio0.8                     2.859***          
+                                   (0.787)          
+                                                    
+FNT21Ratio0.9                     4.404***          
+                                   (0.760)          
+                                                    
+FNT21Ratio1                       4.398***          
+                                   (1.312)          
+                                                    
+PhysicallyUnhealthyDays            -0.055           
+                                   (0.436)          
+                                                    
+MentallyUnhealthyDays              -0.463           
+                                   (0.355)          
+                                                    
+PercentSmokers                      0.103           
+                                   (0.098)          
+                                                    
+PercentExcessiveDrinking           -0.065           
+                                   (0.107)          
+                                                    
+TeenBirthRate                      -0.036           
+                                   (0.032)          
+                                                    
+ChlamydiaRate                      0.004**          
+                                   (0.002)          
+                                                    
+PercentUnemployed                   0.226           
+                                   (0.156)          
+                                                    
+ViolentCrimeRate                   -0.003*          
+                                   (0.002)          
+                                                    
+Constant                          -4.228**          
+                                   (2.020)          
+                                                    
+----------------------------------------------------
+Observations                        1,838           
+Log Likelihood                    -337.269          
+Akaike Inf. Crit.                  714.539          
+====================================================
+Note:                    *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZXhwKGNvZWZmaWNpZW50cyhsb2dpdG1vZGVsMikpXG5gYGAifQ== -->
+<pre class="r"><code>exp(coefficients(logitmodel2))</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><strong>Principal Component Analysis</strong></p>
+<p>Principal Component Analysis</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OgogIGh0bWxfbm90ZWJvb2s6IGRlZmF1bHQKICBwZGZfZG9jdW1lbnQ6IGRlZmF1bHQKLS0tCkxpYnJhcmllcwoKYGBge3IsIHdhcm5pbmcgPSBGQUxTRX0KbGlicmFyeShyZWFkeGwpCmxpYnJhcnkoZGF0YS50YWJsZSkKbGlicmFyeShsdWJyaWRhdGUpICNEYXRlIFRpbWUgT2JqZWN0CmxpYnJhcnkoZ2dwbG90MikKbGlicmFyeShzdHJpbmdyKSAjUmVndWxhciBleHByZXNzaW9uIHN0cmluZyBzcGxpdHRpbmcKbGlicmFyeShyaW8pCmxpYnJhcnkoTUFTUykKbGlicmFyeSh0aWdyaXMpCmxpYnJhcnkoc3ApCmxpYnJhcnkoYnJvb20pCmxpYnJhcnkoZHBseXIpCmxpYnJhcnkocmdkYWwpCmxpYnJhcnkoc3RhcmdhemVyKQpgYGAKClQyMSBFeHRlcm5hbCBSYXcgRGF0YSAKYGBge3J9ClQyMUV4dGVybmFsIDwtIGltcG9ydCgiLi4vLi4vRGF0YS9NQUNUb3duSGVhbHRoMjFfdjYuY3N2IikKVmlldyhUMjFFeHRlcm5hbCkKYGBgCgpSZW1vdmUgdGhlIDIgY2FzZXMgYW5kIHJlbW92ZSB0aGUgeWVhcnMgYmVmb3JlIDIwMDkgYW5kIHJlbW92aW5nIDIwMTggKERhdGEgbmVlZHMgdG8gYmUgcmVmb3JtYXR0ZWQgYWdhaW4pCmBgYHtyfQpUMjFFeHRTdWIgPC0gVDIxRXh0ZXJuYWxbVDIxRXh0ZXJuYWwkRXZlbnQgIT0gMiwgXQpUMjFFeHRTdWIgPC0gVDIxRXh0U3ViWy0xXQpUMjFFeHRTdWIgPC0gc3Vic2V0KFQyMUV4dFN1YiwgWWVhciA+IDIwMTApClQyMUV4dFN1YiA8LSBzdWJzZXQoVDIxRXh0U3ViLCBZZWFyIDwgMjAxOCkKVmlldyhUMjFFeHRTdWIpCgp3cml0ZS5jc3YoVDIxRXh0U3ViLCAiLi4vLi4vRGF0YS9UMjFFeHRTdWIuY3N2IikKVmlldyhUMjFFeHRTdWIpCmBgYAoKQWxsIFQyMSBJbXBvcnRzCgpgYGB7cn0KQWxsVDIxVG9wUmF0aW9zIDwtIGltcG9ydCgiLi4vLi4vRGF0YS9BbGxUMjFUb3BSYXRpb3MuY3N2IikKVmlldyhBbGxUMjFUb3BSYXRpb3MpCkFsbFQyMVRvcFJhdGlvcyA8LSBBbGxUMjFUb3BSYXRpb3NbLTFdClZpZXcoQWxsVDIxVG9wUmF0aW9zKQpgYGAKCk1lcmdpbmcgdGhlIGRhdGEgZmlsZQpgYGB7cn0KVDIxTWVyZ2VkIDwtIFQyMUV4dFN1YiAlPiUgbGVmdF9qb2luKEFsbFQyMVRvcFJhdGlvcywgYnkgPSBjKCJOYW1lIiA9IkNpdHlUb3duIiwgIlllYXIiID0gInllYXIiKSkKYGBgCgpgYGB7cn0KbmFtZXMoVDIxTWVyZ2VkKSA8LSBnc3ViKCIgIiwiIixuYW1lcyhUMjFNZXJnZWQpKQpgYGAKCmBgYHtyfQpzdHIoVDIxTWVyZ2VkKQpUMjFNZXJnZWQkUG9wdWxhdGlvbiA8LSBhcy5udW1lcmljIChUMjFNZXJnZWQkUG9wdWxhdGlvbikKd3JpdGUuY3N2KFQyMU1lcmdlZCwgIi4uLy4uL0RhdGEvVDIxTWVyZ2Vkc2Vjb25kYXR0ZW1wdC5jc3YiKQpgYGAKCmBgYHtyfQpkZW1vIDwtIGltcG9ydCgiLi4vLi4vRGF0YS9UMjFNZXJnZWRzZWNvbmRhdHRlbXB0LmNzdiIpClZpZXcoZGVtbykKZGltKGRlbW8pCmBgYAoKCgpgYGB7cn0KVDIxTWVyZ2VkJEV2ZW50IDwtIGFzLm51bWVyaWMoVDIxTWVyZ2VkJEV2ZW50KQpgYGAKCgoKTG9naXQgTW9kZWwKYGBge3J9CmxvZ2l0bW9kZWwgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBOZWFyYnlUMjFSYXRpbyArIFBoeXNpY2FsbHlVbmhlYWx0aHlEYXlzICsgTWVudGFsbHlVbmhlYWx0aHlEYXlzICsgUGVyY2VudFNtb2tlcnMgKyBQZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgKyBUZWVuQmlydGhSYXRlICsgQ2hsYW15ZGlhUmF0ZSArIFBlcmNlbnRVbmVtcGxveWVkICsgVmlvbGVudENyaW1lUmF0ZSAgICwgZmFtaWx5ID0gYmlub21pYWwobGluayA9ICJsb2dpdCIpLCBkYXRhID0gVDIxTWVyZ2VkICkKCnN1bW1hcnkobG9naXRtb2RlbCkKYGBgCgpUYWJsZSBmb3JtYXQKYGBge3J9CnN0YXJnYXplcihsb2dpdG1vZGVsLCB0eXBlID0gInRleHQiKQoKYGBgCgpgYGB7cn0KZXhwKGNvZWZmaWNpZW50cyhsb2dpdG1vZGVsKSkKYGBgClNob3VsZCBOZWFyYnlUMjEgUmF0aW8gYmUgY29kZWQgYXMgYSBmYWN0b3I/CgpgYGB7cn0KVDIxTWVyZ2VkJEZOVDIxUmF0aW8gPC0gYXMuZmFjdG9yKFQyMU1lcmdlZCROZWFyYnlUMjFSYXRpbykKYGBgCgpMb2dpdCBNb2RlbCAyCmBgYHtyfQpsb2dpdG1vZGVsIDwtIGdsbShFdmVudCB+ICBQb3B1bGF0aW9uICsgRk5UMjFSYXRpbyArIFBoeXNpY2FsbHlVbmhlYWx0aHlEYXlzICsgTWVudGFsbHlVbmhlYWx0aHlEYXlzICsgUGVyY2VudFNtb2tlcnMgKyBQZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgKyBUZWVuQmlydGhSYXRlICsgQ2hsYW15ZGlhUmF0ZSArIFBlcmNlbnRVbmVtcGxveWVkICsgVmlvbGVudENyaW1lUmF0ZSAgICwgZmFtaWx5ID0gYmlub21pYWwobGluayA9ICJsb2dpdCIpLCBkYXRhID0gVDIxTWVyZ2VkICkKCnN1bW1hcnkobG9naXRtb2RlbCkKYGBgCgoK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OgogIGh0bWxfbm90ZWJvb2s6IGRlZmF1bHQKICBwZGZfZG9jdW1lbnQ6IGRlZmF1bHQKLS0tCkxpYnJhcmllcwoKYGBge3IsIHdhcm5pbmcgPSBGQUxTRX0KbGlicmFyeShyZWFkeGwpCmxpYnJhcnkoZGF0YS50YWJsZSkKbGlicmFyeShsdWJyaWRhdGUpICNEYXRlIFRpbWUgT2JqZWN0CmxpYnJhcnkoZ2dwbG90MikKbGlicmFyeShzdHJpbmdyKSAjUmVndWxhciBleHByZXNzaW9uIHN0cmluZyBzcGxpdHRpbmcKbGlicmFyeShyaW8pCmxpYnJhcnkoTUFTUykKbGlicmFyeSh0aWdyaXMpCmxpYnJhcnkoc3ApCmxpYnJhcnkoYnJvb20pCmxpYnJhcnkoZHBseXIpCmxpYnJhcnkocmdkYWwpCmxpYnJhcnkoc3RhcmdhemVyKQpsaWJyYXJ5KHN0YXRzKSAjUHJpbmNpcGFsIENvbXBvbmVudCBQYWNrYWdlCmBgYAoKVDIxIEV4dGVybmFsIFJhdyBEYXRhIApgYGB7cn0KVDIxRXh0ZXJuYWwgPC0gaW1wb3J0KCIuLi8uLi9EYXRhL01BQ1Rvd25IZWFsdGgyMV92Ni5jc3YiKQpWaWV3KFQyMUV4dGVybmFsKQpgYGAKClJlbW92ZSB0aGUgMiBjYXNlcyBhbmQgcmVtb3ZlIHRoZSB5ZWFycyBiZWZvcmUgMjAwOSBhbmQgcmVtb3ZpbmcgMjAxOCAoRGF0YSBuZWVkcyB0byBiZSByZWZvcm1hdHRlZCBhZ2FpbikKYGBge3J9ClQyMUV4dFN1YiA8LSBUMjFFeHRlcm5hbFtUMjFFeHRlcm5hbCRFdmVudCAhPSAyLCBdClQyMUV4dFN1YiA8LSBUMjFFeHRTdWJbLTFdClQyMUV4dFN1YiA8LSBzdWJzZXQoVDIxRXh0U3ViLCBZZWFyID4gMjAxMCkKVDIxRXh0U3ViIDwtIHN1YnNldChUMjFFeHRTdWIsIFllYXIgPCAyMDE4KQpWaWV3KFQyMUV4dFN1YikKCndyaXRlLmNzdihUMjFFeHRTdWIsICIuLi8uLi9EYXRhL1QyMUV4dFN1Yi5jc3YiKQpWaWV3KFQyMUV4dFN1YikKYGBgCgpBbGwgVDIxIEltcG9ydHMKCmBgYHtyfQpBbGxUMjFUb3BSYXRpb3MgPC0gaW1wb3J0KCIuLi8uLi9EYXRhL0FsbFQyMVRvcFJhdGlvcy5jc3YiKQpWaWV3KEFsbFQyMVRvcFJhdGlvcykKQWxsVDIxVG9wUmF0aW9zIDwtIEFsbFQyMVRvcFJhdGlvc1stMV0KVmlldyhBbGxUMjFUb3BSYXRpb3MpCmBgYAoKTWVyZ2luZyB0aGUgZGF0YSBmaWxlCmBgYHtyfQpUMjFNZXJnZWQgPC0gVDIxRXh0U3ViICU+JSBsZWZ0X2pvaW4oQWxsVDIxVG9wUmF0aW9zLCBieSA9IGMoIk5hbWUiID0iQ2l0eVRvd24iLCAiWWVhciIgPSAieWVhciIpKQpgYGAKCmBgYHtyfQpuYW1lcyhUMjFNZXJnZWQpIDwtIGdzdWIoIiAiLCIiLG5hbWVzKFQyMU1lcmdlZCkpCmBgYAoKYGBge3J9CnN0cihUMjFNZXJnZWQpClQyMU1lcmdlZCRQb3B1bGF0aW9uIDwtIGFzLm51bWVyaWMgKFQyMU1lcmdlZCRQb3B1bGF0aW9uKQp3cml0ZS5jc3YoVDIxTWVyZ2VkLCAiLi4vLi4vRGF0YS9UMjFNZXJnZWRzZWNvbmRhdHRlbXB0LmNzdiIpCmBgYAoKYGBge3J9CmRlbW8gPC0gaW1wb3J0KCIuLi8uLi9EYXRhL1QyMU1lcmdlZHNlY29uZGF0dGVtcHQuY3N2IikKVmlldyhkZW1vKQpkaW0oZGVtbykKYGBgCgoKCmBgYHtyfQpUMjFNZXJnZWQkRXZlbnQgPC0gYXMubnVtZXJpYyhUMjFNZXJnZWQkRXZlbnQpCmBgYAoKCgpMb2dpdCBNb2RlbApgYGB7cn0KbG9naXRtb2RlbDEgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBOZWFyYnlUMjFSYXRpbyArIFBoeXNpY2FsbHlVbmhlYWx0aHlEYXlzICsgTWVudGFsbHlVbmhlYWx0aHlEYXlzICsgUGVyY2VudFNtb2tlcnMgKyBQZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgKyBUZWVuQmlydGhSYXRlICsgQ2hsYW15ZGlhUmF0ZSArIFBlcmNlbnRVbmVtcGxveWVkICsgVmlvbGVudENyaW1lUmF0ZSAgICwgZmFtaWx5ID0gYmlub21pYWwobGluayA9ICJsb2dpdCIpLCBkYXRhID0gVDIxTWVyZ2VkICkKCnN1bW1hcnkobG9naXRtb2RlbDEpCmBgYAoKVGFibGUgZm9ybWF0CmBgYHtyfQpzdGFyZ2F6ZXIobG9naXRtb2RlbCwgdHlwZSA9ICJ0ZXh0IikKCmBgYAoKYGBge3J9CmV4cChjb2VmZmljaWVudHMobG9naXRtb2RlbCkpCmBgYApTaG91bGQgTmVhcmJ5VDIxIFJhdGlvIGJlIGNvZGVkIGFzIGEgZmFjdG9yPwoKYGBge3J9ClQyMU1lcmdlZCRGTlQyMVJhdGlvIDwtIGFzLmZhY3RvcihUMjFNZXJnZWQkTmVhcmJ5VDIxUmF0aW8pCmBgYAoKTG9naXQgTW9kZWwgMgpgYGB7cn0KbG9naXRtb2RlbDIgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBGTlQyMVJhdGlvICsgUGh5c2ljYWxseVVuaGVhbHRoeURheXMgKyBNZW50YWxseVVuaGVhbHRoeURheXMgKyBQZXJjZW50U21va2VycyArIFBlcmNlbnRFeGNlc3NpdmVEcmlua2luZyArIFRlZW5CaXJ0aFJhdGUgKyBDaGxhbXlkaWFSYXRlICsgUGVyY2VudFVuZW1wbG95ZWQgKyBWaW9sZW50Q3JpbWVSYXRlICAgLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gImxvZ2l0IiksIGRhdGEgPSBUMjFNZXJnZWQgKQoKc3VtbWFyeShsb2dpdG1vZGVsMikKYGBgCgoKYGBge3J9CnN0YXJnYXplcihsb2dpdG1vZGVsMiwgdHlwZSA9ICJ0ZXh0IikKYGBgCmBgYHtyfQpleHAoY29lZmZpY2llbnRzKGxvZ2l0bW9kZWwyKSkKYGBgCgoqKlByaW5jaXBhbCBDb21wb25lbnQgQW5hbHlzaXMqKgoKClByaW5jaXBhbCBDb21wb25lbnQgQW5hbHlzaXMKCmBgYHtyfQpwY2FfdGVzdCA8LSBUMjFNZXJnZWQKYGBgCgpgYGB7cn0KVmlldyhwY2FfdGVzdCkKYGBgCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoK</div>
 
 
 

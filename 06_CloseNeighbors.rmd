@@ -1,0 +1,163 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+```{r, warning = FALSE}
+library(readxl)
+library(data.table)
+library(lubridate) #Date Time Object
+library(ggplot2)
+library(stringr) #Regular expression string splitting
+library(rio)
+library(MASS)
+library(tigris)
+library(sp)
+library(broom)
+library(dplyr)
+library(rgdal)
+library(rgeos)
+library(spdep)
+```
+
+Shape Files by Town Boundaries
+```{r}
+MA_Town_1 <- readOGR("Data/towns/TOWNS_POLYM.shp")
+MA_Town_2 <- readOGR("Data/towns/TOWNS_POLYM.shp")
+MA_Town_1$TOWN[211] <- "north attleboro"
+MA_Town_2$TOWN[211] <- "north attleboro"
+```
+
+Algorithm
+
+1) Check if the town is neighbor to another town
+2) If it is, check if it has T21 in that year
+3) If it has T21, calculate the ratio
+
+```{r}
+res <- gTouches(MA_Town_1, MA_Town_2, byid = TRUE)
+rownames(res) <- MA_Town_1@data$TOWN
+colnames(res) <- MA_Town_1@data$TOWN
+View(res)
+sum(res)
+```
+
+Checking whether Queens or Rooks
+```{r}
+neighbors <- poly2nb(MA_Town_1, queen = TRUE)
+neighbors
+```
+
+
+Getting the list of list from Neighbors object
+```{r}
+neighbor_list <-lapply(neighbors, unlist)
+```
+
+Building empty data frame for neighbor matrix
+```{r}
+#ncol
+ncol <- max(sapply(neighbor_list, length))
+nrow <- length(neighbor_list)
+neighbormat <- matrix(NA, nrow = nrow, ncol = ncol)
+```
+
+Neighbors Matrix with Indexes through a For Loop
+```{r}
+for(i in 1:nrow(neighbormat)){
+  tmp <- unlist(neighbor_list[i])
+  len <- length(tmp)
+  for(j in 1:len){
+    neighbormat[i,j] <- tmp[j]
+  }
+}
+neighbormat <- data.frame(neighbormat)
+
+
+
+```
+
+Checking Neighbor list from Polygon matches with Neighbor list from James
+```{r}
+MAT21_neighbor_year <- read.csv("Data/matowndistyear_edited.csv")
+MAT21_neighbor_year <- MAT21_neighbor_year[,-1]
+MAT21_neighbor_year <- MAT21_neighbor_year[MAT21_neighbor_year$Event == 1 & MAT21_neighbor_year$csum ==1,]
+View(MAT21_neighbor_year)
+```
+
+```{r}
+MA_Town_ids<- data.frame(tolower(MA_Town_1@data$TOWN))
+MAT21_neighbor_year$TownName <- as.factor(tolower(MAT21_neighbor_year$TownName))
+
+
+#leftjoin to get indexes
+MA_Town_ids$id <- seq.int(nrow(MA_Town_ids))
+names(MA_Town_ids)[1] <-c("TownName") 
+MAT21_neighbor_year_index <- MAT21_neighbor_year %>% left_join(MA_Town_ids, by = c("TownName"))
+MAT21_neighbor_year_index
+```
+
+```{r}
+neighbormat_t21 <- neighbormat[MAT21_neighbor_year_index$id,]
+neighbormat_t21$index <- row.names(neighbormat_t21)
+neighbormat_t21$denom <- apply(neighbormat_t21, 1, function(x) (sum(!is.na(x))))
+```
+
+```{r}
+yearratio <- function(neighbormat_t21, MAT21_neighbor_year_index, year){
+
+  tmp1 <- neighbormat_t21 #neighbors matrix
+  tmp2 <- MAT21_neighbor_year_index #all the MAT21 indexes
+  
+  #grab the year we are interested in
+  #browser()
+  tmpyear <- tmp2[tmp2$year %in% c(2009:year-1),]
+  
+  tmpyear <- unique(tmpyear)
+  
+  browser()
+  tmp1$num <- apply(tmp1, 1, function(x) sum(x %in% tmpyear$id))
+  tmp1$ratio <- tmp1$num/tmp1$denom
+  browser()
+  tmp1$index <- as.character(tmp1$index)
+  tmp2$id <- as.character(tmp2$id)
+ 
+  tmpfinal <- tmp2 %>% left_join(tmp1, by = c("id" = "index"))
+  tmpfinal <- tmpfinal[,c("TownName", "ratio")]
+  tmpfinal$year <- c(year)
+  return(tmpfinal)
+}
+```
+
+
+```{r}
+neighbor_2010 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2010)
+neighbor_2011 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2011)
+neighbor_2012 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2012)
+neighbor_2013 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2013)
+neighbor_2014 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2014)
+neighbor_2015 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2015)
+
+neighbor_2016 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2016)
+neighbor_2017 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2017)
+```
+
+
+```{r}
+
+borderratios <- rbind(neighbor_2010, neighbor_2011, neighbor_2012, neighbor_2013, neighbor_2014, neighbor_2015, neighbor_2016, neighbor_2017)
+
+View(borderratios)
+
+tmp1
+tmp2[tmp2$TownName == "norwood",]
+tmp1[tmp1$index == 236,]
+
+sum(tmp2$id %in% tmp1[tmp1$index == 236,])
+
+
+
+```
+
+

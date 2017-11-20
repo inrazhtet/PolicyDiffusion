@@ -194,25 +194,18 @@ library(rgdal)</code></pre>
 <p>UNUSED: BLOCKGROUP METHOD Getting Census Block Group Shape files from Tigiris</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTUEgPC0gYmxvY2tfZ3JvdXBzKFwiTUFcIilcbmBgYCJ9 -->
-<pre class="r"><code>MA &lt;- block_groups(&quot;MA&quot;)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI01BIDwtIGJsb2NrX2dyb3VwcyhcIk1BXCIpXG5gYGAifQ== -->
+<pre class="r"><code>#MA &lt;- block_groups(&quot;MA&quot;)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiVXNpbmcgRklQUyBjb2RlICcyNScgZm9yIHN0YXRlICdNQSdcbnRyeWluZyBVUkwgJ2h0dHA6Ly93d3cyLmNlbnN1cy5nb3YvZ2VvL3RpZ2VyL1RJR0VSMjAxNS9CRy90bF8yMDE1XzI1X2JnLnppcCdcbkNvbnRlbnQgdHlwZSAnYXBwbGljYXRpb24vemlwJyBsZW5ndGggODA4MDQ1MiBieXRlcyAoNy43IE1CKVxuPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT1cbmRvd25sb2FkZWQgNy43IE1CXG4ifQ== -->
-<pre><code>Using FIPS code '25' for state 'MA'
-trying URL 'http://www2.census.gov/geo/tiger/TIGER2015/BG/tl_2015_25_bg.zip'
-Content type 'application/zip' length 8080452 bytes (7.7 MB)
-==================================================
-downloaded 7.7 MB</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>To make it plottable on ggplot</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTUFAZGF0YSRpZCA8LSByb3duYW1lcyhNQUBkYXRhKVxuTUEucG9pbnRzIDwtIGZvcnRpZnkoTUEsIHJlZ2lvbiA9IFwiaWRcIilcbk1BLmRmIDwtIE1BLnBvaW50cyAlPiUgbGVmdF9qb2luKE1BQGRhdGEsIGJ5ID0gYyhcImlkXCIsIFwiaWRcIikpXG5gYGAifQ== -->
-<pre class="r"><code>MA@data$id &lt;- rownames(MA@data)
-MA.points &lt;- fortify(MA, region = &quot;id&quot;)
-MA.df &lt;- MA.points %&gt;% left_join(MA@data, by = c(&quot;id&quot;, &quot;id&quot;))</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBNQUBkYXRhJGlkIDwtIHJvd25hbWVzKE1BQGRhdGEpXG4jIE1BLnBvaW50cyA8LSBmb3J0aWZ5KE1BLCByZWdpb24gPSBcImlkXCIpXG4jIE1BLmRmIDwtIE1BLnBvaW50cyAlPiUgbGVmdF9qb2luKE1BQGRhdGEsIGJ5ID0gYyhcImlkXCIsIFwiaWRcIikpXG5gYGAifQ== -->
+<pre class="r"><code># MA@data$id &lt;- rownames(MA@data)
+# MA.points &lt;- fortify(MA, region = &quot;id&quot;)
+# MA.df &lt;- MA.points %&gt;% left_join(MA@data, by = c(&quot;id&quot;, &quot;id&quot;))</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -231,36 +224,53 @@ MA.df &lt;- MA.points %&gt;% left_join(MA@data, by = c(&quot;id&quot;, &quot;id&
 <p>ShapeFile of MA by Lower House boundaries</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTUFfTEggPC0gZm9ydGlmeShNQV9MSCwgcmVnaW9uID0gXCJHRU9fSURcIilcblxuYGBgIn0= -->
-<pre class="r"><code>MA_LH &lt;- fortify(MA_LH, region = &quot;GEO_ID&quot;)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTUFfTEggPC0gcmVhZE9HUihcIi4uLy4uL0RhdGEvU2hhcGVmaWxlcy9cIiwgbGF5ZXIgPSBcImNiXzIwMTZfMjVfc2xkbF81MDBrXCIpXG5NQV9MSEBkYXRhJGlkIDwtIHJvd25hbWVzKE1BX0xIQGRhdGEpXG5NQV9MSC5wb2ludHMgPC0gZm9ydGlmeShNQV9MSCwgcmVnaW9uID0gXCJpZFwiKVxuTUFfTEhfZGF0YSA8LSBNQV9MSC5wb2ludHMgJT4lIGxlZnRfam9pbihNQV9MSEBkYXRhLCBieSA9IGMoXCJpZFwiLCBcImlkXCIpKVxuYGBgIn0= -->
+<pre class="r"><code>MA_LH &lt;- readOGR(&quot;../../Data/Shapefiles/&quot;, layer = &quot;cb_2016_25_sldl_500k&quot;)
+MA_LH@data$id &lt;- rownames(MA_LH@data)
+MA_LH.points &lt;- fortify(MA_LH, region = &quot;id&quot;)
+MA_LH_data &lt;- MA_LH.points %&gt;% left_join(MA_LH@data, by = c(&quot;id&quot;, &quot;id&quot;))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gYFsuZGF0YS5mcmFtZWAoYXR0ciwgLCByZWdpb24pIDogdW5kZWZpbmVkIGNvbHVtbnMgc2VsZWN0ZWRcbiJ9 -->
-<pre><code>Error in `[.data.frame`(attr, , region) : undefined columns selected</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <p>Read in the Long and Lat file for T21 for MA</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubmFtZXMoTUFfTG9uX0xhdClcblxuYGBgIn0= -->
-<pre class="r"><code>names(MA_Lon_Lat)
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTUFfTG9uX0xhdCA8LSBpbXBvcnQoXCIuLi8uLi9EYXRhL01BMjFfbG9ubGF0LmNzdlwiKVxuVmlldyhNQV9Mb25fTGF0KVxuY29vcmRzIDwtIE1BX0xvbl9MYXRbLCBjKFwibG9uXCIsIFwibGF0XCIpXVxuI0NoZWNrIHRvIHNlZSBpZiB3ZSBoYXZlIGFueSBtaXNzaW5nXG5jb29yZHMgPC0gY29vcmRzW2NvbXBsZXRlLmNhc2VzKGNvb3JkcyksXVxuI0NvbnZlcnQgaXQgdG8gU3BhdGlhbCBQb2ludHNcbnNwIDwtIFNwYXRpYWxQb2ludHMoY29vcmRzKVxuYGBgIn0= -->
+<pre class="r"><code>MA_Lon_Lat &lt;- import(&quot;../../Data/MA21_lonlat.csv&quot;)
+View(MA_Lon_Lat)
+coords &lt;- MA_Lon_Lat[, c(&quot;lon&quot;, &quot;lat&quot;)]
+#Check to see if we have any missing
+coords &lt;- coords[complete.cases(coords),]
+#Convert it to Spatial Points
+sp &lt;- SpatialPoints(coords)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiVjFcIiAgICAgICBcIkNpdHlUb3duXCIgXCJsb25cIiAgICAgIFwibGF0XCIgICAgIFxuIn0= -->
-<pre><code>[1] &quot;V1&quot;       &quot;CityTown&quot; &quot;lon&quot;      &quot;lat&quot;     </code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2dzYXZlKHAsIGZpbGUgPSBcIi4uLy4uL0RhdGEvTUFUMjEucG5nXCIsIHR5cGUgPSBcImNhaXJvLXBuZ1wiKVxuXG5gYGAifQ== -->
-<pre class="r"><code>ggsave(p, file = &quot;../../Data/MAT21.png&quot;, type = &quot;cairo-png&quot;)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucCA8LSBnZ3Bsb3QoKSArXG4gICAgZ2VvbV9wb2x5Z29uKGRhdGEgPSBNQV9MSF9kYXRhLCBhZXMoeCA9IGxvbmcsIHkgPSBsYXQsIGdyb3VwID0gZ3JvdXApLCBjb2xvciA9IFwiYmxhY2tcIiwgc2l6ZSA9IDAuMjUsIGFscGhhID0gMC4yNSwgZmlsbCA9IFwiaXZvcnk0XCIpXG5wIDwtIHAgK2dlb21fcG9pbnQoZGF0YSA9IE1BX0xvbl9MYXQsIGFlcyh4ID0gbG9uLCB5ID0gbGF0LCBjb2xvciA9IFwicmVkXCIpLCBzaXplID0gMC41IClcbnAgPC0gcCArIGNvb3JkX21hcCgpXG5wIDwtIHAgKyBsYWJzKHg9TlVMTCwgeT1OVUxMLCBcbiAgICAgICAgICAgICAgICAgIHRpdGxlPVwiVDIxIGNpdGllcyBpbiBNQVwiLFxuICAgICAgICAgICAgICAgICAgc3VidGl0bGU9TlVMTCxcbiAgICAgICAgICAgICAgICAgIGNhcHRpb249XCJTb3VyY2U6IFQyMSB3ZWJzaXRlXCIpXG5wIDwtIHAgKyB0aGVtZShwbG90LnRpdGxlPWVsZW1lbnRfdGV4dChmYWNlPVwiYm9sZFwiLCBmYW1pbHk9XCJBcmlhbFwiLCBzaXplPTIwKSlcbnAgPC0gcCArIHRoZW1lKHBsb3QuY2FwdGlvbj1lbGVtZW50X3RleHQoZmFjZT1cImJvbGRcIiwgZmFtaWx5PVwiQXJpYWxcIiwgc2l6ZT0xMCwgY29sb3I9XCJncmF5XCIsIG1hcmdpbj1tYXJnaW4odD0xMCwgcj04MCkpKVxucCA8LSBwICsgdGhlbWUobGVnZW5kLnBvc2l0aW9uPVwibm9uZVwiKVxucCA8LSBwICsgdGhlbWUoYXhpcy5saW5lID0gIGVsZW1lbnRfYmxhbmsoKSxcbiAgICAgICAgICAgICAgICAgICBheGlzLnRleHQgPSAgZWxlbWVudF9ibGFuaygpLFxuICAgICAgICAgICAgICAgICAgIGF4aXMudGlja3MgPSAgZWxlbWVudF9ibGFuaygpLFxuICAgICAgICAgICAgICAgICAgIHBhbmVsLmdyaWQubWFqb3IgPSBlbGVtZW50X2JsYW5rKCksXG4gICAgICAgICAgICAgICAgICAgcGFuZWwuZ3JpZC5taW5vciA9IGVsZW1lbnRfYmxhbmsoKSxcbiAgICAgICAgICAgICAgICAgICBwYW5lbC5ib3JkZXIgPSBlbGVtZW50X2JsYW5rKCksXG4gICAgICAgICAgICAgICAgICAgcGFuZWwuYmFja2dyb3VuZCA9IGVsZW1lbnRfYmxhbmsoKSkgXG5wcmludChwKVxuZ2dzYXZlKHAsIGZpbGUgPSBcIi4uLy4uL0RhdGEvTUFUMjEucG5nXCIsIHR5cGUgPSBcImNhaXJvLXBuZ1wiKVxuXG5gYGAifQ== -->
+<pre class="r"><code>p &lt;- ggplot() +
+    geom_polygon(data = MA_LH_data, aes(x = long, y = lat, group = group), color = &quot;black&quot;, size = 0.25, alpha = 0.25, fill = &quot;ivory4&quot;)
+p &lt;- p +geom_point(data = MA_Lon_Lat, aes(x = lon, y = lat, color = &quot;red&quot;), size = 0.5 )
+p &lt;- p + coord_map()
+p &lt;- p + labs(x=NULL, y=NULL, 
+                  title=&quot;T21 cities in MA&quot;,
+                  subtitle=NULL,
+                  caption=&quot;Source: T21 website&quot;)
+p &lt;- p + theme(plot.title=element_text(face=&quot;bold&quot;, family=&quot;Arial&quot;, size=20))
+p &lt;- p + theme(plot.caption=element_text(face=&quot;bold&quot;, family=&quot;Arial&quot;, size=10, color=&quot;gray&quot;, margin=margin(t=10, r=80)))
+p &lt;- p + theme(legend.position=&quot;none&quot;)
+p &lt;- p + theme(axis.line =  element_blank(),
+                   axis.text =  element_blank(),
+                   axis.ticks =  element_blank(),
+                   panel.grid.major = element_blank(),
+                   panel.grid.minor = element_blank(),
+                   panel.border = element_blank(),
+                   panel.background = element_blank()) 
+print(p)
+ggsave(p, file = &quot;../../Data/MAT21.png&quot;, type = &quot;cairo-png&quot;)
 </code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiU2F2aW5nIDcgeCA3IGluIGltYWdlXG4ifQ== -->
-<pre><code>Saving 7 x 7 in image</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
