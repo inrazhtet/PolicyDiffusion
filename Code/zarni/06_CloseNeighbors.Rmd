@@ -94,6 +94,8 @@ MAT21_neighbor_year$TownName <- as.factor(tolower(MAT21_neighbor_year$TownName))
 #leftjoin to get indexes
 MA_Town_ids$id <- seq.int(nrow(MA_Town_ids))
 names(MA_Town_ids)[1] <-c("TownName") 
+MA_master_town <- MA_Town_ids
+
 MAT21_neighbor_year_index <- MAT21_neighbor_year %>% left_join(MA_Town_ids, by = c("TownName"))
 MAT21_neighbor_year_index #140 towns with Smoking regulations
 ```
@@ -106,11 +108,12 @@ View(neighbormat_t21)
 ```
 
 ```{r}
-yearratio <- function(neighbormat_t21, MAT21_neighbor_year_index, year){
+yearratio <- function(neighbormat_t21, MAT21_neighbor_year_index, MA_master_town, year){
 
   tmp1 <- neighbormat_t21 #neighbors matrix
   tmp3 <- neighbormat_t21[,c(1:10)]
   tmp2 <- MAT21_neighbor_year_index #all the MAT21 indexes
+  tmp4 <- MA_master_town
   
   #grab the year we are interested in
   #browser()
@@ -123,9 +126,11 @@ yearratio <- function(neighbormat_t21, MAT21_neighbor_year_index, year){
   tmp1$ratio <- tmp1$num/tmp1$denom
   #browser()
   tmp1$index <- as.character(tmp1$index)
-  tmp2$id <- as.character(tmp2$id)
- 
-  tmpfinal <- tmp2 %>% right_join(tmp1, by = c("id" = "index"))
+  tmp4$id <- as.character(tmp4$id)
+  
+  #browser()
+  
+  tmpfinal <- tmp4 %>% left_join(tmp1, by = c("id" = "index"))
   tmpfinal <- tmpfinal[,c("TownName", "ratio")]
   tmpfinal$year <- c(year)
   return(tmpfinal)
@@ -134,23 +139,27 @@ yearratio <- function(neighbormat_t21, MAT21_neighbor_year_index, year){
 
 
 ```{r}
-neighbor_2010 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2010)
-neighbor_2011 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2011)
-neighbor_2012 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2012)
-neighbor_2013 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2013)
-neighbor_2014 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2014)
-neighbor_2015 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2015)
-neighbor_2016 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2016)
-neighbor_2017 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2017)
+neighbor_2010 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,MA_master_town,2010)
+neighbor_2011 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,MA_master_town,2011)
+neighbor_2012 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,MA_master_town,2012)
+neighbor_2013 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,MA_master_town,2013)
+neighbor_2014 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,MA_master_town,2014)
+neighbor_2015 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,MA_master_town,2015)
+neighbor_2016 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,MA_master_town,2016)
+neighbor_2017 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,MA_master_town,2017)
 ```
 
 
 ```{r}
 nrow(neighbor_2010)
+```
 
 
+
+```{r}
 borderratios <- rbind(neighbor_2010, neighbor_2011, neighbor_2012, neighbor_2013, neighbor_2014, neighbor_2015, neighbor_2016, neighbor_2017)
-write.csv(borderratios, "../../Data/borderratios.csv")
+nrow(borderratios)
+write.csv(borderratios, "../../Data/borderratios_updated.csv")
 ```
 
 
