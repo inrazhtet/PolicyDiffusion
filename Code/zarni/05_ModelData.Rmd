@@ -148,7 +148,7 @@ master <- rio::import("../../Data/master.csv")
 #Dropping Chlamydia Rate becasue we do NOT understand the measurement for now.
 master <- subset(master, select = -c(25))
 master <- master[,-c(1:2)]
-#View(master)
+View(master)
 ```
 
 Getting the Top 10 ratios
@@ -172,21 +172,64 @@ T21_TopRatios_Master$Population <- as.numeric(T21_TopRatios_Master$Population)
 sort(names(T21_TopRatios_Master))
 ```
 
-The Election data is at the Presidential level
+Neighborhood Distance Function Method 1
 
 ```{r}
 logitmodel_lag_21 <- glm(Event ~  Population + prct_r_2012 + prct_d_2012 + prct_d_2016 + prct_r_2016 + mayor_ind + nearbyt21ratio   , family = binomial(link = "logit"), data = T21_TopRatios_Master)
 summary(logitmodel_lag_21)
 ```
 
-County Level Data
+Neighborhood Distance Function Method 2
+
+Getting the distance based ratios
+```{r}
+AllT21ratios <- rio:: import("../../Data/AllT21Ratios.csv")
+AllT21ratios <- AllT21ratios[-1]
+```
+
+```{r}
+View(master)
+T21_Ratios_Master <- master %>% left_join(AllT21ratios, by = c("Name.x" ="CityTown", "year_dummy-2" = "year"))
+names(T21_Ratios_Master)[73] <- c("nearbyt21ratio")
+```
+
+```{r}
+T21_Ratios_Master <- T21_Ratios_Master[T21_Ratios_Master$Event !=2,]
+T21_Ratios_Master$Population <- as.numeric(T21_Ratios_Master$Population)
+sort(names(T21_Ratios_Master))
+```
+
+Neighborhood Distance function Method 2
+```{r}
+logitmodel_lag_22 <- glm(Event ~  Population + prct_r_2012 + prct_d_2012 + prct_d_2016 + prct_r_2016 + mayor_ind + nearbyt21ratio   , family = binomial(link = "logit"), data = T21_Ratios_Master)
+summary(logitmodel_lag_22)
+```
 
 
+Getting the Contigency based ratio which is already 1 year lagged
+
+```{r}
+AllT21ContigencyRatios <- rio::import("../../Data/borderratios.csv")
+AllT21ContigencyRatios <- AllT21ContigencyRatios[-1]
+```
+
+```{r}
+T21_Contingency_Master <- master %>% left_join(AllT21ContigencyRatios, by = c("Name.x" ="TownName", "Year" = "year"))
+names(T21_Contingency_Master)[73] <- c("nearbyt21ratio")
+```
+
+```{r}
+T21_Contnigency_Master <- T21_Contingency_Master[T21_Contingency_Master$Event !=2,]
+T21_Contingency_Master$Population <- as.numeric(T21_Contingency_Master$Population)
+sort(names(T21_Contingency_Master))
+```
 
 
-
-
-
+Neighborhood Contingency
+```{r}
+logitmodel_lag_23 <- glm(Event ~  Population + prct_r_2012 + prct_d_2012 + prct_d_2016 + prct_r_2016 + mayor_ind + nearbyt21ratio   , family = binomial(link = "logit"), data = T21_Contingency_Master)
+summary(logitmodel_lag_23)
+```
 
 
 
