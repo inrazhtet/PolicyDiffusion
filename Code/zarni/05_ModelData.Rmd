@@ -139,57 +139,47 @@ What is the difference between using covariance matrix and correlation matrix?
 pca_job <- princomp(pca_test_01, cor = FALSE)
 ```
 
-Master File
+###Master File Latest Model Building
 
 ```{r}
 master <- rio::import("../../Data/master.csv")
-View(master)
-sort(names(master))
+#View(master)
+#names(master)
 #Dropping Chlamydia Rate becasue we do NOT understand the measurement for now.
-master <- master[,-c("Chlamydia.Rate")]
+master <- subset(master, select = -c(25))
 master <- master[,-c(1:2)]
-View(master)
+#View(master)
 ```
 
 Getting the Top 10 ratios
 ```{r}
 AllT21TopRatios <- import("../../Data/AllT21TopRatios.csv")
-View(AllT21TopRatios)
+#View(AllT21TopRatios)
 AllT21TopRatios <- AllT21TopRatios[-1]
-View(AllT21TopRatios)
+#View(AllT21TopRatios)
 ```
 
 
 Merging Ratios and the Master File
 ```{r}
-T21Merged_Master <- master %>% left_join(AllT21TopRatios, by = c("Name.x" ="CityTown", "year_dummy-2" = "year"))
-names(T21Merged_Master)[74] <- c("nearbyt21ratio")
+T21_TopRatios_Master <- master %>% left_join(AllT21TopRatios, by = c("Name.x" ="CityTown", "year_dummy-2" = "year"))
+names(T21_TopRatios_Master)[73] <- c("nearbyt21ratio")
 ```
 
 ```{r}
-T21Merged_Master <- T21Merged_Master[T21Merged_Master$Event !=2,]
-T21Merged_Master$Population <- as.numeric(T21Merged_Master$Population)
-names(T21Merged_Master)
+T21_TopRatios_Master <- T21_TopRatios_Master[T21_TopRatios_Master$Event !=2,]
+T21_TopRatios_Master$Population <- as.numeric(T21_TopRatios_Master$Population)
+sort(names(T21_TopRatios_Master))
 ```
 
 The Election data is at the Presidential level
 
 ```{r}
-logitmodel2 <- glm(Event ~  Population + prct_r_2012 + prct_d_2012 + prct_d_2016 + prct_r_2016 + mayor_ind + nearbyt21ratio   , family = binomial(link = "logit"), data = T21Merged_Master)
-summary(logitmodel2)
+logitmodel_lag_21 <- glm(Event ~  Population + prct_r_2012 + prct_d_2012 + prct_d_2016 + prct_r_2016 + mayor_ind + nearbyt21ratio   , family = binomial(link = "logit"), data = T21_TopRatios_Master)
+summary(logitmodel_lag_21)
 ```
-
 
 County Level Data
-```{r}
-No_PrematureDeaths
-Years.of.Potential.Life.Lost.Rate
-Percent_FairOrPoor 
-
-```
-
-
-
 
 
 
