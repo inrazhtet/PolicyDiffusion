@@ -127,8 +127,30 @@ pca_test <- T21Merged
 
 ```{r}
 View(pca_test)
+names(pca_test)
+pca_test_01 <- pca_test[,c(7:36)]
 ```
 
+What is the difference between using covariance matrix and correlation matrix?
+
+```{r}
+pca_job <- princomp(pca_test_01, cor = FALSE)
+```
+
+Lagged Data
+
+```{r}
+
+
+
+```
+
+
+Master File
+
+```{r}
+
+```
 
 
 

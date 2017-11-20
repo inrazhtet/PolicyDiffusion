@@ -25,8 +25,8 @@ Shape Files by Town Boundaries
 ```{r}
 MA_Town_1 <- readOGR("../../Data/towns/TOWNS_POLYM.shp")
 MA_Town_2 <- readOGR("../../Data/towns/TOWNS_POLYM.shp")
-MA_Town_1$TOWN[211] <- "north attleboro"
-MA_Town_2$TOWN[211] <- "north attleboro"
+levels(MA_Town_1$TOWN)[levels(MA_Town_1$TOWN) == "NORTH ATTLEBOROUGH"] <- "north attleboro"
+levels(MA_Town_2$TOWN)[levels(MA_Town_2$TOWN) == "NORTH ATTLEBOROUGH"] <- "north attleboro"
 ```
 
 Algorithm
@@ -80,7 +80,7 @@ neighbormat <- data.frame(neighbormat)
 
 Checking Neighbor list from Polygon matches with Neighbor list from James
 ```{r}
-MAT21_neighbor_year <- read.csv("Data/matowndistyear_edited.csv")
+MAT21_neighbor_year <- read.csv("../../Data/matowndistyear_edited.csv")
 MAT21_neighbor_year <- MAT21_neighbor_year[,-1]
 MAT21_neighbor_year <- MAT21_neighbor_year[MAT21_neighbor_year$Event == 1 & MAT21_neighbor_year$csum ==1,]
 View(MAT21_neighbor_year)
@@ -108,6 +108,7 @@ neighbormat_t21$denom <- apply(neighbormat_t21, 1, function(x) (sum(!is.na(x))))
 yearratio <- function(neighbormat_t21, MAT21_neighbor_year_index, year){
 
   tmp1 <- neighbormat_t21 #neighbors matrix
+  tmp3 <- neighbormat_t21[,c(1:10)]
   tmp2 <- MAT21_neighbor_year_index #all the MAT21 indexes
   
   #grab the year we are interested in
@@ -116,10 +117,10 @@ yearratio <- function(neighbormat_t21, MAT21_neighbor_year_index, year){
   
   tmpyear <- unique(tmpyear)
   
-  browser()
-  tmp1$num <- apply(tmp1, 1, function(x) sum(x %in% tmpyear$id))
+  #browser()
+  tmp1$num <- apply(tmp3, 1, function(x) sum(x %in% tmpyear$id))
   tmp1$ratio <- tmp1$num/tmp1$denom
-  browser()
+  #browser()
   tmp1$index <- as.character(tmp1$index)
   tmp2$id <- as.character(tmp2$id)
  
@@ -145,19 +146,17 @@ neighbor_2017 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2017)
 
 
 ```{r}
-
 borderratios <- rbind(neighbor_2010, neighbor_2011, neighbor_2012, neighbor_2013, neighbor_2014, neighbor_2015, neighbor_2016, neighbor_2017)
+write.csv(borderratios, "../../Data/borderratios.csv")
+```
 
-View(borderratios)
+
+```{r}
 
 tmp1
 tmp2[tmp2$TownName == "norwood",]
 tmp1[tmp1$index == 236,]
-
 sum(tmp2$id %in% tmp1[tmp1$index == 236,])
 
-
-
 ```
-
 
