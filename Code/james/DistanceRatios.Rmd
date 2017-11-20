@@ -104,7 +104,7 @@ T21Ratios
 #write.csv(T21Ratios,"../../Data/T21Ratios.csv")
 ```
 
-We can alternatively look at the top somenumber of closest neighbors instead:
+## We can alternatively look at the top somenumber of closest neighbors instead:
 
 ```{r}
 TopT21Ratios = function(distmatrix, T21List,HowMany = 10){
@@ -309,3 +309,259 @@ ALLTopRATIO = rbind(T21TopRatios2005,T21TopRatios2006,T21TopRatios2007,T21TopRat
 #write.csv(ALLTopRATIO,"./AllT21TopRatios.csv")
 ```
 
+
+# Road Distance?
+
+```{r}
+require(gmapsdistance)
+
+gmapsdistancefix <- function (origin, destination, combinations = "all", mode, key = get.api.key(), 
+    shape = "wide", avoid = "", departure = "now", dep_date = "", 
+    dep_time = "", traffic_model = "best_guess", arrival = "", 
+    arr_date = "", arr_time = "") 
+{
+  require(RCurl)
+  require(XML)
+    if (!(mode %in% c("driving", "walking", "bicycling", "transit"))) {
+        stop("Mode of transportation not recognized. Mode should be one of ", 
+            "'bicycling', 'transit', 'driving', 'walking' ")
+    }
+    if (!(combinations %in% c("all", "pairwise"))) {
+        stop("Combinations between origin and destination not recognized. Combinations should be one of ", 
+            "'all', 'pairwise' ")
+    }
+    if (!(avoid %in% c("", "tolls", "highways", "ferries", "indoor"))) {
+        stop("Avoid parameters not recognized. Avoid should be one of ", 
+            "'tolls', 'highways', 'ferries', 'indoor' ")
+    }
+    if (!(traffic_model %in% c("best_guess", "pessimistic", "optimistic"))) {
+        stop("Traffic model not recognized. Traffic model should be one of ", 
+            "'best_guess', 'pessimistic', 'optimistic'")
+    }
+    seconds = "now"
+    seconds_arrival = ""
+    UTCtime = strptime("1970-01-01 00:00:00", "%Y-%m-%d %H:%M:%OS", 
+        tz = "GMT")
+    min_secs = round(as.numeric(difftime(as.POSIXlt(Sys.time(), 
+        "GMT"), UTCtime, units = "secs")))
+    if (dep_date != "" && dep_time != "") {
+        depart = strptime(paste(dep_date, dep_time), "%Y-%m-%d %H:%M:%OS", 
+            tz = "GMT")
+        seconds = round(as.numeric(difftime(depart, UTCtime, 
+            units = "secs")))
+    }
+    if (departure != "now") {
+        seconds = departure
+    }
+    if (departure != "now" && departure < min_secs) {
+        stop("The departure time has to be some time in the future!")
+    }
+    if (dep_date != "" && dep_time == "") {
+        stop("You should also specify a departure time in the format HH:MM:SS UTC")
+    }
+    if (dep_date == "" && dep_time != "") {
+        stop("You should also specify a departure date in the format YYYY-MM-DD UTC")
+    }
+    if (dep_date != "" && dep_time != "" && seconds < min_secs) {
+        stop("The departure time has to be some time in the future!")
+    }
+    if (arr_date != "" && arr_time != "") {
+        arriv = strptime(paste(arr_date, arr_time), "%Y-%m-%d %H:%M:%OS", 
+            tz = "GMT")
+        seconds_arrival = round(as.numeric(difftime(arriv, UTCtime, 
+            units = "secs")))
+    }
+    if (arrival != "") {
+        seconds_arrival = arrival
+    }
+    if (arrival != "" && arrival < min_secs) {
+        stop("The arrival time has to be some time in the future!")
+    }
+    if (arr_date != "" && arr_time == "") {
+        stop("You should also specify an arrival time in the format HH:MM:SS UTC")
+    }
+    if (arr_date == "" && arr_time != "") {
+        stop("You should also specify an arrival date in the format YYYY-MM-DD UTC")
+    }
+    if (arr_date != "" && arr_time != "" && seconds_arrival < 
+        min_secs) {
+        stop("The arrival time has to be some time in the future!")
+    }
+    if ((dep_date != "" || dep_time != "" || departure != "now") && 
+        (arr_date != "" || arr_time != "" || arrival != "")) {
+        stop("Cannot input departure and arrival times. Only one can be used at a time. ")
+    }
+    if (combinations == "pairwise" && length(origin) != length(destination)) {
+        stop("Size of origin and destination vectors must be the same when using the option: combinations == 'pairwise'")
+    }
+    if (combinations == "all") {
+        data = expand.grid(or = origin, de = destination)
+    }
+    else if (combinations == "pairwise") {
+        data = data.frame(or = origin, de = destination)
+    }
+    n = dim(data)
+    n = n[1]
+    data$Time = NA
+    data$Distance = NA
+    data$status = "OK"
+    avoidmsg = ""
+    if (avoid != "") {
+        avoidmsg = paste0("&avoid=", avoid)
+    }
+    for (i in 1:1:n) {
+        url = paste0("maps.googleapis.com/maps/api/distancematrix/xml?origins=", 
+            data$or[i], "&destinations=", data$de[i], "&mode=", 
+            mode, "&sensor=", "false", "&units=metric", "&departure_time=", 
+            seconds, "&traffic_model=", traffic_model, avoidmsg)
+        if (!is.null(key)) {
+            key = gsub(" ", "", key)
+            url = paste0("https://", url, "&key=", key)
+        }
+        else {
+            url = paste0("http://", url)
+        }
+        webpageXML = xmlParse(getURL(url))
+        results = xmlChildren(xmlRoot(webpageXML))
+        request.status = as(unlist(results$status[[1]]), "character")
+        if (!is.null(results$error_message)) {
+            stop(paste(c("Google API returned an error: ", xmlValue(results$error_message)), 
+                sep = ""))
+        }
+        if (request.status == "REQUEST_DENIED") {
+            set.api.key(NULL)
+            data$status[i] = "REQUEST_DENIED"
+        }
+        rowXML = xmlChildren(results$row[[1L]])
+        Status = as(rowXML$status[1]$text, "character")
+        if (Status == "ZERO_RESULTS") {
+            data$status[i] = "ROUTE_NOT_FOUND"
+        }
+        if (Status == "NOT_FOUND") {
+            data$status[i] = "PLACE_NOT_FOUND"
+        }
+        if (Status == "OVER_QUERY_LIMIT") {
+            stop("You have exceeded your allocation of API requests for today.")
+        }
+        if (data$status[i] == "OK") {
+            data$Distance[i] = as(rowXML$distance[1]$value[1]$text, 
+                "numeric")
+            dur = grep("^duration$", names(rowXML), value = TRUE)
+            data$Time[i] = as(rowXML[[dur]][1L]$value[1L]$text, 
+                "numeric")
+        }
+    }
+    datadist = data[c("or", "de", "Distance")]
+    datatime = data[c("or", "de", "Time")]
+    datastat = data[c("or", "de", "status")]
+    if (n > 1) {
+        if (shape == "wide" && combinations == "all") {
+            Distance = reshape(datadist, timevar = "de", idvar = c("or"), 
+                direction = "wide")
+            Time = reshape(datatime, timevar = "de", idvar = c("or"), 
+                direction = "wide")
+            Stat = reshape(datastat, timevar = "de", idvar = c("or"), 
+                direction = "wide")
+        }
+        else {
+            Distance = datadist
+            Time = datatime
+            Stat = datastat
+        }
+    }
+    else {
+        Distance = data$Distance[i]
+        Time = data$Time[i]
+        Stat = data$status[i]
+    }
+    output = list(Time = Time, Distance = Distance, Status = Stat)
+    return(output)
+}
+
+set.api.key("AIzaSyBdc25d1AoZRHCM01zXiEkkMp55Bbso-MQ")
+set.api.key("AIzaSyD3AK50wTG7tL6hNfap_tjJ_PNqtGpPd5o") # Zarni's API code
+
+Towns <- gsub(" ","+",paste(AllTowns$CityTown,"MA"))
+
+gmap_results1 <- gmapsdistancefix(origin=Towns[1:39], 
+                       destination=Towns, 
+                       mode="driving",
+                       #departure=as.integer(as.POSIXct('2017-11-19 22:00:00 EST')), 
+                       traffic_model="best_guess",
+                       key = get.api.key())
+
+gmap_results2 <- gmapsdistancefix(origin=Towns[40:79], 
+                       destination=Towns, 
+                       mode="driving",
+                       #departure=as.integer(as.POSIXct('2017-11-19 22:00:00 EST')), 
+                       traffic_model="best_guess",
+                       key = get.api.key())
+
+gmap_results3 <- gmapsdistancefix(origin=Towns[80:119], 
+                       destination=Towns, 
+                       mode="driving",
+                       #departure=as.integer(as.POSIXct('2017-11-19 22:00:00 EST')), 
+                       traffic_model="best_guess",
+                       key = get.api.key())
+
+gmap_results4 <- gmapsdistancefix(origin=Towns[120:159], 
+                       destination=Towns, 
+                       mode="driving",
+                       #departure=as.integer(as.POSIXct('2017-11-19 22:00:00 EST')), 
+                       traffic_model="best_guess",
+                       key = get.api.key())
+
+gmap_results5 <- gmapsdistancefix(origin=Towns[160:199], 
+                       destination=Towns, 
+                       mode="driving",
+                       #departure=as.integer(as.POSIXct('2017-11-19 22:00:00 EST')), 
+                       traffic_model="best_guess",
+                       key = get.api.key())
+
+gmap_results6 <- gmapsdistancefix(origin=Towns[200:239], 
+                       destination=Towns, 
+                       mode="driving",
+                       #departure=as.integer(as.POSIXct('2017-11-19 22:00:00 EST')), 
+                       traffic_model="best_guess",
+                       key = get.api.key())
+
+gmap_results7 <- gmapsdistancefix(origin=Towns[240:279], 
+                       destination=Towns, 
+                       mode="driving",
+                       #departure=as.integer(as.POSIXct('2017-11-19 22:00:00 EST')), 
+                       traffic_model="best_guess",
+                       key = get.api.key())
+
+gmap_results8 <- gmapsdistancefix(origin=Towns[280:319], 
+                       destination=Towns, 
+                       mode="driving",
+                       #departure=as.integer(as.POSIXct('2017-11-19 22:00:00 EST')), 
+                       traffic_model="best_guess",
+                       key = get.api.key())
+
+gmap_results9 <- gmapsdistancefix(origin=Towns[320:351], 
+                       destination=Towns, 
+                       mode="driving",
+                       #departure=as.integer(as.POSIXct('2017-11-19 22:00:00 EST')), 
+                       traffic_model="best_guess",
+                       key = get.api.key())
+
+```
+
+```{r}
+results = gmapsdistance(origin = c("Washington +DC", "New+York+NY"), 
+                         destination = c("Washington+DC", "Austin+TX"), 
+                         mode = "driving", 
+                         departure = 1514742000,
+                         traffic_model = "pessimistic", 
+                         shape = "long")
+ 
+
+results=gmapsdistancefix(origin = Towns[1:5], 
+                         destination = Towns[1:10], 
+                         mode = "driving",
+                         traffic_model = "pessimistic", 
+                         shape = "long",
+                      key = get.api.key())
+
+```
