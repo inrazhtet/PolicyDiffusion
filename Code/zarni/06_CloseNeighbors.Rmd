@@ -73,7 +73,7 @@ for(i in 1:nrow(neighbormat)){
   }
 }
 neighbormat <- data.frame(neighbormat)
-
+nrow(neighbormat)
 
 
 ```
@@ -95,13 +95,14 @@ MAT21_neighbor_year$TownName <- as.factor(tolower(MAT21_neighbor_year$TownName))
 MA_Town_ids$id <- seq.int(nrow(MA_Town_ids))
 names(MA_Town_ids)[1] <-c("TownName") 
 MAT21_neighbor_year_index <- MAT21_neighbor_year %>% left_join(MA_Town_ids, by = c("TownName"))
-MAT21_neighbor_year_index
+MAT21_neighbor_year_index #140 towns with Smoking regulations
 ```
 
 ```{r}
-neighbormat_t21 <- neighbormat[MAT21_neighbor_year_index$id,]
-neighbormat_t21$index <- row.names(neighbormat_t21)
+neighbormat_t21 <- neighbormat
 neighbormat_t21$denom <- apply(neighbormat_t21, 1, function(x) (sum(!is.na(x))))
+neighbormat_t21$index <- row.names(neighbormat_t21)
+View(neighbormat_t21)
 ```
 
 ```{r}
@@ -124,7 +125,7 @@ yearratio <- function(neighbormat_t21, MAT21_neighbor_year_index, year){
   tmp1$index <- as.character(tmp1$index)
   tmp2$id <- as.character(tmp2$id)
  
-  tmpfinal <- tmp2 %>% left_join(tmp1, by = c("id" = "index"))
+  tmpfinal <- tmp2 %>% right_join(tmp1, by = c("id" = "index"))
   tmpfinal <- tmpfinal[,c("TownName", "ratio")]
   tmpfinal$year <- c(year)
   return(tmpfinal)
@@ -139,13 +140,15 @@ neighbor_2012 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2012)
 neighbor_2013 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2013)
 neighbor_2014 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2014)
 neighbor_2015 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2015)
-
 neighbor_2016 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2016)
 neighbor_2017 <- yearratio(neighbormat_t21,MAT21_neighbor_year_index,2017)
 ```
 
 
 ```{r}
+nrow(neighbor_2010)
+
+
 borderratios <- rbind(neighbor_2010, neighbor_2011, neighbor_2012, neighbor_2013, neighbor_2014, neighbor_2015, neighbor_2016, neighbor_2017)
 write.csv(borderratios, "../../Data/borderratios.csv")
 ```
