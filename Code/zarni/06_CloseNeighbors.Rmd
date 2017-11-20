@@ -23,8 +23,8 @@ library(spdep)
 
 Shape Files by Town Boundaries
 ```{r}
-MA_Town_1 <- readOGR("Data/towns/TOWNS_POLYM.shp")
-MA_Town_2 <- readOGR("Data/towns/TOWNS_POLYM.shp")
+MA_Town_1 <- readOGR("../../Data/towns/TOWNS_POLYM.shp")
+MA_Town_2 <- readOGR("../../Data/towns/TOWNS_POLYM.shp")
 MA_Town_1$TOWN[211] <- "north attleboro"
 MA_Town_2$TOWN[211] <- "north attleboro"
 ```
