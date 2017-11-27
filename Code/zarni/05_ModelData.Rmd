@@ -280,8 +280,8 @@ T21_Contingency_Master$ratio <- as.numeric(T21_Contingency_Master$ratio)
 
 Neighborhood Contingency
 ```{r}
-logitmodel_lag_23 <- glm(Event ~  Population + prct_r_2012 + prct_d_2012 + prct_d_2016 + prct_r_2016 + mayor_ind + ratio   , family = binomial(link = "logit"), data = T21_Contingency_Master)
-summary(logitmodel_lag_23)
+logitmodel_lag_13 <- glm(Event ~  Population + prct_r_2012 + prct_d_2012 + prct_d_2016 + prct_r_2016 + mayor_ind + ratio   , family = binomial(link = "logit"), data = T21_Contingency_Master)
+summary(logitmodel_lag_13)
 #View(T21_Contigency_Master)
 ```
 
@@ -306,7 +306,7 @@ master$Name.x <- tolower(master$Name.x)
 #match(unique(master$Name.x), unique(AllT21ContingencyRatios$TownName))
 #match(unique(master$Year), unique(AllT21ContingencyRatios$year))
 
-T21_Contingency_Master <- master %>% left_join(AllT21ContingencyRatios, by = c("Name.x" = "TownName", "Year" = "year")) 
+T21_Contingency_Master <- master %>% left_join(AllT21ContingencyRatios, by = c("Name.x" = "TownName", "year_dummy-1" = "year")) 
 #View(T21_Contingency_Master)
 
 ```
