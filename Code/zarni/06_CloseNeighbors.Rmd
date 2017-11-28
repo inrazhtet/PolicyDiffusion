@@ -75,7 +75,7 @@ for(i in 1:nrow(neighbormat)){
 neighbormat <- data.frame(neighbormat)
 nrow(neighbormat)
 
-
+View(neighbormat)
 ```
 
 Checking Neighbor list from Polygon matches with Neighbor list from James

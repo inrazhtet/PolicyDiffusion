@@ -142,7 +142,7 @@ $(document).ready(function () {
 </style>
 <script>
 $(document).ready(function () {
-  window.initializeSourceEmbed("05_ModelData.Rmd");
+  window.initializeSourceEmbed("08_MultiLevelModeling.Rmd");
   window.initializeCodeFolding("show" === "show");
 });
 </script>
@@ -172,908 +172,146 @@ $(document).ready(function () {
 
 
 <!-- rnb-text-begin -->
-<p>Libraries</p>
+<p>Loading the libraries</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShyZWFkeGwpXG5saWJyYXJ5KGRhdGEudGFibGUpXG5saWJyYXJ5KGx1YnJpZGF0ZSkgI0RhdGUgVGltZSBPYmplY3RcbmxpYnJhcnkoZ2dwbG90MilcbmxpYnJhcnkoc3RyaW5ncikgI1JlZ3VsYXIgZXhwcmVzc2lvbiBzdHJpbmcgc3BsaXR0aW5nXG5saWJyYXJ5KHJpbylcbmxpYnJhcnkoTUFTUylcbmxpYnJhcnkodGlncmlzKVxubGlicmFyeShzcClcbmxpYnJhcnkoYnJvb20pXG5saWJyYXJ5KGRwbHlyKVxubGlicmFyeShyZ2RhbClcbmxpYnJhcnkoc3RhcmdhemVyKVxubGlicmFyeShzdGF0cykgI1ByaW5jaXBhbCBDb21wb25lbnQgUGFja2FnZVxubGlicmFyeShsbWU0KVxubGlicmFyeShsbWVyVGVzdClcbmBgYCJ9 -->
-<pre class="r"><code>library(readxl)
-library(data.table)
-library(lubridate) #Date Time Object
-library(ggplot2)
-library(stringr) #Regular expression string splitting
-library(rio)
-library(MASS)
-library(tigris)
-library(sp)
-library(broom)
-library(dplyr)
-library(rgdal)
-library(stargazer)
-library(stats) #Principal Component Package
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShkcGx5cilcbmxpYnJhcnkobG1lNClcbmxpYnJhcnkobG1lclRlc3QpXG5gYGAifQ== -->
+<pre class="r"><code>library(dplyr)
 library(lme4)
 library(lmerTest)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>T21 External Raw Data</p>
+<p>Getting the Master File</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxRXh0ZXJuYWwgPC0gaW1wb3J0KFwiLi4vLi4vRGF0YS9NQUNUb3duSGVhbHRoMjFfdjYuY3N2XCIpXG5WaWV3KFQyMUV4dGVybmFsKVxuYGBgIn0= -->
-<pre class="r"><code>T21External &lt;- import(&quot;../../Data/MACTownHealth21_v6.csv&quot;)
-View(T21External)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Remove the 2 cases and remove the years before 2009 and removing 2018 (Data needs to be reformatted again)</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxRXh0U3ViIDwtIFQyMUV4dGVybmFsW1QyMUV4dGVybmFsJEV2ZW50ICE9IDIsIF1cblQyMUV4dFN1YiA8LSBUMjFFeHRTdWJbLTFdXG5UMjFFeHRTdWIgPC0gc3Vic2V0KFQyMUV4dFN1YiwgWWVhciA+IDIwMTApXG5UMjFFeHRTdWIgPC0gc3Vic2V0KFQyMUV4dFN1YiwgWWVhciA8IDIwMTgpXG5WaWV3KFQyMUV4dFN1YilcbndyaXRlLmNzdihUMjFFeHRTdWIsIFwiLi4vLi4vRGF0YS9UMjFFeHRTdWIuY3N2XCIpXG5WaWV3KFQyMUV4dFN1YilcbmBgYCJ9 -->
-<pre class="r"><code>T21ExtSub &lt;- T21External[T21External$Event != 2, ]
-T21ExtSub &lt;- T21ExtSub[-1]
-T21ExtSub &lt;- subset(T21ExtSub, Year &gt; 2010)
-T21ExtSub &lt;- subset(T21ExtSub, Year &lt; 2018)
-View(T21ExtSub)
-write.csv(T21ExtSub, &quot;../../Data/T21ExtSub.csv&quot;)
-View(T21ExtSub)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>All T21 Imports</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuQWxsVDIxVG9wUmF0aW9zIDwtIGltcG9ydChcIi4uLy4uL0RhdGEvQWxsVDIxVG9wUmF0aW9zLmNzdlwiKVxuVmlldyhBbGxUMjFUb3BSYXRpb3MpXG5BbGxUMjFUb3BSYXRpb3MgPC0gQWxsVDIxVG9wUmF0aW9zWy0xXVxuVmlldyhBbGxUMjFUb3BSYXRpb3MpXG5gYGAifQ== -->
-<pre class="r"><code>AllT21TopRatios &lt;- import(&quot;../../Data/AllT21TopRatios.csv&quot;)
-View(AllT21TopRatios)
-AllT21TopRatios &lt;- AllT21TopRatios[-1]
-View(AllT21TopRatios)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Merging the data file</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxTWVyZ2VkIDwtIFQyMUV4dFN1YiAlPiUgbGVmdF9qb2luKEFsbFQyMVRvcFJhdGlvcywgYnkgPSBjKFwiTmFtZVwiID1cIkNpdHlUb3duXCIsIFwiWWVhclwiID0gXCJ5ZWFyXCIpKVxuYGBgIn0= -->
-<pre class="r"><code>T21Merged &lt;- T21ExtSub %&gt;% left_join(AllT21TopRatios, by = c(&quot;Name&quot; =&quot;CityTown&quot;, &quot;Year&quot; = &quot;year&quot;))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubmFtZXMoVDIxTWVyZ2VkKSA8LSBnc3ViKFwiIFwiLFwiXCIsbmFtZXMoVDIxTWVyZ2VkKSlcbmBgYCJ9 -->
-<pre class="r"><code>names(T21Merged) &lt;- gsub(&quot; &quot;,&quot;&quot;,names(T21Merged))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3RyKFQyMU1lcmdlZClcblQyMU1lcmdlZCRQb3B1bGF0aW9uIDwtIGFzLm51bWVyaWMgKFQyMU1lcmdlZCRQb3B1bGF0aW9uKVxud3JpdGUuY3N2KFQyMU1lcmdlZCwgXCIuLi8uLi9EYXRhL1QyMU1lcmdlZHNlY29uZGF0dGVtcHQuY3N2XCIpXG5gYGAifQ== -->
-<pre class="r"><code>str(T21Merged)
-T21Merged$Population &lt;- as.numeric (T21Merged$Population)
-write.csv(T21Merged, &quot;../../Data/T21Mergedsecondattempt.csv&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGVtbyA8LSBpbXBvcnQoXCIuLi8uLi9EYXRhL1QyMU1lcmdlZHNlY29uZGF0dGVtcHQuY3N2XCIpXG5WaWV3KGRlbW8pXG5kaW0oZGVtbylcbmBgYCJ9 -->
-<pre class="r"><code>demo &lt;- import(&quot;../../Data/T21Mergedsecondattempt.csv&quot;)
-View(demo)
-dim(demo)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDIyMjAgICA0M1xuIn0= -->
-<pre><code>[1] 2220   43</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxTWVyZ2VkJEV2ZW50IDwtIGFzLm51bWVyaWMoVDIxTWVyZ2VkJEV2ZW50KVxuYGBgIn0= -->
-<pre class="r"><code>T21Merged$Event &lt;- as.numeric(T21Merged$Event)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Logit Model</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG9naXRtb2RlbDEgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBOZWFyYnlUMjFSYXRpbyArIFBoeXNpY2FsbHlVbmhlYWx0aHlEYXlzICsgTWVudGFsbHlVbmhlYWx0aHlEYXlzICsgUGVyY2VudFNtb2tlcnMgKyBQZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgKyBUZWVuQmlydGhSYXRlICsgQ2hsYW15ZGlhUmF0ZSArIFBlcmNlbnRVbmVtcGxveWVkICsgVmlvbGVudENyaW1lUmF0ZSAgICwgZmFtaWx5ID0gYmlub21pYWwobGluayA9IFwibG9naXRcIiksIGRhdGEgPSBUMjFNZXJnZWQgKVxuc3VtbWFyeShsb2dpdG1vZGVsMSlcbmBgYCJ9 -->
-<pre class="r"><code>logitmodel1 &lt;- glm(Event ~  Population + NearbyT21Ratio + PhysicallyUnhealthyDays + MentallyUnhealthyDays + PercentSmokers + PercentExcessiveDrinking + TeenBirthRate + ChlamydiaRate + PercentUnemployed + ViolentCrimeRate   , family = binomial(link = &quot;logit&quot;), data = T21Merged )
-summary(logitmodel1)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtKGZvcm11bGEgPSBFdmVudCB+IFBvcHVsYXRpb24gKyBOZWFyYnlUMjFSYXRpbyArIFBoeXNpY2FsbHlVbmhlYWx0aHlEYXlzICsgXG4gICAgTWVudGFsbHlVbmhlYWx0aHlEYXlzICsgUGVyY2VudFNtb2tlcnMgKyBQZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgKyBcbiAgICBUZWVuQmlydGhSYXRlICsgQ2hsYW15ZGlhUmF0ZSArIFBlcmNlbnRVbmVtcGxveWVkICsgVmlvbGVudENyaW1lUmF0ZSwgXG4gICAgZmFtaWx5ID0gYmlub21pYWwobGluayA9IFwibG9naXRcIiksIGRhdGEgPSBUMjFNZXJnZWQpXG5cbkRldmlhbmNlIFJlc2lkdWFsczogXG4gICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4ICBcbi0xLjU5ODIgIC0wLjMwODkgIC0wLjIzNDAgIC0wLjE5ODIgICAyLjg2MDUgIFxuXG5Db2VmZmljaWVudHM6XG4gICAgICAgICAgICAgICAgICAgICAgICAgICBFc3RpbWF0ZSBTdGQuIEVycm9yIHogdmFsdWVcbihJbnRlcmNlcHQpICAgICAgICAgICAgICAtMS43OTFlKzAwICAxLjg1OWUrMDAgIC0wLjk2M1xuUG9wdWxhdGlvbiAgICAgICAgICAgICAgICA1Ljg2OWUtMDYgIDUuMzQyZS0wNiAgIDEuMDk5XG5OZWFyYnlUMjFSYXRpbyAgICAgICAgICAgIDQuNjQyZSswMCAgNS4wMTBlLTAxICAgOS4yNjZcblBoeXNpY2FsbHlVbmhlYWx0aHlEYXlzICAgMS44MzBlLTAxICA0LjI0NWUtMDEgICAwLjQzMVxuTWVudGFsbHlVbmhlYWx0aHlEYXlzICAgIC0xLjczMGUtMDEgIDMuNjg5ZS0wMSAgLTAuNDY5XG5QZXJjZW50U21va2VycyAgICAgICAgICAgIDEuNzI5ZS0wMyAgOS4zNDVlLTAyICAgMC4wMThcblBlcmNlbnRFeGNlc3NpdmVEcmlua2luZyAtMS4zMTFlLTAxICA5Ljg2MGUtMDIgIC0xLjMzMFxuVGVlbkJpcnRoUmF0ZSAgICAgICAgICAgIC00LjAzMWUtMDIgIDIuOTM3ZS0wMiAgLTEuMzczXG5DaGxhbXlkaWFSYXRlICAgICAgICAgICAgIDIuOTgzZS0wMyAgMS41OTVlLTAzICAgMS44NzFcblBlcmNlbnRVbmVtcGxveWVkICAgICAgICAgMS40ODJlLTAxICAxLjQ5NGUtMDEgICAwLjk5MlxuVmlvbGVudENyaW1lUmF0ZSAgICAgICAgIC0xLjM5NmUtMDMgIDEuNjEzZS0wMyAgLTAuODY2XG4gICAgICAgICAgICAgICAgICAgICAgICAgUHIoPnx6fCkgICAgXG4oSW50ZXJjZXB0KSAgICAgICAgICAgICAgICAwLjMzNTMgICAgXG5Qb3B1bGF0aW9uICAgICAgICAgICAgICAgICAwLjI3MTkgICAgXG5OZWFyYnlUMjFSYXRpbyAgICAgICAgICAgICA8MmUtMTYgKioqXG5QaHlzaWNhbGx5VW5oZWFsdGh5RGF5cyAgICAwLjY2NjQgICAgXG5NZW50YWxseVVuaGVhbHRoeURheXMgICAgICAwLjYzOTAgICAgXG5QZXJjZW50U21va2VycyAgICAgICAgICAgICAwLjk4NTIgICAgXG5QZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgICAwLjE4MzUgICAgXG5UZWVuQmlydGhSYXRlICAgICAgICAgICAgICAwLjE2OTggICAgXG5DaGxhbXlkaWFSYXRlICAgICAgICAgICAgICAwLjA2MTQgLiAgXG5QZXJjZW50VW5lbXBsb3llZCAgICAgICAgICAwLjMyMTEgICAgXG5WaW9sZW50Q3JpbWVSYXRlICAgICAgICAgICAwLjM4NjggICAgXG4tLS1cblNpZ25pZi4gY29kZXM6ICBcbjAg4oCYKioq4oCZIDAuMDAxIOKAmCoq4oCZIDAuMDEg4oCYKuKAmSAwLjA1IOKAmC7igJkgMC4xIOKAmCDigJkgMVxuXG4oRGlzcGVyc2lvbiBwYXJhbWV0ZXIgZm9yIGJpbm9taWFsIGZhbWlseSB0YWtlbiB0byBiZSAxKVxuXG4gICAgTnVsbCBkZXZpYW5jZTogOTU0LjY3ICBvbiAxODM3ICBkZWdyZWVzIG9mIGZyZWVkb21cblJlc2lkdWFsIGRldmlhbmNlOiA3NDMuMzMgIG9uIDE4MjcgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuICAoMzgyIG9ic2VydmF0aW9ucyBkZWxldGVkIGR1ZSB0byBtaXNzaW5nbmVzcylcbkFJQzogNzY1LjMzXG5cbk51bWJlciBvZiBGaXNoZXIgU2NvcmluZyBpdGVyYXRpb25zOiA2XG4ifQ== -->
-<pre><code>
-Call:
-glm(formula = Event ~ Population + NearbyT21Ratio + PhysicallyUnhealthyDays + 
-    MentallyUnhealthyDays + PercentSmokers + PercentExcessiveDrinking + 
-    TeenBirthRate + ChlamydiaRate + PercentUnemployed + ViolentCrimeRate, 
-    family = binomial(link = &quot;logit&quot;), data = T21Merged)
-
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--1.5982  -0.3089  -0.2340  -0.1982   2.8605  
-
-Coefficients:
-                           Estimate Std. Error z value
-(Intercept)              -1.791e+00  1.859e+00  -0.963
-Population                5.869e-06  5.342e-06   1.099
-NearbyT21Ratio            4.642e+00  5.010e-01   9.266
-PhysicallyUnhealthyDays   1.830e-01  4.245e-01   0.431
-MentallyUnhealthyDays    -1.730e-01  3.689e-01  -0.469
-PercentSmokers            1.729e-03  9.345e-02   0.018
-PercentExcessiveDrinking -1.311e-01  9.860e-02  -1.330
-TeenBirthRate            -4.031e-02  2.937e-02  -1.373
-ChlamydiaRate             2.983e-03  1.595e-03   1.871
-PercentUnemployed         1.482e-01  1.494e-01   0.992
-ViolentCrimeRate         -1.396e-03  1.613e-03  -0.866
-                         Pr(&gt;|z|)    
-(Intercept)                0.3353    
-Population                 0.2719    
-NearbyT21Ratio             &lt;2e-16 ***
-PhysicallyUnhealthyDays    0.6664    
-MentallyUnhealthyDays      0.6390    
-PercentSmokers             0.9852    
-PercentExcessiveDrinking   0.1835    
-TeenBirthRate              0.1698    
-ChlamydiaRate              0.0614 .  
-PercentUnemployed          0.3211    
-ViolentCrimeRate           0.3868    
----
-Signif. codes:  
-0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-(Dispersion parameter for binomial family taken to be 1)
-
-    Null deviance: 954.67  on 1837  degrees of freedom
-Residual deviance: 743.33  on 1827  degrees of freedom
-  (382 observations deleted due to missingness)
-AIC: 765.33
-
-Number of Fisher Scoring iterations: 6</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Table format</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3RhcmdhemVyKGxvZ2l0bW9kZWwsIHR5cGUgPSBcInRleHRcIilcblxuYGBgIn0= -->
-<pre class="r"><code>stargazer(logitmodel, type = &quot;text&quot;)
-</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoidGhlIGNvbmRpdGlvbiBoYXMgbGVuZ3RoID4gMSBhbmQgb25seSB0aGUgZmlyc3QgZWxlbWVudCB3aWxsIGJlIHVzZWRcbiJ9 -->
-<pre><code>the condition has length &gt; 1 and only the first element will be used</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG49PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIERlcGVuZGVudCB2YXJpYWJsZTogICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBFdmVudCAgICAgICAgICAgXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5Qb3B1bGF0aW9uICAgICAgICAgICAgICAgICAgICAgICAgIDAuMDAwMDEgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKDAuMDAwMDEpICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5OZWFyYnlUMjFSYXRpbyAgICAgICAgICAgICAgICAgICAgNC42NDIqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjUwMSkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5QaHlzaWNhbGx5VW5oZWFsdGh5RGF5cyAgICAgICAgICAgICAwLjE4MyAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjQyNSkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5NZW50YWxseVVuaGVhbHRoeURheXMgICAgICAgICAgICAgIC0wLjE3MyAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjM2OSkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5QZXJjZW50U21va2VycyAgICAgICAgICAgICAgICAgICAgICAwLjAwMiAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjA5MykgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5QZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgICAgICAgICAgIC0wLjEzMSAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjA5OSkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5UZWVuQmlydGhSYXRlICAgICAgICAgICAgICAgICAgICAgIC0wLjA0MCAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjAyOSkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5DaGxhbXlkaWFSYXRlICAgICAgICAgICAgICAgICAgICAgIDAuMDAzKiAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjAwMikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5QZXJjZW50VW5lbXBsb3llZCAgICAgICAgICAgICAgICAgICAwLjE0OCAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjE0OSkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5WaW9sZW50Q3JpbWVSYXRlICAgICAgICAgICAgICAgICAgIC0wLjAwMSAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjAwMikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5Db25zdGFudCAgICAgICAgICAgICAgICAgICAgICAgICAgIC0xLjc5MSAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgxLjg1OSkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5PYnNlcnZhdGlvbnMgICAgICAgICAgICAgICAgICAgICAgICAxLDgzOCAgICAgICAgICAgXG5Mb2cgTGlrZWxpaG9vZCAgICAgICAgICAgICAgICAgICAgLTM3MS42NjUgICAgICAgICAgXG5Ba2Fpa2UgSW5mLiBDcml0LiAgICAgICAgICAgICAgICAgIDc2NS4zMzAgICAgICAgICAgXG49PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG5Ob3RlOiAgICAgICAgICAgICAgICAgICAgKnA8MC4xOyAqKnA8MC4wNTsgKioqcDwwLjAxXG4ifQ== -->
-<pre><code>
-====================================================
-                             Dependent variable:    
-                         ---------------------------
-                                    Event           
-----------------------------------------------------
-Population                         0.00001          
-                                  (0.00001)         
-                                                    
-NearbyT21Ratio                    4.642***          
-                                   (0.501)          
-                                                    
-PhysicallyUnhealthyDays             0.183           
-                                   (0.425)          
-                                                    
-MentallyUnhealthyDays              -0.173           
-                                   (0.369)          
-                                                    
-PercentSmokers                      0.002           
-                                   (0.093)          
-                                                    
-PercentExcessiveDrinking           -0.131           
-                                   (0.099)          
-                                                    
-TeenBirthRate                      -0.040           
-                                   (0.029)          
-                                                    
-ChlamydiaRate                      0.003*           
-                                   (0.002)          
-                                                    
-PercentUnemployed                   0.148           
-                                   (0.149)          
-                                                    
-ViolentCrimeRate                   -0.001           
-                                   (0.002)          
-                                                    
-Constant                           -1.791           
-                                   (1.859)          
-                                                    
-----------------------------------------------------
-Observations                        1,838           
-Log Likelihood                    -371.665          
-Akaike Inf. Crit.                  765.330          
-====================================================
-Note:                    *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZXhwKGNvZWZmaWNpZW50cyhsb2dpdG1vZGVsKSlcblxuYGBgIn0= -->
-<pre class="r"><code>exp(coefficients(logitmodel))
-</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiICAgICAgICAgICAgIChJbnRlcmNlcHQpICAgICAgICAgICAgICAgUG9wdWxhdGlvbiBcbiAgICAgICAgICAgICAgIDAuMTY2NzMwOSAgICAgICAgICAgICAgICAxLjAwMDAwNTkgXG4gICAgICAgICAgTmVhcmJ5VDIxUmF0aW8gIFBoeXNpY2FsbHlVbmhlYWx0aHlEYXlzIFxuICAgICAgICAgICAgIDEwMy43ODg0NzA5ICAgICAgICAgICAgICAgIDEuMjAwODEzMiBcbiAgIE1lbnRhbGx5VW5oZWFsdGh5RGF5cyAgICAgICAgICAgUGVyY2VudFNtb2tlcnMgXG4gICAgICAgICAgICAgICAwLjg0MTExMzggICAgICAgICAgICAgICAgMS4wMDE3MzAxIFxuUGVyY2VudEV4Y2Vzc2l2ZURyaW5raW5nICAgICAgICAgICAgVGVlbkJpcnRoUmF0ZSBcbiAgICAgICAgICAgICAgIDAuODc3MDkwNiAgICAgICAgICAgICAgICAwLjk2MDQ4OTMgXG4gICAgICAgICAgIENobGFteWRpYVJhdGUgICAgICAgIFBlcmNlbnRVbmVtcGxveWVkIFxuICAgICAgICAgICAgICAgMS4wMDI5ODc2ICAgICAgICAgICAgICAgIDEuMTU5NzQ2NyBcbiAgICAgICAgVmlvbGVudENyaW1lUmF0ZSBcbiAgICAgICAgICAgICAgIDAuOTk4NjA0NyBcbiJ9 -->
-<pre><code>             (Intercept)               Population 
-               0.1667309                1.0000059 
-          NearbyT21Ratio  PhysicallyUnhealthyDays 
-             103.7884709                1.2008132 
-   MentallyUnhealthyDays           PercentSmokers 
-               0.8411138                1.0017301 
-PercentExcessiveDrinking            TeenBirthRate 
-               0.8770906                0.9604893 
-           ChlamydiaRate        PercentUnemployed 
-               1.0029876                1.1597467 
-        ViolentCrimeRate 
-               0.9986047 </code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Should NearbyT21 Ratio be coded as a factor?</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxTWVyZ2VkJEZOVDIxUmF0aW8gPC0gYXMuZmFjdG9yKFQyMU1lcmdlZCROZWFyYnlUMjFSYXRpbylcbmBgYCJ9 -->
-<pre class="r"><code>T21Merged$FNT21Ratio &lt;- as.factor(T21Merged$NearbyT21Ratio)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Logit Model 2</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG9naXRtb2RlbDIgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBGTlQyMVJhdGlvICsgUGh5c2ljYWxseVVuaGVhbHRoeURheXMgKyBNZW50YWxseVVuaGVhbHRoeURheXMgKyBQZXJjZW50U21va2VycyArIFBlcmNlbnRFeGNlc3NpdmVEcmlua2luZyArIFRlZW5CaXJ0aFJhdGUgKyBDaGxhbXlkaWFSYXRlICsgUGVyY2VudFVuZW1wbG95ZWQgKyBWaW9sZW50Q3JpbWVSYXRlICAgLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gXCJsb2dpdFwiKSwgZGF0YSA9IFQyMU1lcmdlZCApXG5zdW1tYXJ5KGxvZ2l0bW9kZWwyKVxuYGBgIn0= -->
-<pre class="r"><code>logitmodel2 &lt;- glm(Event ~  Population + FNT21Ratio + PhysicallyUnhealthyDays + MentallyUnhealthyDays + PercentSmokers + PercentExcessiveDrinking + TeenBirthRate + ChlamydiaRate + PercentUnemployed + ViolentCrimeRate   , family = binomial(link = &quot;logit&quot;), data = T21Merged )
-summary(logitmodel2)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtKGZvcm11bGEgPSBFdmVudCB+IFBvcHVsYXRpb24gKyBGTlQyMVJhdGlvICsgUGh5c2ljYWxseVVuaGVhbHRoeURheXMgKyBcbiAgICBNZW50YWxseVVuaGVhbHRoeURheXMgKyBQZXJjZW50U21va2VycyArIFBlcmNlbnRFeGNlc3NpdmVEcmlua2luZyArIFxuICAgIFRlZW5CaXJ0aFJhdGUgKyBDaGxhbXlkaWFSYXRlICsgUGVyY2VudFVuZW1wbG95ZWQgKyBWaW9sZW50Q3JpbWVSYXRlLCBcbiAgICBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gXCJsb2dpdFwiKSwgZGF0YSA9IFQyMU1lcmdlZClcblxuRGV2aWFuY2UgUmVzaWR1YWxzOiBcbiAgICBNaW4gICAgICAgMVEgICBNZWRpYW4gICAgICAgM1EgICAgICBNYXggIFxuLTEuNDAzNiAgLTAuMjYyNiAgLTAuMTQ3OSAgLTAuMTIxNCAgIDMuMjE5NiAgXG5cbkNvZWZmaWNpZW50czpcbiAgICAgICAgICAgICAgICAgICAgICAgICAgIEVzdGltYXRlIFN0ZC4gRXJyb3JcbihJbnRlcmNlcHQpICAgICAgICAgICAgICAtNC4yMjhlKzAwICAyLjAyMGUrMDBcblBvcHVsYXRpb24gICAgICAgICAgICAgICAgOS41MTllLTA2ICA1LjQ1MmUtMDZcbkZOVDIxUmF0aW8wLjEgICAgICAgICAgICAgMS4yMDVlKzAwICA1LjMzNmUtMDFcbkZOVDIxUmF0aW8wLjIgICAgICAgICAgICAgMi43MDRlKzAwICA0LjczM2UtMDFcbkZOVDIxUmF0aW8wLjMgICAgICAgICAgICAgMy40MzJlKzAwICA0LjMyN2UtMDFcbkZOVDIxUmF0aW8wLjQgICAgICAgICAgICAgNC4xODNlKzAwICA0LjU1OGUtMDFcbkZOVDIxUmF0aW8wLjUgICAgICAgICAgICAgMy45NDFlKzAwICA0Ljk3NWUtMDFcbkZOVDIxUmF0aW8wLjYgICAgICAgICAgICAgMy45OTRlKzAwICA1LjMyM2UtMDFcbkZOVDIxUmF0aW8wLjcgICAgICAgICAgICAgNC42NDBlKzAwICA1LjM4MWUtMDFcbkZOVDIxUmF0aW8wLjggICAgICAgICAgICAgMi44NTllKzAwICA3Ljg3MmUtMDFcbkZOVDIxUmF0aW8wLjkgICAgICAgICAgICAgNC40MDRlKzAwICA3LjYwMWUtMDFcbkZOVDIxUmF0aW8xICAgICAgICAgICAgICAgNC4zOThlKzAwICAxLjMxMmUrMDBcblBoeXNpY2FsbHlVbmhlYWx0aHlEYXlzICAtNS41MDZlLTAyICA0LjM2MWUtMDFcbk1lbnRhbGx5VW5oZWFsdGh5RGF5cyAgICAtNC42MzFlLTAxICAzLjU0OGUtMDFcblBlcmNlbnRTbW9rZXJzICAgICAgICAgICAgMS4wMzBlLTAxICA5Ljc2NGUtMDJcblBlcmNlbnRFeGNlc3NpdmVEcmlua2luZyAtNi40NjFlLTAyICAxLjA2OGUtMDFcblRlZW5CaXJ0aFJhdGUgICAgICAgICAgICAtMy41OTNlLTAyICAzLjIwMWUtMDJcbkNobGFteWRpYVJhdGUgICAgICAgICAgICAgMy45MzRlLTAzICAxLjY4N2UtMDNcblBlcmNlbnRVbmVtcGxveWVkICAgICAgICAgMi4yNThlLTAxICAxLjU1NWUtMDFcblZpb2xlbnRDcmltZVJhdGUgICAgICAgICAtMy4zMjVlLTAzICAxLjc5NWUtMDNcbiAgICAgICAgICAgICAgICAgICAgICAgICB6IHZhbHVlIFByKD58enwpICAgIFxuKEludGVyY2VwdCkgICAgICAgICAgICAgICAtMi4wOTMgMC4wMzYzMzIgKiAgXG5Qb3B1bGF0aW9uICAgICAgICAgICAgICAgICAxLjc0NiAwLjA4MDgyOCAuICBcbkZOVDIxUmF0aW8wLjEgICAgICAgICAgICAgIDIuMjU4IDAuMDIzOTQwICogIFxuRk5UMjFSYXRpbzAuMiAgICAgICAgICAgICAgNS43MTQgMS4xMGUtMDggKioqXG5GTlQyMVJhdGlvMC4zICAgICAgICAgICAgICA3LjkzMiAyLjE2ZS0xNSAqKipcbkZOVDIxUmF0aW8wLjQgICAgICAgICAgICAgIDkuMTc3ICA8IDJlLTE2ICoqKlxuRk5UMjFSYXRpbzAuNSAgICAgICAgICAgICAgNy45MjEgMi4zNWUtMTUgKioqXG5GTlQyMVJhdGlvMC42ICAgICAgICAgICAgICA3LjUwMyA2LjI0ZS0xNCAqKipcbkZOVDIxUmF0aW8wLjcgICAgICAgICAgICAgIDguNjI0ICA8IDJlLTE2ICoqKlxuRk5UMjFSYXRpbzAuOCAgICAgICAgICAgICAgMy42MzIgMC4wMDAyODIgKioqXG5GTlQyMVJhdGlvMC45ICAgICAgICAgICAgICA1Ljc5NCA2Ljg2ZS0wOSAqKipcbkZOVDIxUmF0aW8xICAgICAgICAgICAgICAgIDMuMzUxIDAuMDAwODA2ICoqKlxuUGh5c2ljYWxseVVuaGVhbHRoeURheXMgICAtMC4xMjYgMC44OTk1MzQgICAgXG5NZW50YWxseVVuaGVhbHRoeURheXMgICAgIC0xLjMwNSAwLjE5MTgwNSAgICBcblBlcmNlbnRTbW9rZXJzICAgICAgICAgICAgIDEuMDU0IDAuMjkxNzE1ICAgIFxuUGVyY2VudEV4Y2Vzc2l2ZURyaW5raW5nICAtMC42MDUgMC41NDUwNzggICAgXG5UZWVuQmlydGhSYXRlICAgICAgICAgICAgIC0xLjEyMiAwLjI2MTY5NCAgICBcbkNobGFteWRpYVJhdGUgICAgICAgICAgICAgIDIuMzMzIDAuMDE5NjU5ICogIFxuUGVyY2VudFVuZW1wbG95ZWQgICAgICAgICAgMS40NTIgMC4xNDY1MDAgICAgXG5WaW9sZW50Q3JpbWVSYXRlICAgICAgICAgIC0xLjg1MyAwLjA2MzkyNyAuICBcbi0tLVxuU2lnbmlmLiBjb2RlczogIFxuMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cbihEaXNwZXJzaW9uIHBhcmFtZXRlciBmb3IgYmlub21pYWwgZmFtaWx5IHRha2VuIHRvIGJlIDEpXG5cbiAgICBOdWxsIGRldmlhbmNlOiA5NTQuNjcgIG9uIDE4MzcgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuUmVzaWR1YWwgZGV2aWFuY2U6IDY3NC41NCAgb24gMTgxOCAgZGVncmVlcyBvZiBmcmVlZG9tXG4gICgzODIgb2JzZXJ2YXRpb25zIGRlbGV0ZWQgZHVlIHRvIG1pc3NpbmduZXNzKVxuQUlDOiA3MTQuNTRcblxuTnVtYmVyIG9mIEZpc2hlciBTY29yaW5nIGl0ZXJhdGlvbnM6IDdcbiJ9 -->
-<pre><code>
-Call:
-glm(formula = Event ~ Population + FNT21Ratio + PhysicallyUnhealthyDays + 
-    MentallyUnhealthyDays + PercentSmokers + PercentExcessiveDrinking + 
-    TeenBirthRate + ChlamydiaRate + PercentUnemployed + ViolentCrimeRate, 
-    family = binomial(link = &quot;logit&quot;), data = T21Merged)
-
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--1.4036  -0.2626  -0.1479  -0.1214   3.2196  
-
-Coefficients:
-                           Estimate Std. Error
-(Intercept)              -4.228e+00  2.020e+00
-Population                9.519e-06  5.452e-06
-FNT21Ratio0.1             1.205e+00  5.336e-01
-FNT21Ratio0.2             2.704e+00  4.733e-01
-FNT21Ratio0.3             3.432e+00  4.327e-01
-FNT21Ratio0.4             4.183e+00  4.558e-01
-FNT21Ratio0.5             3.941e+00  4.975e-01
-FNT21Ratio0.6             3.994e+00  5.323e-01
-FNT21Ratio0.7             4.640e+00  5.381e-01
-FNT21Ratio0.8             2.859e+00  7.872e-01
-FNT21Ratio0.9             4.404e+00  7.601e-01
-FNT21Ratio1               4.398e+00  1.312e+00
-PhysicallyUnhealthyDays  -5.506e-02  4.361e-01
-MentallyUnhealthyDays    -4.631e-01  3.548e-01
-PercentSmokers            1.030e-01  9.764e-02
-PercentExcessiveDrinking -6.461e-02  1.068e-01
-TeenBirthRate            -3.593e-02  3.201e-02
-ChlamydiaRate             3.934e-03  1.687e-03
-PercentUnemployed         2.258e-01  1.555e-01
-ViolentCrimeRate         -3.325e-03  1.795e-03
-                         z value Pr(&gt;|z|)    
-(Intercept)               -2.093 0.036332 *  
-Population                 1.746 0.080828 .  
-FNT21Ratio0.1              2.258 0.023940 *  
-FNT21Ratio0.2              5.714 1.10e-08 ***
-FNT21Ratio0.3              7.932 2.16e-15 ***
-FNT21Ratio0.4              9.177  &lt; 2e-16 ***
-FNT21Ratio0.5              7.921 2.35e-15 ***
-FNT21Ratio0.6              7.503 6.24e-14 ***
-FNT21Ratio0.7              8.624  &lt; 2e-16 ***
-FNT21Ratio0.8              3.632 0.000282 ***
-FNT21Ratio0.9              5.794 6.86e-09 ***
-FNT21Ratio1                3.351 0.000806 ***
-PhysicallyUnhealthyDays   -0.126 0.899534    
-MentallyUnhealthyDays     -1.305 0.191805    
-PercentSmokers             1.054 0.291715    
-PercentExcessiveDrinking  -0.605 0.545078    
-TeenBirthRate             -1.122 0.261694    
-ChlamydiaRate              2.333 0.019659 *  
-PercentUnemployed          1.452 0.146500    
-ViolentCrimeRate          -1.853 0.063927 .  
----
-Signif. codes:  
-0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-(Dispersion parameter for binomial family taken to be 1)
-
-    Null deviance: 954.67  on 1837  degrees of freedom
-Residual deviance: 674.54  on 1818  degrees of freedom
-  (382 observations deleted due to missingness)
-AIC: 714.54
-
-Number of Fisher Scoring iterations: 7</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc3RhcmdhemVyKGxvZ2l0bW9kZWwyLCB0eXBlID0gXCJ0ZXh0XCIpXG5cbmBgYCJ9 -->
-<pre class="r"><code>stargazer(logitmodel2, type = &quot;text&quot;)
-</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoidGhlIGNvbmRpdGlvbiBoYXMgbGVuZ3RoID4gMSBhbmQgb25seSB0aGUgZmlyc3QgZWxlbWVudCB3aWxsIGJlIHVzZWRcbiJ9 -->
-<pre><code>the condition has length &gt; 1 and only the first element will be used</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG49PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgIERlcGVuZGVudCB2YXJpYWJsZTogICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBFdmVudCAgICAgICAgICAgXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5Qb3B1bGF0aW9uICAgICAgICAgICAgICAgICAgICAgICAgMC4wMDAwMSogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgKDAuMDAwMDEpICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC4xICAgICAgICAgICAgICAgICAgICAgIDEuMjA1KiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjUzNCkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC4yICAgICAgICAgICAgICAgICAgICAgMi43MDQqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjQ3MykgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC4zICAgICAgICAgICAgICAgICAgICAgMy40MzIqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjQzMykgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC40ICAgICAgICAgICAgICAgICAgICAgNC4xODMqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjQ1NikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC41ICAgICAgICAgICAgICAgICAgICAgMy45NDEqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjQ5OCkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC42ICAgICAgICAgICAgICAgICAgICAgMy45OTQqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjUzMikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC43ICAgICAgICAgICAgICAgICAgICAgNC42NDAqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjUzOCkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC44ICAgICAgICAgICAgICAgICAgICAgMi44NTkqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjc4NykgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMC45ICAgICAgICAgICAgICAgICAgICAgNC40MDQqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjc2MCkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5GTlQyMVJhdGlvMSAgICAgICAgICAgICAgICAgICAgICAgNC4zOTgqKiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgxLjMxMikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5QaHlzaWNhbGx5VW5oZWFsdGh5RGF5cyAgICAgICAgICAgIC0wLjA1NSAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjQzNikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5NZW50YWxseVVuaGVhbHRoeURheXMgICAgICAgICAgICAgIC0wLjQ2MyAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjM1NSkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5QZXJjZW50U21va2VycyAgICAgICAgICAgICAgICAgICAgICAwLjEwMyAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjA5OCkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5QZXJjZW50RXhjZXNzaXZlRHJpbmtpbmcgICAgICAgICAgIC0wLjA2NSAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjEwNykgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5UZWVuQmlydGhSYXRlICAgICAgICAgICAgICAgICAgICAgIC0wLjAzNiAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjAzMikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5DaGxhbXlkaWFSYXRlICAgICAgICAgICAgICAgICAgICAgIDAuMDA0KiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjAwMikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5QZXJjZW50VW5lbXBsb3llZCAgICAgICAgICAgICAgICAgICAwLjIyNiAgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjE1NikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5WaW9sZW50Q3JpbWVSYXRlICAgICAgICAgICAgICAgICAgIC0wLjAwMyogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgwLjAwMikgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG5Db25zdGFudCAgICAgICAgICAgICAgICAgICAgICAgICAgLTQuMjI4KiogICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICgyLjAyMCkgICAgICAgICAgXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXG4tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tXG5PYnNlcnZhdGlvbnMgICAgICAgICAgICAgICAgICAgICAgICAxLDgzOCAgICAgICAgICAgXG5Mb2cgTGlrZWxpaG9vZCAgICAgICAgICAgICAgICAgICAgLTMzNy4yNjkgICAgICAgICAgXG5Ba2Fpa2UgSW5mLiBDcml0LiAgICAgICAgICAgICAgICAgIDcxNC41MzkgICAgICAgICAgXG49PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09XG5Ob3RlOiAgICAgICAgICAgICAgICAgICAgKnA8MC4xOyAqKnA8MC4wNTsgKioqcDwwLjAxXG4ifQ== -->
-<pre><code>
-====================================================
-                             Dependent variable:    
-                         ---------------------------
-                                    Event           
-----------------------------------------------------
-Population                        0.00001*          
-                                  (0.00001)         
-                                                    
-FNT21Ratio0.1                      1.205**          
-                                   (0.534)          
-                                                    
-FNT21Ratio0.2                     2.704***          
-                                   (0.473)          
-                                                    
-FNT21Ratio0.3                     3.432***          
-                                   (0.433)          
-                                                    
-FNT21Ratio0.4                     4.183***          
-                                   (0.456)          
-                                                    
-FNT21Ratio0.5                     3.941***          
-                                   (0.498)          
-                                                    
-FNT21Ratio0.6                     3.994***          
-                                   (0.532)          
-                                                    
-FNT21Ratio0.7                     4.640***          
-                                   (0.538)          
-                                                    
-FNT21Ratio0.8                     2.859***          
-                                   (0.787)          
-                                                    
-FNT21Ratio0.9                     4.404***          
-                                   (0.760)          
-                                                    
-FNT21Ratio1                       4.398***          
-                                   (1.312)          
-                                                    
-PhysicallyUnhealthyDays            -0.055           
-                                   (0.436)          
-                                                    
-MentallyUnhealthyDays              -0.463           
-                                   (0.355)          
-                                                    
-PercentSmokers                      0.103           
-                                   (0.098)          
-                                                    
-PercentExcessiveDrinking           -0.065           
-                                   (0.107)          
-                                                    
-TeenBirthRate                      -0.036           
-                                   (0.032)          
-                                                    
-ChlamydiaRate                      0.004**          
-                                   (0.002)          
-                                                    
-PercentUnemployed                   0.226           
-                                   (0.156)          
-                                                    
-ViolentCrimeRate                   -0.003*          
-                                   (0.002)          
-                                                    
-Constant                          -4.228**          
-                                   (2.020)          
-                                                    
-----------------------------------------------------
-Observations                        1,838           
-Log Likelihood                    -337.269          
-Akaike Inf. Crit.                  714.539          
-====================================================
-Note:                    *p&lt;0.1; **p&lt;0.05; ***p&lt;0.01</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZXhwKGNvZWZmaWNpZW50cyhsb2dpdG1vZGVsMikpXG5gYGAifQ== -->
-<pre class="r"><code>exp(coefficients(logitmodel2))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p><strong>Principal Component Analysis</strong></p>
-<p>Principal Component Analysis</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGNhX3Rlc3QgPC0gVDIxTWVyZ2VkXG5gYGAifQ== -->
-<pre class="r"><code>pca_test &lt;- T21Merged</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVmlldyhwY2FfdGVzdClcbm5hbWVzKHBjYV90ZXN0KVxucGNhX3Rlc3RfMDEgPC0gcGNhX3Rlc3RbLGMoNzozNildXG5gYGAifQ== -->
-<pre class="r"><code>View(pca_test)
-names(pca_test)
-pca_test_01 &lt;- pca_test[,c(7:36)]</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>What is the difference between using covariance matrix and correlation matrix?</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGNhX2pvYiA8LSBwcmluY29tcChwY2FfdGVzdF8wMSwgY29yID0gRkFMU0UpXG5gYGAifQ== -->
-<pre class="r"><code>pca_job &lt;- princomp(pca_test_01, cor = FALSE)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<div id="master-file-latest-model-building" class="section level3">
-<h3>Master File Latest Model Building</h3>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubWFzdGVyIDwtIHJpbzo6aW1wb3J0KFwiLi4vLi4vRGF0YS9tYXN0ZXIuY3N2XCIpXG4jVmlldyhtYXN0ZXIpXG4jbmFtZXMobWFzdGVyKVxuI0Ryb3BwaW5nIENobGFteWRpYSBSYXRlIGJlY2FzdWUgd2UgZG8gTk9UIHVuZGVyc3RhbmQgdGhlIG1lYXN1cmVtZW50IGZvciBub3cuXG5tYXN0ZXIgPC0gc3Vic2V0KG1hc3Rlciwgc2VsZWN0ID0gLWMoMjUpKVxubWFzdGVyIDwtIG1hc3RlclssLWMoMToyKV1cblZpZXcobWFzdGVyKVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubWFzdGVyIDwtIHJpbzo6aW1wb3J0KFwiLi4vLi4vRGF0YS9tYXN0ZXIuY3N2XCIpXG4jVmlldyhtYXN0ZXIpXG4jbmFtZXMobWFzdGVyKVxuI0Ryb3BwaW5nIENobGFteWRpYSBSYXRlIGJlY2FzdWUgd2UgZG8gTk9UIHVuZGVyc3RhbmQgdGhlIG1lYXN1cmVtZW50IGZvciBub3cuXG5tYXN0ZXIgPC0gc3Vic2V0KG1hc3Rlciwgc2VsZWN0ID0gLWMoMjUpKVxubWFzdGVyIDwtIG1hc3RlclssLWMoMToyKV1cbmBgYCJ9 -->
 <pre class="r"><code>master &lt;- rio::import(&quot;../../Data/master.csv&quot;)
 #View(master)
 #names(master)
 #Dropping Chlamydia Rate becasue we do NOT understand the measurement for now.
 master &lt;- subset(master, select = -c(25))
-master &lt;- master[,-c(1:2)]
-View(master)</code></pre>
+master &lt;- master[,-c(1:2)]</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-</div>
-<div id="getting-the-top-10-ratios" class="section level3">
-<h3>Getting the Top 10 ratios</h3>
+<p>Getting the Neighboring Border File</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuQWxsVDIxVG9wUmF0aW9zIDwtIGltcG9ydChcIi4uLy4uL0RhdGEvQWxsVDIxVG9wUmF0aW9zLmNzdlwiKVxuI1ZpZXcoQWxsVDIxVG9wUmF0aW9zKVxuQWxsVDIxVG9wUmF0aW9zIDwtIEFsbFQyMVRvcFJhdGlvc1stMV1cbiNWaWV3KEFsbFQyMVRvcFJhdGlvcylcbmBgYCJ9 -->
-<pre class="r"><code>AllT21TopRatios &lt;- import(&quot;../../Data/AllT21TopRatios.csv&quot;)
-#View(AllT21TopRatios)
-AllT21TopRatios &lt;- AllT21TopRatios[-1]
-#View(AllT21TopRatios)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuQWxsVDIxQ29udGlnZW5jeVJhdGlvcyA8LSByaW86OmltcG9ydChcIi4uLy4uL0RhdGEvYm9yZGVycmF0aW9zLmNzdlwiKVxuQWxsVDIxQ29udGlnZW5jeVJhdGlvcyA8LSBBbGxUMjFDb250aWdlbmN5UmF0aW9zWy0xXVxuQWxsVDIxQ29udGlnZW5jeVJhdGlvcyRyYXRpbyA8LSBhcy5udW1lcmljKEFsbFQyMUNvbnRpZ2VuY3lSYXRpb3MkcmF0aW8pXG5gYGAifQ== -->
+<pre class="r"><code>AllT21ContigencyRatios &lt;- rio::import(&quot;../../Data/borderratios.csv&quot;)
+AllT21ContigencyRatios &lt;- AllT21ContigencyRatios[-1]
+AllT21ContigencyRatios$ratio &lt;- as.numeric(AllT21ContigencyRatios$ratio)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-</div>
-<div id="merging-ratios-and-the-master-file-for-2-year-lags" class="section level3">
-<h3>Merging Ratios and the Master File for 2 Year Lags</h3>
+<p>Joining the two files for Analysis</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzIgPC0gbWFzdGVyICU+JSBsZWZ0X2pvaW4oQWxsVDIxVG9wUmF0aW9zLCBieSA9IGMoXCJOYW1lLnhcIiA9XCJDaXR5VG93blwiLCBcInllYXJfZHVtbXktMlwiID0gXCJ5ZWFyXCIpKVxubmFtZXMoVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzIpWzczXSA8LSBjKFwibmVhcmJ5dDIxcmF0aW9cIilcbmBgYCJ9 -->
-<pre class="r"><code>T21_TopRatios_Master_lag_2 &lt;- master %&gt;% left_join(AllT21TopRatios, by = c(&quot;Name.x&quot; =&quot;CityTown&quot;, &quot;year_dummy-2&quot; = &quot;year&quot;))
-names(T21_TopRatios_Master_lag_2)[73] &lt;- c(&quot;nearbyt21ratio&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzIgPC0gVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzJbVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzIkRXZlbnQgIT0yLF1cblQyMV9Ub3BSYXRpb3NfTWFzdGVyX2xhZ18yJFBvcHVsYXRpb24gPC0gYXMubnVtZXJpYyhUMjFfVG9wUmF0aW9zX01hc3Rlcl9sYWdfMiRQb3B1bGF0aW9uKVxuc29ydChuYW1lcyhUMjFfVG9wUmF0aW9zX01hc3Rlcl9sYWdfMikpXG5gYGAifQ== -->
-<pre class="r"><code>T21_TopRatios_Master_lag_2 &lt;- T21_TopRatios_Master_lag_2[T21_TopRatios_Master_lag_2$Event !=2,]
-T21_TopRatios_Master_lag_2$Population &lt;- as.numeric(T21_TopRatios_Master_lag_2$Population)
-sort(names(T21_TopRatios_Master_lag_2))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG9naXRtb2RlbF9sYWdfMjEgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBwcmN0X3JfMjAxMiArIHByY3RfZF8yMDEyICsgcHJjdF9kXzIwMTYgKyBwcmN0X3JfMjAxNiArIG1heW9yX2luZCArIG5lYXJieXQyMXJhdGlvICAgLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gXCJsb2dpdFwiKSwgZGF0YSA9IFQyMV9Ub3BSYXRpb3NfTWFzdGVyX2xhZ18yKVxuc3VtbWFyeShsb2dpdG1vZGVsX2xhZ18yMSlcbmBgYCJ9 -->
-<pre class="r"><code>logitmodel_lag_21 &lt;- glm(Event ~  Population + prct_r_2012 + prct_d_2012 + prct_d_2016 + prct_r_2016 + mayor_ind + nearbyt21ratio   , family = binomial(link = &quot;logit&quot;), data = T21_TopRatios_Master_lag_2)
-summary(logitmodel_lag_21)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtKGZvcm11bGEgPSBFdmVudCB+IFBvcHVsYXRpb24gKyBwcmN0X3JfMjAxMiArIHByY3RfZF8yMDEyICsgXG4gICAgcHJjdF9kXzIwMTYgKyBwcmN0X3JfMjAxNiArIG1heW9yX2luZCArIG5lYXJieXQyMXJhdGlvLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gXCJsb2dpdFwiKSwgXG4gICAgZGF0YSA9IFQyMV9Ub3BSYXRpb3NfTWFzdGVyX2xhZ18yKVxuXG5EZXZpYW5jZSBSZXNpZHVhbHM6IFxuICAgIE1pbiAgICAgICAxUSAgIE1lZGlhbiAgICAgICAzUSAgICAgIE1heCAgXG4tMS4xOTY5ICAtMC4zOTk5ICAtMC4wNDg0ICAtMC4wMjg2ICAgMy42NDU2ICBcblxuQ29lZmZpY2llbnRzOlxuICAgICAgICAgICAgICAgICBFc3RpbWF0ZSBTdGQuIEVycm9yIHogdmFsdWUgUHIoPnx6fCkgICAgXG4oSW50ZXJjZXB0KSAgICAtMS42MjBlKzAxICAyLjYyM2UrMDEgIC0wLjYxOCAwLjUzNjc1MCAgICBcblBvcHVsYXRpb24gICAgICAyLjUwNmUtMDUgIDcuMjI3ZS0wNiAgIDMuNDY4IDAuMDAwNTI1ICoqKlxucHJjdF9yXzIwMTIgICAgIDEuNjU4ZS0wMSAgNC4wNDFlLTAxICAgMC40MTAgMC42ODE1NjAgICAgXG5wcmN0X2RfMjAxMiAgICAgNC41NzhlLTAyICA0LjE3MmUtMDEgICAwLjExMCAwLjkxMjYxMSAgICBcbnByY3RfZF8yMDE2ICAgIC05LjE0N2UtMDIgIDIuMTkxZS0wMSAgLTAuNDE3IDAuNjc2MzE4ICAgIFxucHJjdF9yXzIwMTYgICAgLTIuNTU5ZS0wMSAgMi4zMzFlLTAxICAtMS4wOTggMC4yNzI0MjEgICAgXG5tYXlvcl9pbmQgICAgICAtNi4yNzJlLTAxICA0LjA3MGUtMDEgIC0xLjU0MSAwLjEyMzI5NCAgICBcbm5lYXJieXQyMXJhdGlvICA1LjM2NGUrMDAgIDEuMDA1ZSswMCAgIDUuMzM3IDkuNDhlLTA4ICoqKlxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cbihEaXNwZXJzaW9uIHBhcmFtZXRlciBmb3IgYmlub21pYWwgZmFtaWx5IHRha2VuIHRvIGJlIDEpXG5cbiAgICBOdWxsIGRldmlhbmNlOiAxMDQzLjEgIG9uIDI1MzUgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuUmVzaWR1YWwgZGV2aWFuY2U6ICA3ODAuNCAgb24gMjUyOCAgZGVncmVlcyBvZiBmcmVlZG9tXG4gICgzNCBvYnNlcnZhdGlvbnMgZGVsZXRlZCBkdWUgdG8gbWlzc2luZ25lc3MpXG5BSUM6IDc5Ni40XG5cbk51bWJlciBvZiBGaXNoZXIgU2NvcmluZyBpdGVyYXRpb25zOiA5XG4ifQ== -->
-<pre><code>
-Call:
-glm(formula = Event ~ Population + prct_r_2012 + prct_d_2012 + 
-    prct_d_2016 + prct_r_2016 + mayor_ind + nearbyt21ratio, family = binomial(link = &quot;logit&quot;), 
-    data = T21_TopRatios_Master_lag_2)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubnJvdyhtYXN0ZXIpXG5ucm93KEFsbFQyMUNvbnRpZ2VuY3lSYXRpb3MpXG4jbmFtZXMoQWxsVDIxQ29udGluZ2VuY3lSYXRpb3MpXG5cbm1hc3RlciROYW1lLnggPC0gdG9sb3dlcihtYXN0ZXIkTmFtZS54KVxuI21hc3RlciROYW1lLnhcbiNtYXRjaCh1bmlxdWUobWFzdGVyJE5hbWUueCksIHVuaXF1ZShBbGxUMjFDb250aW5nZW5jeVJhdGlvcyRUb3duTmFtZSkpXG4jbWF0Y2godW5pcXVlKG1hc3RlciRZZWFyKSwgdW5pcXVlKEFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zJHllYXIpKVxuXG5UMjFfQ29udGlnZW5jeV9NYXN0ZXIgPC0gbWFzdGVyICU+JSBsZWZ0X2pvaW4oQWxsVDIxQ29udGlnZW5jeVJhdGlvcywgYnkgPSBjKFwiTmFtZS54XCIgPSBcIlRvd25OYW1lXCIsIFwiWWVhclwiID0gXCJ5ZWFyXCIpKSBcbiNWaWV3KFQyMV9Db250aW5nZW5jeV9NYXN0ZXIpXG5gYGAifQ== -->
+<pre class="r"><code>nrow(master)
+nrow(AllT21ContigencyRatios)
+#names(AllT21ContingencyRatios)
 
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--1.1969  -0.3999  -0.0484  -0.0286   3.6456  
-
-Coefficients:
-                 Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)    -1.620e+01  2.623e+01  -0.618 0.536750    
-Population      2.506e-05  7.227e-06   3.468 0.000525 ***
-prct_r_2012     1.658e-01  4.041e-01   0.410 0.681560    
-prct_d_2012     4.578e-02  4.172e-01   0.110 0.912611    
-prct_d_2016    -9.147e-02  2.191e-01  -0.417 0.676318    
-prct_r_2016    -2.559e-01  2.331e-01  -1.098 0.272421    
-mayor_ind      -6.272e-01  4.070e-01  -1.541 0.123294    
-nearbyt21ratio  5.364e+00  1.005e+00   5.337 9.48e-08 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-(Dispersion parameter for binomial family taken to be 1)
-
-    Null deviance: 1043.1  on 2535  degrees of freedom
-Residual deviance:  780.4  on 2528  degrees of freedom
-  (34 observations deleted due to missingness)
-AIC: 796.4
-
-Number of Fisher Scoring iterations: 9</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="merging-ratios-and-the-master-file-for-1-year-lags" class="section level3">
-<h3>Merging Ratios and the Master File for 1 Year Lags</h3>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzEgPC0gbWFzdGVyICU+JSBsZWZ0X2pvaW4oQWxsVDIxVG9wUmF0aW9zLCBieSA9IGMoXCJOYW1lLnhcIiA9XCJDaXR5VG93blwiLCBcInllYXJfZHVtbXktMVwiID0gXCJ5ZWFyXCIpKVxubmFtZXMoVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzEpWzczXSA8LSBjKFwibmVhcmJ5dDIxcmF0aW9cIilcbmBgYCJ9 -->
-<pre class="r"><code>T21_TopRatios_Master_lag_1 &lt;- master %&gt;% left_join(AllT21TopRatios, by = c(&quot;Name.x&quot; =&quot;CityTown&quot;, &quot;year_dummy-1&quot; = &quot;year&quot;))
-names(T21_TopRatios_Master_lag_1)[73] &lt;- c(&quot;nearbyt21ratio&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzE8LSBUMjFfVG9wUmF0aW9zX01hc3Rlcl9sYWdfMltUMjFfVG9wUmF0aW9zX01hc3Rlcl9sYWdfMSRFdmVudCAhPTIsXVxuVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzEkUG9wdWxhdGlvbiA8LSBhcy5udW1lcmljKFQyMV9Ub3BSYXRpb3NfTWFzdGVyX2xhZ18xJFBvcHVsYXRpb24pXG5zb3J0KG5hbWVzKFQyMV9Ub3BSYXRpb3NfTWFzdGVyX2xhZ18xKSlcbmBgYCJ9 -->
-<pre class="r"><code>T21_TopRatios_Master_lag_1&lt;- T21_TopRatios_Master_lag_2[T21_TopRatios_Master_lag_1$Event !=2,]
-T21_TopRatios_Master_lag_1$Population &lt;- as.numeric(T21_TopRatios_Master_lag_1$Population)
-sort(names(T21_TopRatios_Master_lag_1))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG9naXRtb2RlbF9sYWdfMTEgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBwcmN0X3JfMjAxMiArIHByY3RfZF8yMDEyICsgcHJjdF9kXzIwMTYgKyBwcmN0X3JfMjAxNiArIG1heW9yX2luZCArIG5lYXJieXQyMXJhdGlvICAgLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gXCJsb2dpdFwiKSwgZGF0YSA9IFQyMV9Ub3BSYXRpb3NfTWFzdGVyX2xhZ18xKVxuc3VtbWFyeShsb2dpdG1vZGVsX2xhZ18xMSlcbmBgYCJ9 -->
-<pre class="r"><code>logitmodel_lag_11 &lt;- glm(Event ~  Population + prct_r_2012 + prct_d_2012 + prct_d_2016 + prct_r_2016 + mayor_ind + nearbyt21ratio   , family = binomial(link = &quot;logit&quot;), data = T21_TopRatios_Master_lag_1)
-summary(logitmodel_lag_11)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtKGZvcm11bGEgPSBFdmVudCB+IFBvcHVsYXRpb24gKyBwcmN0X3JfMjAxMiArIHByY3RfZF8yMDEyICsgXG4gICAgcHJjdF9kXzIwMTYgKyBwcmN0X3JfMjAxNiArIG1heW9yX2luZCArIG5lYXJieXQyMXJhdGlvLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gXCJsb2dpdFwiKSwgXG4gICAgZGF0YSA9IFQyMV9Ub3BSYXRpb3NfTWFzdGVyX2xhZ18xKVxuXG5EZXZpYW5jZSBSZXNpZHVhbHM6IFxuICAgIE1pbiAgICAgICAxUSAgIE1lZGlhbiAgICAgICAzUSAgICAgIE1heCAgXG4tMS4xMzU1ICAtMC4zOTc2ICAtMC4wNTA5ICAtMC4wMjk5ICAgMy42Mjg5ICBcblxuQ29lZmZpY2llbnRzOlxuICAgICAgICAgICAgICAgICBFc3RpbWF0ZSBTdGQuIEVycm9yIHogdmFsdWUgUHIoPnx6fCkgICAgXG4oSW50ZXJjZXB0KSAgICAtMS44ODZlKzAxICAyLjY1MWUrMDEgIC0wLjcxMSAgMC40NzY4NSAgICBcblBvcHVsYXRpb24gICAgICAyLjIyNmUtMDUgIDcuMzQxZS0wNiAgIDMuMDMyICAwLjAwMjQzICoqIFxucHJjdF9yXzIwMTIgICAgIDEuMTg2ZS0wMSAgNC4wODRlLTAxICAgMC4yOTAgIDAuNzcxNTggICAgXG5wcmN0X2RfMjAxMiAgICAgNS4xNzBlLTAzICA0LjIxM2UtMDEgICAwLjAxMiAgMC45OTAyMSAgICBcbnByY3RfZF8yMDE2ICAgIC0xLjYzNWUtMDIgIDIuMjQ5ZS0wMSAgLTAuMDczICAwLjk0MjA3ICAgIFxucHJjdF9yXzIwMTYgICAgLTEuNzI1ZS0wMSAgMi4zOTNlLTAxICAtMC43MjEgIDAuNDcwOTcgICAgXG5tYXlvcl9pbmQgICAgICAtNC42ODVlLTAxICA0LjA3MGUtMDEgIC0xLjE1MSAgMC4yNDk2OCAgICBcbm5lYXJieXQyMXJhdGlvICA1LjI4MWUrMDAgIDEuMDA2ZSswMCAgIDUuMjUwIDEuNTJlLTA3ICoqKlxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cbihEaXNwZXJzaW9uIHBhcmFtZXRlciBmb3IgYmlub21pYWwgZmFtaWx5IHRha2VuIHRvIGJlIDEpXG5cbiAgICBOdWxsIGRldmlhbmNlOiA5NjcuNTQgIG9uIDIzMTggIGRlZ3JlZXMgb2YgZnJlZWRvbVxuUmVzaWR1YWwgZGV2aWFuY2U6IDcyNS4yNCAgb24gMjMxMSAgZGVncmVlcyBvZiBmcmVlZG9tXG4gICgyNTEgb2JzZXJ2YXRpb25zIGRlbGV0ZWQgZHVlIHRvIG1pc3NpbmduZXNzKVxuQUlDOiA3NDEuMjRcblxuTnVtYmVyIG9mIEZpc2hlciBTY29yaW5nIGl0ZXJhdGlvbnM6IDlcbiJ9 -->
-<pre><code>
-Call:
-glm(formula = Event ~ Population + prct_r_2012 + prct_d_2012 + 
-    prct_d_2016 + prct_r_2016 + mayor_ind + nearbyt21ratio, family = binomial(link = &quot;logit&quot;), 
-    data = T21_TopRatios_Master_lag_1)
-
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--1.1355  -0.3976  -0.0509  -0.0299   3.6289  
-
-Coefficients:
-                 Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)    -1.886e+01  2.651e+01  -0.711  0.47685    
-Population      2.226e-05  7.341e-06   3.032  0.00243 ** 
-prct_r_2012     1.186e-01  4.084e-01   0.290  0.77158    
-prct_d_2012     5.170e-03  4.213e-01   0.012  0.99021    
-prct_d_2016    -1.635e-02  2.249e-01  -0.073  0.94207    
-prct_r_2016    -1.725e-01  2.393e-01  -0.721  0.47097    
-mayor_ind      -4.685e-01  4.070e-01  -1.151  0.24968    
-nearbyt21ratio  5.281e+00  1.006e+00   5.250 1.52e-07 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-(Dispersion parameter for binomial family taken to be 1)
-
-    Null deviance: 967.54  on 2318  degrees of freedom
-Residual deviance: 725.24  on 2311  degrees of freedom
-  (251 observations deleted due to missingness)
-AIC: 741.24
-
-Number of Fisher Scoring iterations: 9</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Neighborhood Pure Distance Method</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuQWxsVDIxcmF0aW9zIDwtIHJpbzo6IGltcG9ydChcIi4uLy4uL0RhdGEvQWxsVDIxUmF0aW9zLmNzdlwiKVxuQWxsVDIxcmF0aW9zIDwtIEFsbFQyMXJhdGlvc1stMV1cbm5yb3coQWxsVDIxcmF0aW9zKVxuYGBgIn0= -->
-<pre class="r"><code>AllT21ratios &lt;- rio:: import(&quot;../../Data/AllT21Ratios.csv&quot;)
-AllT21ratios &lt;- AllT21ratios[-1]
-nrow(AllT21ratios)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDQ5MTRcbiJ9 -->
-<pre><code>[1] 4914</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGVuZ3RoKHVuaXF1ZShBbGxUMjFyYXRpb3MkQ2l0eVRvd24pKVxuYGBgIn0= -->
-<pre class="r"><code>length(unique(AllT21ratios$CityTown))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDM1MVxuIn0= -->
-<pre><code>[1] 351</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="year-lag-joining" class="section level3">
-<h3>2 year Lag Joining</h3>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI1ZpZXcobWFzdGVyKVxuVDIxX1JhdGlvc19NYXN0ZXJfbGFnXzIgPC0gbWFzdGVyICU+JSBsZWZ0X2pvaW4oQWxsVDIxcmF0aW9zLCBieSA9IGMoXCJOYW1lLnhcIiA9XCJDaXR5VG93blwiLCBcInllYXJfZHVtbXktMlwiID0gXCJ5ZWFyXCIpKVxubmFtZXMoVDIxX1JhdGlvc19NYXN0ZXJfbGFnXzIpWzczXSA8LSBjKFwibmVhcmJ5dDIxcmF0aW9cIilcbmBgYCJ9 -->
-<pre class="r"><code>#View(master)
-T21_Ratios_Master_lag_2 &lt;- master %&gt;% left_join(AllT21ratios, by = c(&quot;Name.x&quot; =&quot;CityTown&quot;, &quot;year_dummy-2&quot; = &quot;year&quot;))
-names(T21_Ratios_Master_lag_2)[73] &lt;- c(&quot;nearbyt21ratio&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxX1JhdGlvc19NYXN0ZXJfbGFnXzIgPC0gVDIxX1JhdGlvc19NYXN0ZXJfbGFnXzJbVDIxX1JhdGlvc19NYXN0ZXJfbGFnXzIkRXZlbnQgIT0yLF1cblQyMV9SYXRpb3NfTWFzdGVyX2xhZ18yJFBvcHVsYXRpb24gPC0gYXMubnVtZXJpYyhUMjFfUmF0aW9zX01hc3Rlcl9sYWdfMiRQb3B1bGF0aW9uKVxuc29ydChuYW1lcyhUMjFfUmF0aW9zX01hc3Rlcl9sYWdfMikpXG5gYGAifQ== -->
-<pre class="r"><code>T21_Ratios_Master_lag_2 &lt;- T21_Ratios_Master_lag_2[T21_Ratios_Master_lag_2$Event !=2,]
-T21_Ratios_Master_lag_2$Population &lt;- as.numeric(T21_Ratios_Master_lag_2$Population)
-sort(names(T21_Ratios_Master_lag_2))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Neighborhood Distance function Method 2</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG9naXRtb2RlbF9sYWdfMjIgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBwcmN0X3JfMjAxMiArIHByY3RfZF8yMDEyICsgcHJjdF9kXzIwMTYgKyBwcmN0X3JfMjAxNiArIG1heW9yX2luZCArIG5lYXJieXQyMXJhdGlvICAgLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gXCJsb2dpdFwiKSwgZGF0YSA9IFQyMV9SYXRpb3NfTWFzdGVyX2xhZ18yKVxuc3VtbWFyeShsb2dpdG1vZGVsX2xhZ18yMilcbmBgYCJ9 -->
-<pre class="r"><code>logitmodel_lag_22 &lt;- glm(Event ~  Population + prct_r_2012 + prct_d_2012 + prct_d_2016 + prct_r_2016 + mayor_ind + nearbyt21ratio   , family = binomial(link = &quot;logit&quot;), data = T21_Ratios_Master_lag_2)
-summary(logitmodel_lag_22)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtKGZvcm11bGEgPSBFdmVudCB+IFBvcHVsYXRpb24gKyBwcmN0X3JfMjAxMiArIHByY3RfZF8yMDEyICsgXG4gICAgcHJjdF9kXzIwMTYgKyBwcmN0X3JfMjAxNiArIG1heW9yX2luZCArIG5lYXJieXQyMXJhdGlvLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gXCJsb2dpdFwiKSwgXG4gICAgZGF0YSA9IFQyMV9SYXRpb3NfTWFzdGVyX2xhZ18yKVxuXG5EZXZpYW5jZSBSZXNpZHVhbHM6IFxuICAgIE1pbiAgICAgICAxUSAgIE1lZGlhbiAgICAgICAzUSAgICAgIE1heCAgXG4tMS4xOTY5ICAtMC4zOTk5ICAtMC4wNDg0ICAtMC4wMjg2ICAgMy42NDU2ICBcblxuQ29lZmZpY2llbnRzOlxuICAgICAgICAgICAgICAgICBFc3RpbWF0ZSBTdGQuIEVycm9yIHogdmFsdWUgUHIoPnx6fCkgICAgXG4oSW50ZXJjZXB0KSAgICAtMS42MjBlKzAxICAyLjYyM2UrMDEgIC0wLjYxOCAwLjUzNjc1MCAgICBcblBvcHVsYXRpb24gICAgICAyLjUwNmUtMDUgIDcuMjI3ZS0wNiAgIDMuNDY4IDAuMDAwNTI1ICoqKlxucHJjdF9yXzIwMTIgICAgIDEuNjU4ZS0wMSAgNC4wNDFlLTAxICAgMC40MTAgMC42ODE1NjAgICAgXG5wcmN0X2RfMjAxMiAgICAgNC41NzhlLTAyICA0LjE3MmUtMDEgICAwLjExMCAwLjkxMjYxMSAgICBcbnByY3RfZF8yMDE2ICAgIC05LjE0N2UtMDIgIDIuMTkxZS0wMSAgLTAuNDE3IDAuNjc2MzE4ICAgIFxucHJjdF9yXzIwMTYgICAgLTIuNTU5ZS0wMSAgMi4zMzFlLTAxICAtMS4wOTggMC4yNzI0MjEgICAgXG5tYXlvcl9pbmQgICAgICAtNi4yNzJlLTAxICA0LjA3MGUtMDEgIC0xLjU0MSAwLjEyMzI5NCAgICBcbm5lYXJieXQyMXJhdGlvICA1LjM2NGUrMDAgIDEuMDA1ZSswMCAgIDUuMzM3IDkuNDhlLTA4ICoqKlxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cbihEaXNwZXJzaW9uIHBhcmFtZXRlciBmb3IgYmlub21pYWwgZmFtaWx5IHRha2VuIHRvIGJlIDEpXG5cbiAgICBOdWxsIGRldmlhbmNlOiAxMDQzLjEgIG9uIDI1MzUgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuUmVzaWR1YWwgZGV2aWFuY2U6ICA3ODAuNCAgb24gMjUyOCAgZGVncmVlcyBvZiBmcmVlZG9tXG4gICgzNCBvYnNlcnZhdGlvbnMgZGVsZXRlZCBkdWUgdG8gbWlzc2luZ25lc3MpXG5BSUM6IDc5Ni40XG5cbk51bWJlciBvZiBGaXNoZXIgU2NvcmluZyBpdGVyYXRpb25zOiA5XG4ifQ== -->
-<pre><code>
-Call:
-glm(formula = Event ~ Population + prct_r_2012 + prct_d_2012 + 
-    prct_d_2016 + prct_r_2016 + mayor_ind + nearbyt21ratio, family = binomial(link = &quot;logit&quot;), 
-    data = T21_Ratios_Master_lag_2)
-
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--1.1969  -0.3999  -0.0484  -0.0286   3.6456  
-
-Coefficients:
-                 Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)    -1.620e+01  2.623e+01  -0.618 0.536750    
-Population      2.506e-05  7.227e-06   3.468 0.000525 ***
-prct_r_2012     1.658e-01  4.041e-01   0.410 0.681560    
-prct_d_2012     4.578e-02  4.172e-01   0.110 0.912611    
-prct_d_2016    -9.147e-02  2.191e-01  -0.417 0.676318    
-prct_r_2016    -2.559e-01  2.331e-01  -1.098 0.272421    
-mayor_ind      -6.272e-01  4.070e-01  -1.541 0.123294    
-nearbyt21ratio  5.364e+00  1.005e+00   5.337 9.48e-08 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-(Dispersion parameter for binomial family taken to be 1)
-
-    Null deviance: 1043.1  on 2535  degrees of freedom
-Residual deviance:  780.4  on 2528  degrees of freedom
-  (34 observations deleted due to missingness)
-AIC: 796.4
-
-Number of Fisher Scoring iterations: 9</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="year-lag-joining-1" class="section level3">
-<h3>1 year lag joining</h3>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI1ZpZXcobWFzdGVyKVxuVDIxX1JhdGlvc19NYXN0ZXJfbGFnXzEgPC0gbWFzdGVyICU+JSBsZWZ0X2pvaW4oQWxsVDIxcmF0aW9zLCBieSA9IGMoXCJOYW1lLnhcIiA9XCJDaXR5VG93blwiLCBcInllYXJfZHVtbXktMVwiID0gXCJ5ZWFyXCIpKVxubmFtZXMoVDIxX1JhdGlvc19NYXN0ZXJfbGFnXzEpWzczXSA8LSBjKFwibmVhcmJ5dDIxcmF0aW9cIilcbmBgYCJ9 -->
-<pre class="r"><code>#View(master)
-T21_Ratios_Master_lag_1 &lt;- master %&gt;% left_join(AllT21ratios, by = c(&quot;Name.x&quot; =&quot;CityTown&quot;, &quot;year_dummy-1&quot; = &quot;year&quot;))
-names(T21_Ratios_Master_lag_1)[73] &lt;- c(&quot;nearbyt21ratio&quot;)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxX1JhdGlvc19NYXN0ZXJfbGFnXzE8LSBUMjFfUmF0aW9zX01hc3Rlcl9sYWdfMVtUMjFfUmF0aW9zX01hc3Rlcl9sYWdfMSRFdmVudCAhPTIsXVxuVDIxX1JhdGlvc19NYXN0ZXJfbGFnXzEkUG9wdWxhdGlvbiA8LSBhcy5udW1lcmljKFQyMV9SYXRpb3NfTWFzdGVyX2xhZ18xJFBvcHVsYXRpb24pXG5zb3J0KG5hbWVzKFQyMV9SYXRpb3NfTWFzdGVyX2xhZ18xKSlcbmBgYCJ9 -->
-<pre class="r"><code>T21_Ratios_Master_lag_1&lt;- T21_Ratios_Master_lag_1[T21_Ratios_Master_lag_1$Event !=2,]
-T21_Ratios_Master_lag_1$Population &lt;- as.numeric(T21_Ratios_Master_lag_1$Population)
-sort(names(T21_Ratios_Master_lag_1))</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Neighborhood Distance function Method 2</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG9naXRtb2RlbF9sYWdfMjEgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBwcmN0X3JfMjAxMiArIHByY3RfZF8yMDEyICsgcHJjdF9kXzIwMTYgKyBwcmN0X3JfMjAxNiArIG1heW9yX2luZCArIG5lYXJieXQyMXJhdGlvICAgLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gXCJsb2dpdFwiKSwgZGF0YSA9IFQyMV9SYXRpb3NfTWFzdGVyX2xhZ18xKVxuc3VtbWFyeShsb2dpdG1vZGVsX2xhZ18yMSlcbmBgYCJ9 -->
-<pre class="r"><code>logitmodel_lag_21 &lt;- glm(Event ~  Population + prct_r_2012 + prct_d_2012 + prct_d_2016 + prct_r_2016 + mayor_ind + nearbyt21ratio   , family = binomial(link = &quot;logit&quot;), data = T21_Ratios_Master_lag_1)
-summary(logitmodel_lag_21)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtKGZvcm11bGEgPSBFdmVudCB+IFBvcHVsYXRpb24gKyBwcmN0X3JfMjAxMiArIHByY3RfZF8yMDEyICsgXG4gICAgcHJjdF9kXzIwMTYgKyBwcmN0X3JfMjAxNiArIG1heW9yX2luZCArIG5lYXJieXQyMXJhdGlvLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gXCJsb2dpdFwiKSwgXG4gICAgZGF0YSA9IFQyMV9SYXRpb3NfTWFzdGVyX2xhZ18xKVxuXG5EZXZpYW5jZSBSZXNpZHVhbHM6IFxuICAgIE1pbiAgICAgICAxUSAgIE1lZGlhbiAgICAgICAzUSAgICAgIE1heCAgXG4tMS4xOTY5ICAtMC4zOTk5ICAtMC4wNDg0ICAtMC4wMjg2ICAgMy42NDU2ICBcblxuQ29lZmZpY2llbnRzOlxuICAgICAgICAgICAgICAgICBFc3RpbWF0ZSBTdGQuIEVycm9yIHogdmFsdWUgUHIoPnx6fCkgICAgXG4oSW50ZXJjZXB0KSAgICAtMS42MjBlKzAxICAyLjYyM2UrMDEgIC0wLjYxOCAwLjUzNjc1MCAgICBcblBvcHVsYXRpb24gICAgICAyLjUwNmUtMDUgIDcuMjI3ZS0wNiAgIDMuNDY4IDAuMDAwNTI1ICoqKlxucHJjdF9yXzIwMTIgICAgIDEuNjU4ZS0wMSAgNC4wNDFlLTAxICAgMC40MTAgMC42ODE1NjAgICAgXG5wcmN0X2RfMjAxMiAgICAgNC41NzhlLTAyICA0LjE3MmUtMDEgICAwLjExMCAwLjkxMjYxMSAgICBcbnByY3RfZF8yMDE2ICAgIC05LjE0N2UtMDIgIDIuMTkxZS0wMSAgLTAuNDE3IDAuNjc2MzE4ICAgIFxucHJjdF9yXzIwMTYgICAgLTIuNTU5ZS0wMSAgMi4zMzFlLTAxICAtMS4wOTggMC4yNzI0MjEgICAgXG5tYXlvcl9pbmQgICAgICAtNi4yNzJlLTAxICA0LjA3MGUtMDEgIC0xLjU0MSAwLjEyMzI5NCAgICBcbm5lYXJieXQyMXJhdGlvICA1LjM2NGUrMDAgIDEuMDA1ZSswMCAgIDUuMzM3IDkuNDhlLTA4ICoqKlxuLS0tXG5TaWduaWYuIGNvZGVzOiAgMCDigJgqKirigJkgMC4wMDEg4oCYKirigJkgMC4wMSDigJgq4oCZIDAuMDUg4oCYLuKAmSAwLjEg4oCYIOKAmSAxXG5cbihEaXNwZXJzaW9uIHBhcmFtZXRlciBmb3IgYmlub21pYWwgZmFtaWx5IHRha2VuIHRvIGJlIDEpXG5cbiAgICBOdWxsIGRldmlhbmNlOiAxMDQzLjEgIG9uIDI1MzUgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuUmVzaWR1YWwgZGV2aWFuY2U6ICA3ODAuNCAgb24gMjUyOCAgZGVncmVlcyBvZiBmcmVlZG9tXG4gICgzNCBvYnNlcnZhdGlvbnMgZGVsZXRlZCBkdWUgdG8gbWlzc2luZ25lc3MpXG5BSUM6IDc5Ni40XG5cbk51bWJlciBvZiBGaXNoZXIgU2NvcmluZyBpdGVyYXRpb25zOiA5XG4ifQ== -->
-<pre><code>
-Call:
-glm(formula = Event ~ Population + prct_r_2012 + prct_d_2012 + 
-    prct_d_2016 + prct_r_2016 + mayor_ind + nearbyt21ratio, family = binomial(link = &quot;logit&quot;), 
-    data = T21_Ratios_Master_lag_1)
-
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--1.1969  -0.3999  -0.0484  -0.0286   3.6456  
-
-Coefficients:
-                 Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)    -1.620e+01  2.623e+01  -0.618 0.536750    
-Population      2.506e-05  7.227e-06   3.468 0.000525 ***
-prct_r_2012     1.658e-01  4.041e-01   0.410 0.681560    
-prct_d_2012     4.578e-02  4.172e-01   0.110 0.912611    
-prct_d_2016    -9.147e-02  2.191e-01  -0.417 0.676318    
-prct_r_2016    -2.559e-01  2.331e-01  -1.098 0.272421    
-mayor_ind      -6.272e-01  4.070e-01  -1.541 0.123294    
-nearbyt21ratio  5.364e+00  1.005e+00   5.337 9.48e-08 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-(Dispersion parameter for binomial family taken to be 1)
-
-    Null deviance: 1043.1  on 2535  degrees of freedom
-Residual deviance:  780.4  on 2528  degrees of freedom
-  (34 observations deleted due to missingness)
-AIC: 796.4
-
-Number of Fisher Scoring iterations: 9</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="getting-the-contigency-based-ratio-which-is-already-1-year-lagged" class="section level3">
-<h3>Getting the Contigency based ratio which is already 1 year lagged</h3>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuQWxsVDIxQ29udGluZ2VuY3lSYXRpb3MgPC0gcmlvOjppbXBvcnQoXCIuLi8uLi9EYXRhL2JvcmRlcnJhdGlvc191cGRhdGVkLmNzdlwiKVxuI1ZpZXcoQWxsVDIxQ29udGluZ2VuY3lSYXRpb3MpXG4jbnJvdyhBbGxUMjFDb250aW5nZW5jeVJhdGlvcylcbkFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zIDwtIEFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zWy0xXVxuQWxsVDIxQ29udGlnZW5jeVJhdGlvcyRyYXRpbyA8LSBhcy5udW1lcmljKEFsbFQyMUNvbnRpZ2VuY3lSYXRpb3MkcmF0aW8pXG4jQWxsVDIxQ29udGlnZW5jeVJhdGlvcyRyYXRpb1xuYGBgIn0= -->
-<pre class="r"><code>AllT21ContingencyRatios &lt;- rio::import(&quot;../../Data/borderratios_updated.csv&quot;)
-#View(AllT21ContingencyRatios)
-#nrow(AllT21ContingencyRatios)
-AllT21ContingencyRatios &lt;- AllT21ContingencyRatios[-1]
-AllT21ContigencyRatios$ratio &lt;- as.numeric(AllT21ContigencyRatios$ratio)
-#AllT21ContigencyRatios$ratio</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubnJvdyhtYXN0ZXIpXG5gYGAifQ== -->
-<pre class="r"><code>nrow(master)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDI4MDhcbiJ9 -->
-<pre><code>[1] 2808</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubnJvdyhBbGxUMjFDb250aW5nZW5jeVJhdGlvcylcbmBgYCJ9 -->
-<pre class="r"><code>nrow(AllT21ContingencyRatios)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDI4MDhcbiJ9 -->
-<pre><code>[1] 2808</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI25hbWVzKEFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zKVxubWFzdGVyJE5hbWUueCA8LSB0b2xvd2VyKG1hc3RlciROYW1lLngpXG4jbWFzdGVyJE5hbWUueFxuI21hdGNoKHVuaXF1ZShtYXN0ZXIkTmFtZS54KSwgdW5pcXVlKEFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zJFRvd25OYW1lKSlcbiNtYXRjaCh1bmlxdWUobWFzdGVyJFllYXIpLCB1bmlxdWUoQWxsVDIxQ29udGluZ2VuY3lSYXRpb3MkeWVhcikpXG5UMjFfQ29udGluZ2VuY3lfTWFzdGVyIDwtIG1hc3RlciAlPiUgbGVmdF9qb2luKEFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zLCBieSA9IGMoXCJOYW1lLnhcIiA9IFwiVG93bk5hbWVcIiwgXCJZZWFyXCIgPSBcInllYXJcIikpIFxuI1ZpZXcoVDIxX0NvbnRpbmdlbmN5X01hc3RlcilcbmBgYCJ9 -->
-<pre class="r"><code>#names(AllT21ContingencyRatios)
 master$Name.x &lt;- tolower(master$Name.x)
 #master$Name.x
 #match(unique(master$Name.x), unique(AllT21ContingencyRatios$TownName))
 #match(unique(master$Year), unique(AllT21ContingencyRatios$year))
-T21_Contingency_Master &lt;- master %&gt;% left_join(AllT21ContingencyRatios, by = c(&quot;Name.x&quot; = &quot;TownName&quot;, &quot;Year&quot; = &quot;year&quot;)) 
+
+T21_Contigency_Master &lt;- master %&gt;% left_join(AllT21ContigencyRatios, by = c(&quot;Name.x&quot; = &quot;TownName&quot;, &quot;Year&quot; = &quot;year&quot;)) 
 #View(T21_Contingency_Master)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+<p>Cleaning the combined data set further for analysis</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxX0NvbnRpbmdlbmN5X01hc3RlciA8LSBUMjFfQ29udGluZ2VuY3lfTWFzdGVyW1QyMV9Db250aW5nZW5jeV9NYXN0ZXIkRXZlbnQgIT0yLF1cblQyMV9Db250aW5nZW5jeV9NYXN0ZXIkUG9wdWxhdGlvbiA8LSBhcy5udW1lcmljKFQyMV9Db250aW5nZW5jeV9NYXN0ZXIkUG9wdWxhdGlvbilcbiNzb3J0KG5hbWVzKFQyMV9Db250aW5nZW5jeV9NYXN0ZXIpKVxuI1QyMV9Db250aW5nZW5jeV9NYXN0ZXIkcmF0aW9cblQyMV9Db250aW5nZW5jeV9NYXN0ZXIkcmF0aW8gPC0gYXMubnVtZXJpYyhUMjFfQ29udGluZ2VuY3lfTWFzdGVyJHJhdGlvKVxuYGBgIn0= -->
-<pre class="r"><code>T21_Contingency_Master &lt;- T21_Contingency_Master[T21_Contingency_Master$Event !=2,]
-T21_Contingency_Master$Population &lt;- as.numeric(T21_Contingency_Master$Population)
-#sort(names(T21_Contingency_Master))
-#T21_Contingency_Master$ratio
-T21_Contingency_Master$ratio &lt;- as.numeric(T21_Contingency_Master$ratio)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<p>Neighborhood Contingency</p>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG9naXRtb2RlbF9sYWdfMjMgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBwcmN0X3JfMjAxMiArIHByY3RfZF8yMDEyICsgcHJjdF9kXzIwMTYgKyBwcmN0X3JfMjAxNiArIG1heW9yX2luZCArIHJhdGlvICAgLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gXCJsb2dpdFwiKSwgZGF0YSA9IFQyMV9Db250aW5nZW5jeV9NYXN0ZXIpXG5zdW1tYXJ5KGxvZ2l0bW9kZWxfbGFnXzIzKVxuYGBgIn0= -->
-<pre class="r"><code>logitmodel_lag_23 &lt;- glm(Event ~  Population + prct_r_2012 + prct_d_2012 + prct_d_2016 + prct_r_2016 + mayor_ind + ratio   , family = binomial(link = &quot;logit&quot;), data = T21_Contingency_Master)
-summary(logitmodel_lag_23)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiXG5DYWxsOlxuZ2xtKGZvcm11bGEgPSBFdmVudCB+IFBvcHVsYXRpb24gKyBwcmN0X3JfMjAxMiArIHByY3RfZF8yMDEyICsgXG4gICAgcHJjdF9kXzIwMTYgKyBwcmN0X3JfMjAxNiArIG1heW9yX2luZCArIHJhdGlvLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gXCJsb2dpdFwiKSwgXG4gICAgZGF0YSA9IFQyMV9Db250aW5nZW5jeV9NYXN0ZXIpXG5cbkRldmlhbmNlIFJlc2lkdWFsczogXG4gICAgTWluICAgICAgIDFRICAgTWVkaWFuICAgICAgIDNRICAgICAgTWF4ICBcbi0xLjQ0MjEgIC0wLjMzMjkgIC0wLjI2NDIgIC0wLjI0MDAgICAyLjc4OTAgIFxuXG5Db2VmZmljaWVudHM6XG4gICAgICAgICAgICAgIEVzdGltYXRlIFN0ZC4gRXJyb3IgeiB2YWx1ZSBQcig+fHp8KSAgICBcbihJbnRlcmNlcHQpICAxLjEzNmUtMDEgIDIuNTg0ZSswMSAgIDAuMDA0ICAgMC45OTY1ICAgIFxuUG9wdWxhdGlvbiAgIDEuNzUyZS0wNSAgNi44NTZlLTA2ICAgMi41NTUgICAwLjAxMDYgKiAgXG5wcmN0X3JfMjAxMiAgOC44NDhlLTAyICA0LjAxNmUtMDEgICAwLjIyMCAgIDAuODI1NiAgICBcbnByY3RfZF8yMDEyICAxLjM3NWUtMDIgIDQuMTQzZS0wMSAgIDAuMDMzICAgMC45NzM1ICAgIFxucHJjdF9kXzIwMTYgLTQuNTg4ZS0wMiAgMi4xNDBlLTAxICAtMC4yMTQgICAwLjgzMDMgICAgXG5wcmN0X3JfMjAxNiAtMS40NzRlLTAxICAyLjI3NGUtMDEgIC0wLjY0OCAgIDAuNTE2OSAgICBcbm1heW9yX2luZCAgIC00LjUwN2UtMDEgIDMuODM3ZS0wMSAgLTEuMTc1ICAgMC4yNDAxICAgIFxucmF0aW8gICAgICAgIDMuMDQwZSswMCAgMy45NzBlLTAxICAgNy42NTcgMS45MWUtMTQgKioqXG4tLS1cblNpZ25pZi4gY29kZXM6ICAwIOKAmCoqKuKAmSAwLjAwMSDigJgqKuKAmSAwLjAxIOKAmCrigJkgMC4wNSDigJgu4oCZIDAuMSDigJgg4oCZIDFcblxuKERpc3BlcnNpb24gcGFyYW1ldGVyIGZvciBiaW5vbWlhbCBmYW1pbHkgdGFrZW4gdG8gYmUgMSlcblxuICAgIE51bGwgZGV2aWFuY2U6IDEwNDEuMzQgIG9uIDI1MTkgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuUmVzaWR1YWwgZGV2aWFuY2U6ICA5NTIuMjIgIG9uIDI1MTIgIGRlZ3JlZXMgb2YgZnJlZWRvbVxuICAoNTAgb2JzZXJ2YXRpb25zIGRlbGV0ZWQgZHVlIHRvIG1pc3NpbmduZXNzKVxuQUlDOiA5NjguMjJcblxuTnVtYmVyIG9mIEZpc2hlciBTY29yaW5nIGl0ZXJhdGlvbnM6IDZcbiJ9 -->
-<pre><code>
-Call:
-glm(formula = Event ~ Population + prct_r_2012 + prct_d_2012 + 
-    prct_d_2016 + prct_r_2016 + mayor_ind + ratio, family = binomial(link = &quot;logit&quot;), 
-    data = T21_Contingency_Master)
-
-Deviance Residuals: 
-    Min       1Q   Median       3Q      Max  
--1.4421  -0.3329  -0.2642  -0.2400   2.7890  
-
-Coefficients:
-              Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)  1.136e-01  2.584e+01   0.004   0.9965    
-Population   1.752e-05  6.856e-06   2.555   0.0106 *  
-prct_r_2012  8.848e-02  4.016e-01   0.220   0.8256    
-prct_d_2012  1.375e-02  4.143e-01   0.033   0.9735    
-prct_d_2016 -4.588e-02  2.140e-01  -0.214   0.8303    
-prct_r_2016 -1.474e-01  2.274e-01  -0.648   0.5169    
-mayor_ind   -4.507e-01  3.837e-01  -1.175   0.2401    
-ratio        3.040e+00  3.970e-01   7.657 1.91e-14 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-(Dispersion parameter for binomial family taken to be 1)
-
-    Null deviance: 1041.34  on 2519  degrees of freedom
-Residual deviance:  952.22  on 2512  degrees of freedom
-  (50 observations deleted due to missingness)
-AIC: 968.22
-
-Number of Fisher Scoring iterations: 6</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI1ZpZXcoVDIxX0NvbnRpZ2VuY3lfTWFzdGVyKVxuYGBgIn0= -->
-<pre class="r"><code>#View(T21_Contigency_Master)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-</div>
-<div id="contigency-based-2-years" class="section level3">
-<h3>Contigency based 2 years</h3>
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuQWxsVDIxQ29udGluZ2VuY3lSYXRpb3MgPC0gcmlvOjppbXBvcnQoXCIuLi8uLi9EYXRhL2JvcmRlcnJhdGlvc191cGRhdGVkLmNzdlwiKVxuI1ZpZXcoQWxsVDIxQ29udGluZ2VuY3lSYXRpb3MpXG4jbnJvdyhBbGxUMjFDb250aW5nZW5jeVJhdGlvcylcbkFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zIDwtIEFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zWy0xXVxuQWxsVDIxQ29udGlnZW5jeVJhdGlvcyRyYXRpbyA8LSBhcy5udW1lcmljKEFsbFQyMUNvbnRpZ2VuY3lSYXRpb3MkcmF0aW8pXG4jQWxsVDIxQ29udGlnZW5jeVJhdGlvcyRyYXRpb1xuYGBgIn0= -->
-<pre class="r"><code>AllT21ContingencyRatios &lt;- rio::import(&quot;../../Data/borderratios_updated.csv&quot;)
-#View(AllT21ContingencyRatios)
-#nrow(AllT21ContingencyRatios)
-AllT21ContingencyRatios &lt;- AllT21ContingencyRatios[-1]
-AllT21ContigencyRatios$ratio &lt;- as.numeric(AllT21ContigencyRatios$ratio)
-#AllT21ContigencyRatios$ratio</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubnJvdyhtYXN0ZXIpXG5gYGAifQ== -->
-<pre class="r"><code>nrow(master)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDI4MDhcbiJ9 -->
-<pre><code>[1] 2808</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubnJvdyhBbGxUMjFDb250aW5nZW5jeVJhdGlvcylcbmBgYCJ9 -->
-<pre class="r"><code>nrow(AllT21ContingencyRatios)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIDI4MDhcbiJ9 -->
-<pre><code>[1] 2808</code></pre>
-<!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI25hbWVzKEFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zKVxubWFzdGVyJE5hbWUueCA8LSB0b2xvd2VyKG1hc3RlciROYW1lLngpXG4jbWFzdGVyJE5hbWUueFxuI21hdGNoKHVuaXF1ZShtYXN0ZXIkTmFtZS54KSwgdW5pcXVlKEFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zJFRvd25OYW1lKSlcbiNtYXRjaCh1bmlxdWUobWFzdGVyJFllYXIpLCB1bmlxdWUoQWxsVDIxQ29udGluZ2VuY3lSYXRpb3MkeWVhcikpXG5UMjFfQ29udGluZ2VuY3lfTWFzdGVyIDwtIG1hc3RlciAlPiUgbGVmdF9qb2luKEFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zLCBieSA9IGMoXCJOYW1lLnhcIiA9IFwiVG93bk5hbWVcIiwgXCJ5ZWFyX2R1bW15LTFcIiA9IFwieWVhclwiKSkgXG4jVmlldyhUMjFfQ29udGluZ2VuY3lfTWFzdGVyKVxuYGBgIn0= -->
-<pre class="r"><code>#names(AllT21ContingencyRatios)
-master$Name.x &lt;- tolower(master$Name.x)
-#master$Name.x
-#match(unique(master$Name.x), unique(AllT21ContingencyRatios$TownName))
-#match(unique(master$Year), unique(AllT21ContingencyRatios$year))
-T21_Contingency_Master &lt;- master %&gt;% left_join(AllT21ContingencyRatios, by = c(&quot;Name.x&quot; = &quot;TownName&quot;, &quot;year_dummy-1&quot; = &quot;year&quot;)) 
-#View(T21_Contingency_Master)</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxX0NvbnRpbmdlbmN5X01hc3RlciA8LSBUMjFfQ29udGluZ2VuY3lfTWFzdGVyW1QyMV9Db250aW5nZW5jeV9NYXN0ZXIkRXZlbnQgIT0yLF1cblQyMV9Db250aW5nZW5jeV9NYXN0ZXIkUG9wdWxhdGlvbiA8LSBhcy5udW1lcmljKFQyMV9Db250aW5nZW5jeV9NYXN0ZXIkUG9wdWxhdGlvbilcbmBgYCJ9 -->
-<pre class="r"><code>T21_Contingency_Master &lt;- T21_Contingency_Master[T21_Contingency_Master$Event !=2,]
-T21_Contingency_Master$Population &lt;- as.numeric(T21_Contingency_Master$Population)</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuVDIxX0NvbnRpZ2VuY3lfTWFzdGVyIDwtIFQyMV9Db250aWdlbmN5X01hc3RlcltUMjFfQ29udGlnZW5jeV9NYXN0ZXIkRXZlbnQgIT0yLF1cblQyMV9Db250aWdlbmN5X01hc3RlciRQb3B1bGF0aW9uIDwtIGFzLm51bWVyaWMoVDIxX0NvbnRpZ2VuY3lfTWFzdGVyJFBvcHVsYXRpb24pXG5gYGAifQ== -->
+<pre class="r"><code>T21_Contigency_Master &lt;- T21_Contigency_Master[T21_Contigency_Master$Event !=2,]
+T21_Contigency_Master$Population &lt;- as.numeric(T21_Contigency_Master$Population)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiTkFzIGludHJvZHVjZWQgYnkgY29lcmNpb25cbiJ9 -->
 <pre><code>NAs introduced by coercion</code></pre>
 <!-- rnb-output-end -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI3NvcnQobmFtZXMoVDIxX0NvbnRpbmdlbmN5X01hc3RlcikpXG4jVDIxX0NvbnRpbmdlbmN5X01hc3RlciRyYXRpb1xuVDIxX0NvbnRpbmdlbmN5X01hc3RlciRyYXRpbyA8LSBhcy5udW1lcmljKFQyMV9Db250aW5nZW5jeV9NYXN0ZXIkcmF0aW8pXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuI3NvcnQobmFtZXMoVDIxX0NvbnRpbmdlbmN5X01hc3RlcikpXG4jVDIxX0NvbnRpbmdlbmN5X01hc3RlciRyYXRpb1xuVDIxX0NvbnRpZ2VuY3lfTWFzdGVyJHJhdGlvIDwtIGFzLm51bWVyaWMoVDIxX0NvbnRpZ2VuY3lfTWFzdGVyJHJhdGlvKVxuYGBgIn0= -->
 <pre class="r"><code>#sort(names(T21_Contingency_Master))
 #T21_Contingency_Master$ratio
-T21_Contingency_Master$ratio &lt;- as.numeric(T21_Contingency_Master$ratio)</code></pre>
+T21_Contigency_Master$ratio &lt;- as.numeric(T21_Contigency_Master$ratio)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<p>Neighborhood Contingency</p>
+<p>Unconditional Mean Models for Random Effect Lowest Level</p>
+<p>?Function to test UMM to the lowest level Random Effects Test</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubG9naXRtb2RlbF9sYWdfMjMgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBwcmN0X3JfMjAxMiArIHByY3RfZF8yMDEyICsgcHJjdF9kXzIwMTYgKyBwcmN0X3JfMjAxNiArIG1heW9yX2luZCArIHJhdGlvICAgLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gXCJsb2dpdFwiKSwgZGF0YSA9IFQyMV9Db250aW5nZW5jeV9NYXN0ZXIpXG5zdW1tYXJ5KGxvZ2l0bW9kZWxfbGFnXzIzKVxuI1ZpZXcoVDIxX0NvbnRpZ2VuY3lfTWFzdGVyKVxuYGBgIn0= -->
-<pre class="r"><code>logitmodel_lag_23 &lt;- glm(Event ~  Population + prct_r_2012 + prct_d_2012 + prct_d_2016 + prct_r_2016 + mayor_ind + ratio   , family = binomial(link = &quot;logit&quot;), data = T21_Contingency_Master)
-summary(logitmodel_lag_23)
-#View(T21_Contigency_Master)</code></pre>
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Check if we need random effects of Counties? It is statistically significant to include the County Level Random Effects</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZ2xtZXIuZml0MiA8LSBnbG1lcihFdmVudCB+ICgxfFllYXIvQ291bnR5KSwgZmFtaWx5ID0gYmlub21pYWwsIGRhdGEgPSBUMjFfQ29udGlnZW5jeV9NYXN0ZXIpXG5gYGAifQ== -->
+<pre class="r"><code>glmer.fit2 &lt;- glmer(Event ~ (1|Year/County), family = binomial, data = T21_Contigency_Master)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Checking if the Year Random Effect is needed</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYW5vdmEoZ2xtZXIuZml0MSwgZ2xtZXIuZml0MilcbmBgYCJ9 -->
+<pre class="r"><code>anova(glmer.fit1, glmer.fit2)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>ICC Interpretations</p>
+<p>Where are the residuals?</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQoc3VtbWFyeShnbG1lci5maXQxKSlcbmBgYCJ9 -->
+<pre class="r"><code>print(summary(glmer.fit1))</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
-</div>
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQoc3VtbWFyeShnbG1lci5maXQyKSlcblxuYGBgIn0= -->
+<pre class="r"><code>print(summary(glmer.fit2))
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiR2VuZXJhbGl6ZWQgbGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBtYXhpbXVtXG4gIGxpa2VsaWhvb2QgKExhcGxhY2UgQXBwcm94aW1hdGlvbikgW2dsbWVyTW9kXVxuIEZhbWlseTogYmlub21pYWwgICggbG9naXQgKVxuRm9ybXVsYTogRXZlbnQgfiAoMSB8IFllYXIvQ291bnR5KVxuICAgRGF0YTogVDIxX0NvbnRpZ2VuY3lfTWFzdGVyXG5cbiAgICAgQUlDICAgICAgQklDICAgbG9nTGlrIGRldmlhbmNlIGRmLnJlc2lkIFxuICAgNzY2LjEgICAgNzgzLjYgICAtMzgwLjAgICAgNzYwLjEgICAgIDI1NjcgXG5cblNjYWxlZCByZXNpZHVhbHM6IFxuICAgIE1pbiAgICAgIDFRICBNZWRpYW4gICAgICAzUSAgICAgTWF4IFxuLTEuMDQwOCAtMC4xNDg0IC0wLjA0OTYgLTAuMDI0MCAxMS45MDEyIFxuXG5SYW5kb20gZWZmZWN0czpcbiBHcm91cHMgICAgICBOYW1lICAgICAgICBWYXJpYW5jZSBTdGQuRGV2LlxuIENvdW50eTpZZWFyIChJbnRlcmNlcHQpIDEuMTE1ICAgIDEuMDU2ICAgXG4gWWVhciAgICAgICAgKEludGVyY2VwdCkgOC43ODkgICAgMi45NjUgICBcbk51bWJlciBvZiBvYnM6IDI1NzAsIGdyb3VwczogIFxuQ291bnR5OlllYXIsIDExMjsgWWVhciwgOFxuXG5GaXhlZCBlZmZlY3RzOlxuICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciB6IHZhbHVlIFByKD58enwpXG4oSW50ZXJjZXB0KSAgIC01LjY3MCAgICAgIDEuMjkyICAtNC4zODcgMS4xNWUtMDVcbiAgICAgICAgICAgICAgIFxuKEludGVyY2VwdCkgKioqXG4tLS1cblNpZ25pZi4gY29kZXM6ICBcbjAg4oCYKioq4oCZIDAuMDAxIOKAmCoq4oCZIDAuMDEg4oCYKuKAmSAwLjA1IOKAmC7igJkgMC4xIOKAmCDigJkgMVxuIn0= -->
+<pre><code>Generalized linear mixed model fit by maximum
+  likelihood (Laplace Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: Event ~ (1 | Year/County)
+   Data: T21_Contigency_Master
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OgogIGh0bWxfbm90ZWJvb2s6IGRlZmF1bHQKICBwZGZfZG9jdW1lbnQ6IGRlZmF1bHQKLS0tCkxpYnJhcmllcwoKYGBge3IsIHdhcm5pbmcgPSBGQUxTRX0KbGlicmFyeShyZWFkeGwpCmxpYnJhcnkoZGF0YS50YWJsZSkKbGlicmFyeShsdWJyaWRhdGUpICNEYXRlIFRpbWUgT2JqZWN0CmxpYnJhcnkoZ2dwbG90MikKbGlicmFyeShzdHJpbmdyKSAjUmVndWxhciBleHByZXNzaW9uIHN0cmluZyBzcGxpdHRpbmcKbGlicmFyeShyaW8pCmxpYnJhcnkoTUFTUykKbGlicmFyeSh0aWdyaXMpCmxpYnJhcnkoc3ApCmxpYnJhcnkoYnJvb20pCmxpYnJhcnkoZHBseXIpCmxpYnJhcnkocmdkYWwpCmxpYnJhcnkoc3RhcmdhemVyKQpsaWJyYXJ5KHN0YXRzKSAjUHJpbmNpcGFsIENvbXBvbmVudCBQYWNrYWdlCmxpYnJhcnkobG1lNCkKbGlicmFyeShsbWVyVGVzdCkKYGBgCgpUMjEgRXh0ZXJuYWwgUmF3IERhdGEgCmBgYHtyfQpUMjFFeHRlcm5hbCA8LSBpbXBvcnQoIi4uLy4uL0RhdGEvTUFDVG93bkhlYWx0aDIxX3Y2LmNzdiIpClZpZXcoVDIxRXh0ZXJuYWwpCmBgYAoKUmVtb3ZlIHRoZSAyIGNhc2VzIGFuZCByZW1vdmUgdGhlIHllYXJzIGJlZm9yZSAyMDA5IGFuZCByZW1vdmluZyAyMDE4IChEYXRhIG5lZWRzIHRvIGJlIHJlZm9ybWF0dGVkIGFnYWluKQpgYGB7cn0KVDIxRXh0U3ViIDwtIFQyMUV4dGVybmFsW1QyMUV4dGVybmFsJEV2ZW50ICE9IDIsIF0KVDIxRXh0U3ViIDwtIFQyMUV4dFN1YlstMV0KVDIxRXh0U3ViIDwtIHN1YnNldChUMjFFeHRTdWIsIFllYXIgPiAyMDEwKQpUMjFFeHRTdWIgPC0gc3Vic2V0KFQyMUV4dFN1YiwgWWVhciA8IDIwMTgpClZpZXcoVDIxRXh0U3ViKQoKd3JpdGUuY3N2KFQyMUV4dFN1YiwgIi4uLy4uL0RhdGEvVDIxRXh0U3ViLmNzdiIpClZpZXcoVDIxRXh0U3ViKQpgYGAKCkFsbCBUMjEgSW1wb3J0cwoKYGBge3J9CkFsbFQyMVRvcFJhdGlvcyA8LSBpbXBvcnQoIi4uLy4uL0RhdGEvQWxsVDIxVG9wUmF0aW9zLmNzdiIpClZpZXcoQWxsVDIxVG9wUmF0aW9zKQpBbGxUMjFUb3BSYXRpb3MgPC0gQWxsVDIxVG9wUmF0aW9zWy0xXQpWaWV3KEFsbFQyMVRvcFJhdGlvcykKYGBgCgpNZXJnaW5nIHRoZSBkYXRhIGZpbGUKYGBge3J9ClQyMU1lcmdlZCA8LSBUMjFFeHRTdWIgJT4lIGxlZnRfam9pbihBbGxUMjFUb3BSYXRpb3MsIGJ5ID0gYygiTmFtZSIgPSJDaXR5VG93biIsICJZZWFyIiA9ICJ5ZWFyIikpCmBgYAoKYGBge3J9Cm5hbWVzKFQyMU1lcmdlZCkgPC0gZ3N1YigiICIsIiIsbmFtZXMoVDIxTWVyZ2VkKSkKYGBgCgpgYGB7cn0Kc3RyKFQyMU1lcmdlZCkKVDIxTWVyZ2VkJFBvcHVsYXRpb24gPC0gYXMubnVtZXJpYyAoVDIxTWVyZ2VkJFBvcHVsYXRpb24pCndyaXRlLmNzdihUMjFNZXJnZWQsICIuLi8uLi9EYXRhL1QyMU1lcmdlZHNlY29uZGF0dGVtcHQuY3N2IikKYGBgCgpgYGB7cn0KZGVtbyA8LSBpbXBvcnQoIi4uLy4uL0RhdGEvVDIxTWVyZ2Vkc2Vjb25kYXR0ZW1wdC5jc3YiKQpWaWV3KGRlbW8pCmRpbShkZW1vKQpgYGAKCgoKYGBge3J9ClQyMU1lcmdlZCRFdmVudCA8LSBhcy5udW1lcmljKFQyMU1lcmdlZCRFdmVudCkKYGBgCgoKCkxvZ2l0IE1vZGVsCmBgYHtyfQpsb2dpdG1vZGVsMSA8LSBnbG0oRXZlbnQgfiAgUG9wdWxhdGlvbiArIE5lYXJieVQyMVJhdGlvICsgUGh5c2ljYWxseVVuaGVhbHRoeURheXMgKyBNZW50YWxseVVuaGVhbHRoeURheXMgKyBQZXJjZW50U21va2VycyArIFBlcmNlbnRFeGNlc3NpdmVEcmlua2luZyArIFRlZW5CaXJ0aFJhdGUgKyBDaGxhbXlkaWFSYXRlICsgUGVyY2VudFVuZW1wbG95ZWQgKyBWaW9sZW50Q3JpbWVSYXRlICAgLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gImxvZ2l0IiksIGRhdGEgPSBUMjFNZXJnZWQgKQoKc3VtbWFyeShsb2dpdG1vZGVsMSkKYGBgCgpUYWJsZSBmb3JtYXQKYGBge3J9CnN0YXJnYXplcihsb2dpdG1vZGVsLCB0eXBlID0gInRleHQiKQoKYGBgCgpgYGB7cn0KZXhwKGNvZWZmaWNpZW50cyhsb2dpdG1vZGVsKSkKYGBgClNob3VsZCBOZWFyYnlUMjEgUmF0aW8gYmUgY29kZWQgYXMgYSBmYWN0b3I/CgpgYGB7cn0KVDIxTWVyZ2VkJEZOVDIxUmF0aW8gPC0gYXMuZmFjdG9yKFQyMU1lcmdlZCROZWFyYnlUMjFSYXRpbykKYGBgCgpMb2dpdCBNb2RlbCAyCmBgYHtyfQpsb2dpdG1vZGVsMiA8LSBnbG0oRXZlbnQgfiAgUG9wdWxhdGlvbiArIEZOVDIxUmF0aW8gKyBQaHlzaWNhbGx5VW5oZWFsdGh5RGF5cyArIE1lbnRhbGx5VW5oZWFsdGh5RGF5cyArIFBlcmNlbnRTbW9rZXJzICsgUGVyY2VudEV4Y2Vzc2l2ZURyaW5raW5nICsgVGVlbkJpcnRoUmF0ZSArIENobGFteWRpYVJhdGUgKyBQZXJjZW50VW5lbXBsb3llZCArIFZpb2xlbnRDcmltZVJhdGUgICAsIGZhbWlseSA9IGJpbm9taWFsKGxpbmsgPSAibG9naXQiKSwgZGF0YSA9IFQyMU1lcmdlZCApCgpzdW1tYXJ5KGxvZ2l0bW9kZWwyKQpgYGAKCgpgYGB7cn0Kc3RhcmdhemVyKGxvZ2l0bW9kZWwyLCB0eXBlID0gInRleHQiKQpgYGAKYGBge3J9CmV4cChjb2VmZmljaWVudHMobG9naXRtb2RlbDIpKQpgYGAKCioqUHJpbmNpcGFsIENvbXBvbmVudCBBbmFseXNpcyoqCgoKUHJpbmNpcGFsIENvbXBvbmVudCBBbmFseXNpcwoKYGBge3J9CnBjYV90ZXN0IDwtIFQyMU1lcmdlZApgYGAKCmBgYHtyfQpWaWV3KHBjYV90ZXN0KQpuYW1lcyhwY2FfdGVzdCkKcGNhX3Rlc3RfMDEgPC0gcGNhX3Rlc3RbLGMoNzozNildCmBgYAoKV2hhdCBpcyB0aGUgZGlmZmVyZW5jZSBiZXR3ZWVuIHVzaW5nIGNvdmFyaWFuY2UgbWF0cml4IGFuZCBjb3JyZWxhdGlvbiBtYXRyaXg/CgpgYGB7cn0KcGNhX2pvYiA8LSBwcmluY29tcChwY2FfdGVzdF8wMSwgY29yID0gRkFMU0UpCmBgYAoKIyMjIE1hc3RlciBGaWxlIExhdGVzdCBNb2RlbCBCdWlsZGluZwoKYGBge3J9Cm1hc3RlciA8LSByaW86OmltcG9ydCgiLi4vLi4vRGF0YS9tYXN0ZXIuY3N2IikKI1ZpZXcobWFzdGVyKQojbmFtZXMobWFzdGVyKQojRHJvcHBpbmcgQ2hsYW15ZGlhIFJhdGUgYmVjYXN1ZSB3ZSBkbyBOT1QgdW5kZXJzdGFuZCB0aGUgbWVhc3VyZW1lbnQgZm9yIG5vdy4KbWFzdGVyIDwtIHN1YnNldChtYXN0ZXIsIHNlbGVjdCA9IC1jKDI1KSkKbWFzdGVyIDwtIG1hc3RlclssLWMoMToyKV0KVmlldyhtYXN0ZXIpCmBgYAoKIyMjIEdldHRpbmcgdGhlIFRvcCAxMCByYXRpb3MKYGBge3J9CkFsbFQyMVRvcFJhdGlvcyA8LSBpbXBvcnQoIi4uLy4uL0RhdGEvQWxsVDIxVG9wUmF0aW9zLmNzdiIpCiNWaWV3KEFsbFQyMVRvcFJhdGlvcykKQWxsVDIxVG9wUmF0aW9zIDwtIEFsbFQyMVRvcFJhdGlvc1stMV0KI1ZpZXcoQWxsVDIxVG9wUmF0aW9zKQpgYGAKCiMjIyBNZXJnaW5nIFJhdGlvcyBhbmQgdGhlIE1hc3RlciBGaWxlIGZvciAyIFllYXIgTGFncwpgYGB7cn0KVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzIgPC0gbWFzdGVyICU+JSBsZWZ0X2pvaW4oQWxsVDIxVG9wUmF0aW9zLCBieSA9IGMoIk5hbWUueCIgPSJDaXR5VG93biIsICJ5ZWFyX2R1bW15LTIiID0gInllYXIiKSkKbmFtZXMoVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzIpWzczXSA8LSBjKCJuZWFyYnl0MjFyYXRpbyIpCmBgYAoKYGBge3J9ClQyMV9Ub3BSYXRpb3NfTWFzdGVyX2xhZ18yIDwtIFQyMV9Ub3BSYXRpb3NfTWFzdGVyX2xhZ18yW1QyMV9Ub3BSYXRpb3NfTWFzdGVyX2xhZ18yJEV2ZW50ICE9MixdClQyMV9Ub3BSYXRpb3NfTWFzdGVyX2xhZ18yJFBvcHVsYXRpb24gPC0gYXMubnVtZXJpYyhUMjFfVG9wUmF0aW9zX01hc3Rlcl9sYWdfMiRQb3B1bGF0aW9uKQpzb3J0KG5hbWVzKFQyMV9Ub3BSYXRpb3NfTWFzdGVyX2xhZ18yKSkKYGBgCgoKCmBgYHtyfQpsb2dpdG1vZGVsX2xhZ18yMSA8LSBnbG0oRXZlbnQgfiAgUG9wdWxhdGlvbiArIHByY3Rfcl8yMDEyICsgcHJjdF9kXzIwMTIgKyBwcmN0X2RfMjAxNiArIHByY3Rfcl8yMDE2ICsgbWF5b3JfaW5kICsgbmVhcmJ5dDIxcmF0aW8gICAsIGZhbWlseSA9IGJpbm9taWFsKGxpbmsgPSAibG9naXQiKSwgZGF0YSA9IFQyMV9Ub3BSYXRpb3NfTWFzdGVyX2xhZ18yKQpzdW1tYXJ5KGxvZ2l0bW9kZWxfbGFnXzIxKQpgYGAKCiMjIyBNZXJnaW5nIFJhdGlvcyBhbmQgdGhlIE1hc3RlciBGaWxlIGZvciAxIFllYXIgTGFncwpgYGB7cn0KVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzEgPC0gbWFzdGVyICU+JSBsZWZ0X2pvaW4oQWxsVDIxVG9wUmF0aW9zLCBieSA9IGMoIk5hbWUueCIgPSJDaXR5VG93biIsICJ5ZWFyX2R1bW15LTEiID0gInllYXIiKSkKbmFtZXMoVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzEpWzczXSA8LSBjKCJuZWFyYnl0MjFyYXRpbyIpCmBgYAoKYGBge3J9ClQyMV9Ub3BSYXRpb3NfTWFzdGVyX2xhZ18xPC0gVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzJbVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzEkRXZlbnQgIT0yLF0KVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzEkUG9wdWxhdGlvbiA8LSBhcy5udW1lcmljKFQyMV9Ub3BSYXRpb3NfTWFzdGVyX2xhZ18xJFBvcHVsYXRpb24pCnNvcnQobmFtZXMoVDIxX1RvcFJhdGlvc19NYXN0ZXJfbGFnXzEpKQpgYGAKCmBgYHtyfQpsb2dpdG1vZGVsX2xhZ18xMSA8LSBnbG0oRXZlbnQgfiAgUG9wdWxhdGlvbiArIHByY3Rfcl8yMDEyICsgcHJjdF9kXzIwMTIgKyBwcmN0X2RfMjAxNiArIHByY3Rfcl8yMDE2ICsgbWF5b3JfaW5kICsgbmVhcmJ5dDIxcmF0aW8gICAsIGZhbWlseSA9IGJpbm9taWFsKGxpbmsgPSAibG9naXQiKSwgZGF0YSA9IFQyMV9Ub3BSYXRpb3NfTWFzdGVyX2xhZ18xKQpzdW1tYXJ5KGxvZ2l0bW9kZWxfbGFnXzExKQpgYGAKCk5laWdoYm9yaG9vZCBQdXJlIERpc3RhbmNlIE1ldGhvZApgYGB7cn0KQWxsVDIxcmF0aW9zIDwtIHJpbzo6IGltcG9ydCgiLi4vLi4vRGF0YS9BbGxUMjFSYXRpb3MuY3N2IikKQWxsVDIxcmF0aW9zIDwtIEFsbFQyMXJhdGlvc1stMV0KbnJvdyhBbGxUMjFyYXRpb3MpCmxlbmd0aCh1bmlxdWUoQWxsVDIxcmF0aW9zJENpdHlUb3duKSkKYGBgCgojIyMgMiB5ZWFyIExhZyBKb2luaW5nCgpgYGB7cn0KI1ZpZXcobWFzdGVyKQpUMjFfUmF0aW9zX01hc3Rlcl9sYWdfMiA8LSBtYXN0ZXIgJT4lIGxlZnRfam9pbihBbGxUMjFyYXRpb3MsIGJ5ID0gYygiTmFtZS54IiA9IkNpdHlUb3duIiwgInllYXJfZHVtbXktMiIgPSAieWVhciIpKQpuYW1lcyhUMjFfUmF0aW9zX01hc3Rlcl9sYWdfMilbNzNdIDwtIGMoIm5lYXJieXQyMXJhdGlvIikKYGBgCgpgYGB7cn0KVDIxX1JhdGlvc19NYXN0ZXJfbGFnXzIgPC0gVDIxX1JhdGlvc19NYXN0ZXJfbGFnXzJbVDIxX1JhdGlvc19NYXN0ZXJfbGFnXzIkRXZlbnQgIT0yLF0KVDIxX1JhdGlvc19NYXN0ZXJfbGFnXzIkUG9wdWxhdGlvbiA8LSBhcy5udW1lcmljKFQyMV9SYXRpb3NfTWFzdGVyX2xhZ18yJFBvcHVsYXRpb24pCnNvcnQobmFtZXMoVDIxX1JhdGlvc19NYXN0ZXJfbGFnXzIpKQpgYGAKCk5laWdoYm9yaG9vZCBEaXN0YW5jZSBmdW5jdGlvbiBNZXRob2QgMgpgYGB7cn0KbG9naXRtb2RlbF9sYWdfMjIgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBwcmN0X3JfMjAxMiArIHByY3RfZF8yMDEyICsgcHJjdF9kXzIwMTYgKyBwcmN0X3JfMjAxNiArIG1heW9yX2luZCArIG5lYXJieXQyMXJhdGlvICAgLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gImxvZ2l0IiksIGRhdGEgPSBUMjFfUmF0aW9zX01hc3Rlcl9sYWdfMikKc3VtbWFyeShsb2dpdG1vZGVsX2xhZ18yMikKYGBgCgojIyMgMSB5ZWFyIGxhZyBqb2luaW5nCmBgYHtyfQojVmlldyhtYXN0ZXIpClQyMV9SYXRpb3NfTWFzdGVyX2xhZ18xIDwtIG1hc3RlciAlPiUgbGVmdF9qb2luKEFsbFQyMXJhdGlvcywgYnkgPSBjKCJOYW1lLngiID0iQ2l0eVRvd24iLCAieWVhcl9kdW1teS0xIiA9ICJ5ZWFyIikpCm5hbWVzKFQyMV9SYXRpb3NfTWFzdGVyX2xhZ18xKVs3M10gPC0gYygibmVhcmJ5dDIxcmF0aW8iKQpgYGAKCmBgYHtyfQpUMjFfUmF0aW9zX01hc3Rlcl9sYWdfMTwtIFQyMV9SYXRpb3NfTWFzdGVyX2xhZ18xW1QyMV9SYXRpb3NfTWFzdGVyX2xhZ18xJEV2ZW50ICE9MixdClQyMV9SYXRpb3NfTWFzdGVyX2xhZ18xJFBvcHVsYXRpb24gPC0gYXMubnVtZXJpYyhUMjFfUmF0aW9zX01hc3Rlcl9sYWdfMSRQb3B1bGF0aW9uKQpzb3J0KG5hbWVzKFQyMV9SYXRpb3NfTWFzdGVyX2xhZ18xKSkKYGBgCgpOZWlnaGJvcmhvb2QgRGlzdGFuY2UgZnVuY3Rpb24gTWV0aG9kIDIKYGBge3J9CmxvZ2l0bW9kZWxfbGFnXzIxIDwtIGdsbShFdmVudCB+ICBQb3B1bGF0aW9uICsgcHJjdF9yXzIwMTIgKyBwcmN0X2RfMjAxMiArIHByY3RfZF8yMDE2ICsgcHJjdF9yXzIwMTYgKyBtYXlvcl9pbmQgKyBuZWFyYnl0MjFyYXRpbyAgICwgZmFtaWx5ID0gYmlub21pYWwobGluayA9ICJsb2dpdCIpLCBkYXRhID0gVDIxX1JhdGlvc19NYXN0ZXJfbGFnXzEpCnN1bW1hcnkobG9naXRtb2RlbF9sYWdfMjEpCgpgYGAKCiMjI0dldHRpbmcgdGhlIENvbnRpZ2VuY3kgYmFzZWQgcmF0aW8gd2hpY2ggaXMgYWxyZWFkeSAxIHllYXIgbGFnZ2VkCgpgYGB7cn0KQWxsVDIxQ29udGluZ2VuY3lSYXRpb3MgPC0gcmlvOjppbXBvcnQoIi4uLy4uL0RhdGEvYm9yZGVycmF0aW9zX3VwZGF0ZWQuY3N2IikKI1ZpZXcoQWxsVDIxQ29udGluZ2VuY3lSYXRpb3MpCiNucm93KEFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zKQpBbGxUMjFDb250aW5nZW5jeVJhdGlvcyA8LSBBbGxUMjFDb250aW5nZW5jeVJhdGlvc1stMV0KQWxsVDIxQ29udGlnZW5jeVJhdGlvcyRyYXRpbyA8LSBhcy5udW1lcmljKEFsbFQyMUNvbnRpZ2VuY3lSYXRpb3MkcmF0aW8pCiNBbGxUMjFDb250aWdlbmN5UmF0aW9zJHJhdGlvCmBgYAoKYGBge3J9Cm5yb3cobWFzdGVyKQpucm93KEFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zKQojbmFtZXMoQWxsVDIxQ29udGluZ2VuY3lSYXRpb3MpCgptYXN0ZXIkTmFtZS54IDwtIHRvbG93ZXIobWFzdGVyJE5hbWUueCkKI21hc3RlciROYW1lLngKI21hdGNoKHVuaXF1ZShtYXN0ZXIkTmFtZS54KSwgdW5pcXVlKEFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zJFRvd25OYW1lKSkKI21hdGNoKHVuaXF1ZShtYXN0ZXIkWWVhciksIHVuaXF1ZShBbGxUMjFDb250aW5nZW5jeVJhdGlvcyR5ZWFyKSkKClQyMV9Db250aW5nZW5jeV9NYXN0ZXIgPC0gbWFzdGVyICU+JSBsZWZ0X2pvaW4oQWxsVDIxQ29udGluZ2VuY3lSYXRpb3MsIGJ5ID0gYygiTmFtZS54IiA9ICJUb3duTmFtZSIsICJZZWFyIiA9ICJ5ZWFyIikpIAojVmlldyhUMjFfQ29udGluZ2VuY3lfTWFzdGVyKQoKYGBgCgpgYGB7cn0KVDIxX0NvbnRpbmdlbmN5X01hc3RlciA8LSBUMjFfQ29udGluZ2VuY3lfTWFzdGVyW1QyMV9Db250aW5nZW5jeV9NYXN0ZXIkRXZlbnQgIT0yLF0KVDIxX0NvbnRpbmdlbmN5X01hc3RlciRQb3B1bGF0aW9uIDwtIGFzLm51bWVyaWMoVDIxX0NvbnRpbmdlbmN5X01hc3RlciRQb3B1bGF0aW9uKQojc29ydChuYW1lcyhUMjFfQ29udGluZ2VuY3lfTWFzdGVyKSkKI1QyMV9Db250aW5nZW5jeV9NYXN0ZXIkcmF0aW8KVDIxX0NvbnRpbmdlbmN5X01hc3RlciRyYXRpbyA8LSBhcy5udW1lcmljKFQyMV9Db250aW5nZW5jeV9NYXN0ZXIkcmF0aW8pCmBgYAoKCk5laWdoYm9yaG9vZCBDb250aW5nZW5jeQpgYGB7cn0KbG9naXRtb2RlbF9sYWdfMTMgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBwcmN0X3JfMjAxMiArIHByY3RfZF8yMDEyICsgcHJjdF9kXzIwMTYgKyBwcmN0X3JfMjAxNiArIG1heW9yX2luZCArIHJhdGlvICAgLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gImxvZ2l0IiksIGRhdGEgPSBUMjFfQ29udGluZ2VuY3lfTWFzdGVyKQpzdW1tYXJ5KGxvZ2l0bW9kZWxfbGFnXzEzKQojVmlldyhUMjFfQ29udGlnZW5jeV9NYXN0ZXIpCmBgYAoKCiMjIyBDb250aWdlbmN5IGJhc2VkIDIgeWVhcnMKYGBge3J9CkFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zIDwtIHJpbzo6aW1wb3J0KCIuLi8uLi9EYXRhL2JvcmRlcnJhdGlvc191cGRhdGVkLmNzdiIpCiNWaWV3KEFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zKQojbnJvdyhBbGxUMjFDb250aW5nZW5jeVJhdGlvcykKQWxsVDIxQ29udGluZ2VuY3lSYXRpb3MgPC0gQWxsVDIxQ29udGluZ2VuY3lSYXRpb3NbLTFdCkFsbFQyMUNvbnRpZ2VuY3lSYXRpb3MkcmF0aW8gPC0gYXMubnVtZXJpYyhBbGxUMjFDb250aWdlbmN5UmF0aW9zJHJhdGlvKQojQWxsVDIxQ29udGlnZW5jeVJhdGlvcyRyYXRpbwpgYGAKCmBgYHtyfQpucm93KG1hc3RlcikKbnJvdyhBbGxUMjFDb250aW5nZW5jeVJhdGlvcykKI25hbWVzKEFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zKQoKbWFzdGVyJE5hbWUueCA8LSB0b2xvd2VyKG1hc3RlciROYW1lLngpCiNtYXN0ZXIkTmFtZS54CiNtYXRjaCh1bmlxdWUobWFzdGVyJE5hbWUueCksIHVuaXF1ZShBbGxUMjFDb250aW5nZW5jeVJhdGlvcyRUb3duTmFtZSkpCiNtYXRjaCh1bmlxdWUobWFzdGVyJFllYXIpLCB1bmlxdWUoQWxsVDIxQ29udGluZ2VuY3lSYXRpb3MkeWVhcikpCgpUMjFfQ29udGluZ2VuY3lfTWFzdGVyIDwtIG1hc3RlciAlPiUgbGVmdF9qb2luKEFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zLCBieSA9IGMoIk5hbWUueCIgPSAiVG93bk5hbWUiLCAieWVhcl9kdW1teS0xIiA9ICJ5ZWFyIikpIAojVmlldyhUMjFfQ29udGluZ2VuY3lfTWFzdGVyKQoKYGBgCgpgYGB7cn0KVDIxX0NvbnRpbmdlbmN5X01hc3RlciA8LSBUMjFfQ29udGluZ2VuY3lfTWFzdGVyW1QyMV9Db250aW5nZW5jeV9NYXN0ZXIkRXZlbnQgIT0yLF0KVDIxX0NvbnRpbmdlbmN5X01hc3RlciRQb3B1bGF0aW9uIDwtIGFzLm51bWVyaWMoVDIxX0NvbnRpbmdlbmN5X01hc3RlciRQb3B1bGF0aW9uKQojc29ydChuYW1lcyhUMjFfQ29udGluZ2VuY3lfTWFzdGVyKSkKI1QyMV9Db250aW5nZW5jeV9NYXN0ZXIkcmF0aW8KVDIxX0NvbnRpbmdlbmN5X01hc3RlciRyYXRpbyA8LSBhcy5udW1lcmljKFQyMV9Db250aW5nZW5jeV9NYXN0ZXIkcmF0aW8pCmBgYAoKCk5laWdoYm9yaG9vZCBDb250aW5nZW5jeQpgYGB7cn0KbG9naXRtb2RlbF9sYWdfMjMgPC0gZ2xtKEV2ZW50IH4gIFBvcHVsYXRpb24gKyBwcmN0X3JfMjAxMiArIHByY3RfZF8yMDEyICsgcHJjdF9kXzIwMTYgKyBwcmN0X3JfMjAxNiArIG1heW9yX2luZCArIHJhdGlvICAgLCBmYW1pbHkgPSBiaW5vbWlhbChsaW5rID0gImxvZ2l0IiksIGRhdGEgPSBUMjFfQ29udGluZ2VuY3lfTWFzdGVyKQpzdW1tYXJ5KGxvZ2l0bW9kZWxfbGFnXzIzKQojVmlldyhUMjFfQ29udGlnZW5jeV9NYXN0ZXIpCmBgYAoKCgoKCg==</div>
+     AIC      BIC   logLik deviance df.resid 
+   766.1    783.6   -380.0    760.1     2567 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-1.0408 -0.1484 -0.0496 -0.0240 11.9012 
+
+Random effects:
+ Groups      Name        Variance Std.Dev.
+ County:Year (Intercept) 1.115    1.056   
+ Year        (Intercept) 8.789    2.965   
+Number of obs: 2570, groups:  
+County:Year, 112; Year, 8
+
+Fixed effects:
+            Estimate Std. Error z value Pr(&gt;|z|)
+(Intercept)   -5.670      1.292  -4.387 1.15e-05
+               
+(Intercept) ***
+---
+Signif. codes:  
+0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUiBOb3RlYm9vayIKb3V0cHV0OiBodG1sX25vdGVib29rCi0tLQpMb2FkaW5nIHRoZSBsaWJyYXJpZXMKYGBge3IsIHdhcm5pbmc9RkFMU0V9CmxpYnJhcnkoZHBseXIpCmxpYnJhcnkobG1lNCkKbGlicmFyeShsbWVyVGVzdCkKYGBgCgpHZXR0aW5nIHRoZSBNYXN0ZXIgRmlsZQoKYGBge3J9Cm1hc3RlciA8LSByaW86OmltcG9ydCgiLi4vLi4vRGF0YS9tYXN0ZXIuY3N2IikKI1ZpZXcobWFzdGVyKQojbmFtZXMobWFzdGVyKQojRHJvcHBpbmcgQ2hsYW15ZGlhIFJhdGUgYmVjYXN1ZSB3ZSBkbyBOT1QgdW5kZXJzdGFuZCB0aGUgbWVhc3VyZW1lbnQgZm9yIG5vdy4KbWFzdGVyIDwtIHN1YnNldChtYXN0ZXIsIHNlbGVjdCA9IC1jKDI1KSkKbWFzdGVyIDwtIG1hc3RlclssLWMoMToyKV0KVmlldyhtYXN0ZXIpCmBgYAoKR2V0dGluZyB0aGUgTmVpZ2hib3JpbmcgQm9yZGVyIEZpbGUKCmBgYHtyfQpBbGxUMjFDb250aWdlbmN5UmF0aW9zIDwtIHJpbzo6aW1wb3J0KCIuLi8uLi9EYXRhL2JvcmRlcnJhdGlvcy5jc3YiKQpBbGxUMjFDb250aWdlbmN5UmF0aW9zIDwtIEFsbFQyMUNvbnRpZ2VuY3lSYXRpb3NbLTFdCkFsbFQyMUNvbnRpZ2VuY3lSYXRpb3MkcmF0aW8gPC0gYXMubnVtZXJpYyhBbGxUMjFDb250aWdlbmN5UmF0aW9zJHJhdGlvKQpgYGAKCkpvaW5pbmcgdGhlIHR3byBmaWxlcyBmb3IgQW5hbHlzaXMKYGBge3J9Cm5yb3cobWFzdGVyKQpucm93KEFsbFQyMUNvbnRpZ2VuY3lSYXRpb3MpCiNuYW1lcyhBbGxUMjFDb250aW5nZW5jeVJhdGlvcykKCm1hc3RlciROYW1lLnggPC0gdG9sb3dlcihtYXN0ZXIkTmFtZS54KQojbWFzdGVyJE5hbWUueAojbWF0Y2godW5pcXVlKG1hc3RlciROYW1lLngpLCB1bmlxdWUoQWxsVDIxQ29udGluZ2VuY3lSYXRpb3MkVG93bk5hbWUpKQojbWF0Y2godW5pcXVlKG1hc3RlciRZZWFyKSwgdW5pcXVlKEFsbFQyMUNvbnRpbmdlbmN5UmF0aW9zJHllYXIpKQoKVDIxX0NvbnRpZ2VuY3lfTWFzdGVyIDwtIG1hc3RlciAlPiUgbGVmdF9qb2luKEFsbFQyMUNvbnRpZ2VuY3lSYXRpb3MsIGJ5ID0gYygiTmFtZS54IiA9ICJUb3duTmFtZSIsICJZZWFyIiA9ICJ5ZWFyIikpIAojVmlldyhUMjFfQ29udGluZ2VuY3lfTWFzdGVyKQpgYGAKCkNsZWFuaW5nIHRoZSBjb21iaW5lZCBkYXRhIHNldCBmdXJ0aGVyIGZvciBhbmFseXNpcwpgYGB7cn0KVDIxX0NvbnRpZ2VuY3lfTWFzdGVyIDwtIFQyMV9Db250aWdlbmN5X01hc3RlcltUMjFfQ29udGlnZW5jeV9NYXN0ZXIkRXZlbnQgIT0yLF0KVDIxX0NvbnRpZ2VuY3lfTWFzdGVyJFBvcHVsYXRpb24gPC0gYXMubnVtZXJpYyhUMjFfQ29udGlnZW5jeV9NYXN0ZXIkUG9wdWxhdGlvbikKI3NvcnQobmFtZXMoVDIxX0NvbnRpbmdlbmN5X01hc3RlcikpCiNUMjFfQ29udGluZ2VuY3lfTWFzdGVyJHJhdGlvClQyMV9Db250aWdlbmN5X01hc3RlciRyYXRpbyA8LSBhcy5udW1lcmljKFQyMV9Db250aWdlbmN5X01hc3RlciRyYXRpbykKYGBgCgpVbmNvbmRpdGlvbmFsIE1lYW4gTW9kZWxzIGZvciBSYW5kb20gRWZmZWN0IExvd2VzdCBMZXZlbAoKP0Z1bmN0aW9uIHRvIHRlc3QgVU1NIHRvIHRoZSBsb3dlc3QgbGV2ZWwgUmFuZG9tIEVmZmVjdHMgVGVzdApgYGB7cn0KZ2xtZXIuZml0MSA8LSBnbG1lcihFdmVudCB+ICgxfFllYXIpLCBmYW1pbHkgPSBiaW5vbWlhbCwgZGF0YSA9IFQyMV9Db250aWdlbmN5X01hc3RlcikKI3JhbmQoZ2xtZXIuZml0MSkgI1doYXQgaXMgdGhlcmUgdG8gdXNlPwpgYGAKCgoKCkNoZWNrIGlmIHdlIG5lZWQgcmFuZG9tIGVmZmVjdHMgb2YgQ291bnRpZXM/Ckl0IGlzIHN0YXRpc3RpY2FsbHkgc2lnbmlmaWNhbnQgdG8gaW5jbHVkZSB0aGUgQ291bnR5IExldmVsIFJhbmRvbSBFZmZlY3RzCmBgYHtyfQpnbG1lci5maXQyIDwtIGdsbWVyKEV2ZW50IH4gKDF8WWVhci9Db3VudHkpLCBmYW1pbHkgPSBiaW5vbWlhbCwgZGF0YSA9IFQyMV9Db250aWdlbmN5X01hc3RlcikKYGBgCgpDaGVja2luZyBpZiB0aGUgWWVhciBSYW5kb20gRWZmZWN0IGlzIG5lZWRlZApgYGB7cn0KYW5vdmEoZ2xtZXIuZml0MSwgZ2xtZXIuZml0MikKYGBgCgpJQ0MgSW50ZXJwcmV0YXRpb25zCgpXaGVyZSBhcmUgdGhlIHJlc2lkdWFscz8KYGBge3J9CnByaW50KHN1bW1hcnkoZ2xtZXIuZml0MSkpCmBgYAoKYGBge3J9CnByaW50KHN1bW1hcnkoZ2xtZXIuZml0MikpCmBgYAoKCgoKCg==</div>
 
 
 

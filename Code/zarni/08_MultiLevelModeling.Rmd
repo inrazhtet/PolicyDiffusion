@@ -1,0 +1,92 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+Loading the libraries
+```{r, warning=FALSE}
+library(dplyr)
+library(lme4)
+library(lmerTest)
+```
+
+Getting the Master File
+
+```{r}
+master <- rio::import("../../Data/master.csv")
+#View(master)
+#names(master)
+#Dropping Chlamydia Rate becasue we do NOT understand the measurement for now.
+master <- subset(master, select = -c(25))
+master <- master[,-c(1:2)]
+View(master)
+```
+
+Getting the Neighboring Border File
+
+```{r}
+AllT21ContigencyRatios <- rio::import("../../Data/borderratios.csv")
+AllT21ContigencyRatios <- AllT21ContigencyRatios[-1]
+AllT21ContigencyRatios$ratio <- as.numeric(AllT21ContigencyRatios$ratio)
+```
+
+Joining the two files for Analysis
+```{r}
+nrow(master)
+nrow(AllT21ContigencyRatios)
+#names(AllT21ContingencyRatios)
+
+master$Name.x <- tolower(master$Name.x)
+#master$Name.x
+#match(unique(master$Name.x), unique(AllT21ContingencyRatios$TownName))
+#match(unique(master$Year), unique(AllT21ContingencyRatios$year))
+
+T21_Contigency_Master <- master %>% left_join(AllT21ContigencyRatios, by = c("Name.x" = "TownName", "Year" = "year")) 
+#View(T21_Contingency_Master)
+```
+
+Cleaning the combined data set further for analysis
+```{r}
+T21_Contigency_Master <- T21_Contigency_Master[T21_Contigency_Master$Event !=2,]
+T21_Contigency_Master$Population <- as.numeric(T21_Contigency_Master$Population)
+#sort(names(T21_Contingency_Master))
+#T21_Contingency_Master$ratio
+T21_Contigency_Master$ratio <- as.numeric(T21_Contigency_Master$ratio)
+```
+
+Unconditional Mean Models for Random Effect Lowest Level
+
+?Function to test UMM to the lowest level Random Effects Test
+```{r}
+glmer.fit1 <- glmer(Event ~ (1|Year), family = binomial, data = T21_Contigency_Master)
+#rand(glmer.fit1) #What is there to use?
+```
+
+
+
+
+Check if we need random effects of Counties?
+It is statistically significant to include the County Level Random Effects
+```{r}
+glmer.fit2 <- glmer(Event ~ (1|Year/County), family = binomial, data = T21_Contigency_Master)
+```
+
+Checking if the Year Random Effect is needed
+```{r}
+anova(glmer.fit1, glmer.fit2)
+```
+
+ICC Interpretations
+
+Where are the residuals?
+```{r}
+print(summary(glmer.fit1))
+```
+
+```{r}
+print(summary(glmer.fit2))
+```
+
+
+
+
+
