@@ -273,40 +273,9 @@ T21_Contigency_Master$ratio &lt;- as.numeric(T21_Contigency_Master$ratio)</code>
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQoc3VtbWFyeShnbG1lci5maXQyKSlcblxuYGBgIn0= -->
-<pre class="r"><code>print(summary(glmer.fit2))
-</code></pre>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucHJpbnQoc3VtbWFyeShnbG1lci5maXQyKSlcbmBgYCJ9 -->
+<pre class="r"><code>print(summary(glmer.fit2))</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiR2VuZXJhbGl6ZWQgbGluZWFyIG1peGVkIG1vZGVsIGZpdCBieSBtYXhpbXVtXG4gIGxpa2VsaWhvb2QgKExhcGxhY2UgQXBwcm94aW1hdGlvbikgW2dsbWVyTW9kXVxuIEZhbWlseTogYmlub21pYWwgICggbG9naXQgKVxuRm9ybXVsYTogRXZlbnQgfiAoMSB8IFllYXIvQ291bnR5KVxuICAgRGF0YTogVDIxX0NvbnRpZ2VuY3lfTWFzdGVyXG5cbiAgICAgQUlDICAgICAgQklDICAgbG9nTGlrIGRldmlhbmNlIGRmLnJlc2lkIFxuICAgNzY2LjEgICAgNzgzLjYgICAtMzgwLjAgICAgNzYwLjEgICAgIDI1NjcgXG5cblNjYWxlZCByZXNpZHVhbHM6IFxuICAgIE1pbiAgICAgIDFRICBNZWRpYW4gICAgICAzUSAgICAgTWF4IFxuLTEuMDQwOCAtMC4xNDg0IC0wLjA0OTYgLTAuMDI0MCAxMS45MDEyIFxuXG5SYW5kb20gZWZmZWN0czpcbiBHcm91cHMgICAgICBOYW1lICAgICAgICBWYXJpYW5jZSBTdGQuRGV2LlxuIENvdW50eTpZZWFyIChJbnRlcmNlcHQpIDEuMTE1ICAgIDEuMDU2ICAgXG4gWWVhciAgICAgICAgKEludGVyY2VwdCkgOC43ODkgICAgMi45NjUgICBcbk51bWJlciBvZiBvYnM6IDI1NzAsIGdyb3VwczogIFxuQ291bnR5OlllYXIsIDExMjsgWWVhciwgOFxuXG5GaXhlZCBlZmZlY3RzOlxuICAgICAgICAgICAgRXN0aW1hdGUgU3RkLiBFcnJvciB6IHZhbHVlIFByKD58enwpXG4oSW50ZXJjZXB0KSAgIC01LjY3MCAgICAgIDEuMjkyICAtNC4zODcgMS4xNWUtMDVcbiAgICAgICAgICAgICAgIFxuKEludGVyY2VwdCkgKioqXG4tLS1cblNpZ25pZi4gY29kZXM6ICBcbjAg4oCYKioq4oCZIDAuMDAxIOKAmCoq4oCZIDAuMDEg4oCYKuKAmSAwLjA1IOKAmC7igJkgMC4xIOKAmCDigJkgMVxuIn0= -->
-<pre><code>Generalized linear mixed model fit by maximum
-  likelihood (Laplace Approximation) [glmerMod]
- Family: binomial  ( logit )
-Formula: Event ~ (1 | Year/County)
-   Data: T21_Contigency_Master
-
-     AIC      BIC   logLik deviance df.resid 
-   766.1    783.6   -380.0    760.1     2567 
-
-Scaled residuals: 
-    Min      1Q  Median      3Q     Max 
--1.0408 -0.1484 -0.0496 -0.0240 11.9012 
-
-Random effects:
- Groups      Name        Variance Std.Dev.
- County:Year (Intercept) 1.115    1.056   
- Year        (Intercept) 8.789    2.965   
-Number of obs: 2570, groups:  
-County:Year, 112; Year, 8
-
-Fixed effects:
-            Estimate Std. Error z value Pr(&gt;|z|)
-(Intercept)   -5.670      1.292  -4.387 1.15e-05
-               
-(Intercept) ***
----
-Signif. codes:  
-0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</code></pre>
-<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <!-- rnb-text-end -->
